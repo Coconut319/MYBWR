@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HF 7: Wertströme (KLR) – BWR Masterguide</title>
+    <style>
+        :root {
+            --accent: #f39c12;
+            --dark: #1a1a2e;
+            --text: #2c3e50;
+            --border: #e0e0e0;
+            --formula-bg: #fffbf0;
+            --example-bg: #f0fff4;
+            --warn: #e74c3c;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            color: var(--text);
+        }
+
+        .topbar {
+            background: var(--dark);
+            color: white;
+            padding: 12px 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar a {
+            color: #fdbb2d;
+            text-decoration: none;
+        }
+
+        .topbar h1 {
+            font-size: 1.1rem;
+            margin: 0;
+            color: white;
+        }
+
+        .layout {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: var(--dark);
+            color: #ccc;
+            padding: 20px;
+            position: fixed;
+            top: 48px;
+            overflow-y: auto;
+            height: calc(100vh - 48px);
+        }
+
+        .sidebar h3 {
+            color: var(--accent);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #aaa;
+            text-decoration: none;
+            padding: 6px 0 6px 10px;
+            font-size: 0.85rem;
+            border-left: 2px solid transparent;
+            transition: 0.2s;
+        }
+
+        .sidebar a:hover {
+            color: white;
+            border-left-color: var(--accent);
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 40px;
+            max-width: 870px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #7f5c00, #f39c12);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            margin: 0 0 10px;
+            font-size: 2.2rem;
+        }
+
+        .hero p {
+            margin: 0;
+            opacity: 0.85;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border-top: 5px solid var(--accent);
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: var(--dark);
+            font-size: 1.4rem;
+        }
+
+        .section h3 {
+            color: #c67d00;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .formula {
+            background: var(--formula-bg);
+            border: 1.5px dashed var(--accent);
+            padding: 16px;
+            text-align: center;
+            font-size: 1.05rem;
+            font-weight: bold;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .example {
+            background: var(--example-bg);
+            border-left: 5px solid #27ae60;
+            padding: 18px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .example::before {
+            content: "✎ Beispiel";
+            font-weight: bold;
+            color: #27ae60;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .merke {
+            background: #fff0f0;
+            border-left: 5px solid var(--warn);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .merke::before {
+            content: "⚠ Merke:";
+            font-weight: bold;
+            color: var(--warn);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--border);
+            padding: 12px;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: var(--dark);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 16px 0;
+        }
+
+        .box {
+            border: 1px solid var(--border);
+            padding: 18px;
+            border-radius: 8px;
+        }
+
+        .box h4 {
+            margin-top: 0;
+        }
+
+        .kalk-schema {
+            background: #fafafa;
+            border: 1px solid var(--border);
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            line-height: 2;
+        }
+
+        .kalk-schema .row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .kalk-schema .sum {
+            font-weight: bold;
+            border-top: 1px solid #999;
+            margin-top: 4px;
+            padding-top: 4px;
+        }
+
+        .green {
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .red {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+
+        @media print {
+
+            .sidebar,
+            .topbar {
+                display: none;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a href="index.html">← Zurück zur Übersicht</a>
+        <h1>HF 7: Wertströme (Kosten- und Leistungsrechnung)</h1>
+    </div>
+    <div class="layout">
+        <div class="sidebar">
+            <h3>Einführung KLR</h3>
+            <a href="#klr-intro">Wozu dient die KLR?</a>
+            <a href="#klr-intro">Abgrenzung zur Fibu</a>
+            <h3>Kostenartenrechnung</h3>
+            <a href="#kostenar">Betriebsergebnis & Beurteilung</a>
+            <a href="#kostenar">Neutrale Aufwendungen</a>
+            <a href="#kostenar">Grundkosten, Anderskosten, Zusatzkosten</a>
+            <a href="#kalk-kosten">Kalk. Abschreibungen</a>
+            <a href="#kalk-kosten">Kalk. Zinsen</a>
+            <a href="#kalk-kosten">Kalk. Unternehmerlohn</a>
+            <h3>Kostenstellenrechnung</h3>
+            <a href="#kostenstellen">Einzelkosten & Gemeinkosten</a>
+            <a href="#bab">Betriebsabrechnungsbogen (BAB)</a>
+            <a href="#bab">Ist-Zuschlagssätze</a>
+            <h3>Kostenträgerrechnung</h3>
+            <a href="#traeger">Ist- vs. Normal-Zuschlagssätze</a>
+            <a href="#traeger">Listenverkaufspreis ermitteln</a>
+            <a href="#nachkalk">Nachkalkulation (Über/Unterdeckung)</a>
+        </div>
+        <div class="content">
+            <div class="hero">
+                <h1>💰 HF 7: Wertströme (KLR)</h1>
+                <p>Kostenartenrechnung, BAB, Zu- und Abschlagssätze – jeder Punkt tief erklärt.</p>
+            </div>
+
+            <!-- EINFÜHRUNG -->
+            <div class="section" id="klr-intro">
+                <h2>1. Was ist die KLR und wozu dient sie?</h2>
+                <p>Die <strong>Kosten- und Leistungsrechnung (KLR)</strong> ist das interne Rechnungswesen eines
+                    Unternehmens. Im Gegensatz zur Finanzbuchhaltung (GuV, Bilanz – für externe) ist die KLR nur für das
+                    <strong>interne Management</strong> bestimmt.</p>
+                <div class="grid2">
+                    <div class="box">
+                        <h4>Finanzbuchhaltung (extern)</h4>
+                        <p>Pflicht gesetzlich, für Finanzamt, Banken, Gesellschafter. Enthält auch unternehmensfremde
+                            Posten.</p>
+                    </div>
+                    <div class="box">
+                        <h4>KLR (intern)</h4>
+                        <p>Freiwillig, für Unternehmensführung. Zeigt genau, was ein Produkt kostet und ob es sich
+                            lohnt.</p>
+                    </div>
+                </div>
+                <p>Die KLR beantwortet die 3 Kernfragen:</p>
+                <ul>
+                    <li><strong>Was für Kosten fallen an?</strong> → Kostenartenrechnung</li>
+                    <li><strong>Wo fallen sie an?</strong> → Kostenstellenrechnung</li>
+                    <li><strong>Wofür fallen sie an?</strong> → Kostenträgerrechnung</li>
+                </ul>
+            </div>
+
+            <!-- KOSTENARTENRECHNUNG -->
+            <div class="section" id="kostenar">
+                <h2>2. Kostenartenrechnung</h2>
+                <h3>Betriebsergebnis & Beurteilung</h3>
+                <p>Das <strong>Betriebsergebnis</strong> zeigt, ob das Kerngeschäft (der eigentliche Betrieb) profitabel
+                    ist.</p>
+                <div class="formula">Betriebsergebnis = Betriebsleistung – Betriebskosten</div>
+                <p>In der KLR vergleichen wir: Sind die Kosten höher als die Erlöse? Dann arbeiten wir mit Verlust.</p>
+
+                <h3>Neutrale Aufwendungen & Erträge</h3>
+                <p>Nicht alle Positionen aus der Finanzbuchhaltung gehören in die Kostenrechnung:</p>
+                <table>
+                    <tr>
+                        <th>Art</th>
+                        <th>Was ist das?</th>
+                        <th>Beispiel</th>
+                    </tr>
+                    <tr>
+                        <td>Betriebsfremde A/E</td>
+                        <td>Hat nichts mit der Produktion zu tun</td>
+                        <td>Aktiengewinne, Mieterträge einer Fabrik die privat vermietet wird</td>
+                    </tr>
+                    <tr>
+                        <td>Außerordentliche A/E</td>
+                        <td>Unregelmäßig, einmalig, untypisch</td>
+                        <td>Verlust durch Hochwasser, außerordentlicher Ertrag durch Grundstücksverkauf</td>
+                    </tr>
+                    <tr>
+                        <td>Periodenfremde A/E</td>
+                        <td>Gehören zeitlich zu einem anderen Jahr</td>
+                        <td>Steuernachzahlung für Vorjahr; Mieteinnahme die für Januar im Dezember kommt</td>
+                    </tr>
+                </table>
+                <div class="merke">In der KLR werden DIESE neutralen Posten HERAUSGERECHNET. Wir wollen nur die
+                    wirklichen Betriebskosten!</div>
+
+                <h3>Grundkosten, Anderskosten, Zusatzkosten</h3>
+                <table>
+                    <tr>
+                        <th>Begriff</th>
+                        <th>Definition</th>
+                        <th>Beispiel</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Grundkosten</strong></td>
+                        <td>Kosten, die auch in der Fibu als Aufwand erscheinen – gleicher Betrag, gleicher Sachverhalt
+                        </td>
+                        <td>Lohnkosten der Arbeiter (identisch in Fibu und KLR)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Anderskosten</strong></td>
+                        <td>In Fibu als Aufwand, aber in der KLR mit einem ANDEREN Wert angesetzt (z.B. andere
+                            Abschreibungshöhe)</td>
+                        <td>Fibu: AfA nach Steuerrecht 5 Jahre; KLR: kalk. Abschreibung über 8 Jahre Nutzungsdauer</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Zusatzkosten</strong></td>
+                        <td>Erscheinen NICHT in der Fibu, werden aber in der KLR trotzdem angesetzt</td>
+                        <td>Kalkulatorischer Unternehmerlohn (der Inhaber zahlt sich kein Gehalt, es muss aber trotzdem
+                            eingerechnet werden)</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- KALKULATORISCHE KOSTEN -->
+            <div class="section" id="kalk-kosten">
+                <h2>3. Kalkulatorische Kosten (im Detail)</h2>
+
+                <h3>Kalkulatorische Abschreibungen</h3>
+                <p>In der KLR schreiben wir auf Basis des <strong>Wiederbeschaffungswertes</strong> ab, nicht des
+                    Anschaffungswertes. So stellen wir sicher, dass am Ende genug Geld da ist, um eine neue Maschine zu
+                    kaufen (die ja durch Inflation teurer ist).</p>
+                <div class="formula">Kalk. Abschreibung = Wiederbeschaffungswert / Nutzungsdauer</div>
+                <div class="example">
+                    Maschine gekauft für 60.000 € (Anschaffungswert), Nutzungsdauer = 10 Jahre.<br>
+                    Eine neue Maschine kostet aber heute schon 80.000 € (Wiederbeschaffungswert).<br><br>
+                    Fibu-AfA: 60.000 / 10 = <strong>6.000 €/Jahr</strong><br>
+                    Kalk. Abschr.: 80.000 / 10 = <strong>8.000 €/Jahr</strong><br>
+                    → Differenz von 2.000 € ist eine Anderskosten.
+                </div>
+
+                <h3>Kalkulatorische Zinsen</h3>
+                <p>Das im Unternehmen gebundene Kapital (Maschinen, Lager) könnte auch anderswo angelegt werden und
+                    Zinsen bringen. Diesen entgangenen Gewinn setzen wir als Kosten an ("Opportunitätskosten").</p>
+                <div class="formula">Kalk. Zinsen = Betriebsnotwendiges Kapital × Zinssatz</div>
+                <div class="example">
+                    Maschinen, Gebäude und Lager binden 500.000 € Kapital.<br>
+                    Zinssatz = 6 % p.a.<br>
+                    → Kalk. Zinsen = 500.000 × 0,06 = <strong>30.000 €/Jahr</strong>
+                </div>
+
+                <h3>Kalkulatorischer Unternehmerlohn</h3>
+                <p>Bei Einzelunternehmen und Personengesellschaften zahlt der Inhaber sich oft kein Gehalt. In der KLR
+                    muss man trotzdem einen fiktiven Unternehmerlohn einrechnen, sonst sieht das Ergebnis künstlich
+                    besser aus als es wäre, wenn man die gleiche Arbeit von einem Angestellten machen ließe.</p>
+                <div class="example">
+                    Die Bäckereiinhaberin arbeitet 8 Stunden täglich selbst in der Bäckerei. In der Fibu bekommt sie
+                    kein Gehalt, entnimmt am Ende Gewinn. In der KLR wird ein marktüblicher Lohn von z.B. 4.500 €/Monat
+                    als <strong>Zusatzkosten</strong> eingerechnet.
+                </div>
+                <div class="merke">Kalk. Unternehmerlohn = Zusatzkosten (kein Aufwand in Fibu, aber Kosten in KLR!)
+                </div>
+            </div>
+
+            <!-- KOSTENSTELLENRECHNUNG -->
+            <div class="section" id="kostenstellen">
+                <h2>4. Kostenstellenrechnung</h2>
+                <h3>Einzelkosten vs. Gemeinkosten</h3>
+                <div class="grid2">
+                    <div class="box">
+                        <h4>Einzelkosten (EK)</h4>
+                        <p>Können einem einzelnen Produkt <strong>direkt zugerechnet</strong> werden. Sie werden nicht
+                            über den BAB verteilt, sondern direkt in die Kalkulation übernommen.</p>
+                        <p><strong>Beispiele:</strong> Fertigungsmaterial (Holz für Schreibtisch), Fertigungslöhne
+                            (Stundenlohn bei diesem Produkt).</p>
+                    </div>
+                    <div class="box">
+                        <h4>Gemeinkosten (GK)</h4>
+                        <p>Entstehen für mehrere Produkte gleichzeitig, können keinem Einzelprodukt direkt zugerechnet
+                            werden. Sie müssen <strong>verteilt (zugeschlagen)</strong> werden.</p>
+                        <p><strong>Beispiele:</strong> Miete der Halle, Gehalt des Meisters, Strom der Fabrik,
+                            Abschreibungen der Maschinen.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BAB -->
+            <div class="section" id="bab">
+                <h2>5. Betriebsabrechnungsbogen (BAB)</h2>
+                <p>Der BAB ist eine Tabelle, mit der die <strong>Gemeinkosten auf die Kostenstellen verteilt</strong>
+                    werden. Die Hauptkostenstellen sind:</p>
+                <ul>
+                    <li><strong>Material</strong> (Wareneinkauf, Lager)</li>
+                    <li><strong>Fertigung</strong> (Produktion, Werkstatt)</li>
+                    <li><strong>Verwaltung</strong> (Büro, Buchhaltung, Geschäftsführung)</li>
+                    <li><strong>Vertrieb</strong> (Verkauf, Außendienst)</li>
+                </ul>
+
+                <h3>Verteilung der Gemeinkosten (Schlüsselung)</h3>
+                <p>Gemeinkosten werden nach einem passenden Schlüssel verteilt, z.B.:</p>
+                <table>
+                    <tr>
+                        <th>Gemeinkostenart</th>
+                        <th>Verteilschlüssel</th>
+                        <th>Warum?</th>
+                    </tr>
+                    <tr>
+                        <td>Miete der Halle</td>
+                        <td>Fläche (m²) je Abteilung</td>
+                        <td>Jede Abteilung belegt einen Teil der Fläche</td>
+                    </tr>
+                    <tr>
+                        <td>Gehalt des IT-Mitarbeiters</td>
+                        <td>Anzahl der PCs je Abt.</td>
+                        <td>Jede Abt. nutzt unterschiedlich viele PCs</td>
+                    </tr>
+                    <tr>
+                        <td>Strom der Maschinen</td>
+                        <td>Maschinenleistung (kW)</td>
+                        <td>Stärkere Maschinen brauchen mehr Strom</td>
+                    </tr>
+                </table>
+
+                <h3>Berechnung der Ist-Zuschlagssätze</h3>
+                <p>Nachdem alle Gemeinkosten auf die Kostenstellen verteilt sind, berechnen wir die Zuschlagssätze:</p>
+                <div class="formula">MGK-Zuschlag = Material-Gemeinkosten / Fertigungsmaterial × 100</div>
+                <div class="formula">FGK-Zuschlag = Fertigungs-Gemeinkosten / Fertigungslöhne × 100</div>
+                <div class="formula">VwGK-Zuschlag = Verwaltungs-GK / Herstellkosten × 100</div>
+                <div class="formula">VtGK-Zuschlag = Vertriebs-GK / Herstellkosten × 100</div>
+
+                <div class="example">
+                    Fertigungsgemeinkosten (FGK) = 80.000 €<br>
+                    Fertigungslöhne (Einzelkosten) = 40.000 €<br>
+                    → FGK-Zuschlagssatz = (80.000 / 40.000) × 100 = <strong>200 %</strong><br>
+                    → Für jede Maschine, die 100 € Fertigungslohn erzeugt, kommen 200 € Gemeinkosten dazu!
+                </div>
+            </div>
+
+            <!-- KOSTENTRÄGERRECHNUNG -->
+            <div class="section" id="traeger">
+                <h2>6. Kostenträgerrechnung (Kalkulation)</h2>
+                <h3>Normal- vs. Ist-Zuschlagssätze</h3>
+                <div class="grid2">
+                    <div class="box">
+                        <h4>Normal-Zuschlagssätze</h4>
+                        <p>Werden zu Beginn des Jahres <strong>geplant</strong> (auf Basis von Durchschnittswerten).
+                            Werden für die Vorkalkulation genutzt.</p>
+                        <p><em>Vorteil:</em> Planungssicherheit, Preis schon vor Produktion kalkulierbar.</p>
+                    </div>
+                    <div class="box">
+                        <h4>Ist-Zuschlagssätze</h4>
+                        <p>Werden <strong>am Ende des Jahres</strong> aus den echten Kosten berechnet. Werden für die
+                            Nachkalkulation genutzt.</p>
+                        <p><em>Vorteil:</em> Zeigt, was wirklich passiert ist (Abweichung von Plan erkennbar).</p>
+                    </div>
+                </div>
+
+                <h3>Das Kalkulationsschema (vollständig)</h3>
+                <div class="kalk-schema">
+                    <div class="row"><span>Fertigungsmaterial (FM)</span><span>xxx €</span></div>
+                    <div class="row"><span>+ Materialgemeinkosten (MGK) [FM × MGK-Satz]</span><span>xxx €</span></div>
+                    <div class="row sum"><span>= Materialkosten (MK)</span><span>xxx €</span></div>
+                    <div class="row"><span>+ Fertigungslöhne (FL)</span><span>xxx €</span></div>
+                    <div class="row"><span>+ Fertigungsgemeinkosten (FGK) [FL × FGK-Satz]</span><span>xxx €</span></div>
+                    <div class="row"><span>+ Sondereinzelkosten der Fertigung (SEKF)</span><span>xxx €</span></div>
+                    <div class="row sum"><span>= Herstellkosten (HK)</span><span>xxx €</span></div>
+                    <div class="row"><span>+ Verwaltungsgemeinkosten (VwGK) [HK × VwGK-Satz]</span><span>xxx €</span>
+                    </div>
+                    <div class="row"><span>+ Vertriebsgemeinkosten (VtGK) [HK × VtGK-Satz]</span><span>xxx €</span>
+                    </div>
+                    <div class="row"><span>+ Sonderkosten des Vertriebs</span><span>xxx €</span></div>
+                    <div class="row sum green"><span>= Selbstkosten (SK)</span><span>xxx €</span></div>
+                </div>
+
+                <div class="example">
+                    FM = 50 €, MGK-Satz = 10 %, FL = 80 €, FGK-Satz = 200 %, VwGK-Satz = 15 %, VtGK-Satz = 10 %<br><br>
+                    MGK = 50 × 10% = 5 € → MK = 55 €<br>
+                    FGK = 80 × 200% = 160 € → HK = 55 + 80 + 160 = 295 €<br>
+                    VwGK = 295 × 15% = 44,25 €<br>
+                    VtGK = 295 × 10% = 29,50 €<br>
+                    → <strong>Selbstkosten (SK) = 295 + 44,25 + 29,50 = 368,75 €</strong>
+                </div>
+
+                <h3>Listenverkaufspreis ermitteln (auf Basis der Selbstkosten)</h3>
+                <div class="kalk-schema">
+                    <div class="row"><span>Selbstkosten (SK)</span><span></span></div>
+                    <div class="row"><span>+ Gewinnaufschlag (Prozent der SK)</span><span></span></div>
+                    <div class="row sum"><span>= Barverkaufspreis</span><span></span></div>
+                    <div class="row"><span>+ Skonto (z.B. 2%, wird aufgeteilt)</span><span></span></div>
+                    <div class="row sum"><span>= Zielverkaufspreis</span><span></span></div>
+                    <div class="row"><span>+ Rabatt (z.B. 10%)</span><span></span></div>
+                    <div class="row sum green"><span>= Listenverkaufspreis (netto)</span><span></span></div>
+                </div>
+                <div class="merke">Beim Aufschlagen von Skonto und Rabatt wird AUFGETEILT: 2 % Skonto bedeutet, der
+                    Nettopreis ist um 100/98 zu erhöhen. (Weil 2% VOM höheren Preis abgezogen wird, nicht vom
+                    niedrigeren!)</div>
+            </div>
+
+            <!-- NACHKALKULATION -->
+            <div class="section" id="nachkalk">
+                <h2>7. Nachkalkulation & Über-/Unterdeckung</h2>
+                <p>Am Jahresende vergleicht man die <strong>Normalkalkulation (Plan)</strong> mit der
+                    <strong>Ist-Kalkulation (Wirklichkeit)</strong>:</p>
+                <table>
+                    <tr>
+                        <th>Ergebnis</th>
+                        <th>Was bedeutet das?</th>
+                        <th>Konsequenz</th>
+                    </tr>
+                    <tr>
+                        <td class="green">Überdeckung (Ist-Kosten &lt; Normal-Kosten)</td>
+                        <td>Wir haben günstiger produziert als geplant. Die Gemeinkosten wurden "zu viel" auf die
+                            Produkte verrechnet.</td>
+                        <td>Positiv! Zeigt Effizienz. Kann zu Gewinnerhöhung führen.</td>
+                    </tr>
+                    <tr>
+                        <td class="red">Unterdeckung (Ist-Kosten &gt; Normal-Kosten)</td>
+                        <td>Wir haben teurer produziert als geplant. Zu wenige Kosten auf die Produkte verrechnet.</td>
+                        <td>Negativ! Gewinne werden geringer als geplant. Analyse erforderlich.</td>
+                    </tr>
+                </table>
+
+                <div class="example">
+                    Normal-FGK-Satz (geplant) = 200 %, FL = 40.000 €<br>
+                    → Normal-FGK = 80.000 €<br><br>
+                    Ist-FGK (Ende Jahr aus BAB) = 85.000 €<br>
+                    → Unterdeckung = 85.000 – 80.000 = <span class="red">5.000 € Unterdeckung</span><br>
+                    Wir haben 5.000 € mehr Gemeinkosten gehabt als geplant. Entweder war der Plan zu optimistisch oder
+                    die Kosten sind unvorhergesehen gestiegen.
+                </div>
+
+                <h3>Nachkalkulation auf Stückbasis</h3>
+                <p>Man vergleicht die geplanten Stückkosten mit den tatsächlichen Stückkosten:</p>
+                <div class="formula">Differenz = Ist-Selbstkosten/Stück – Normal-Selbstkosten/Stück</div>
+                <div class="example">
+                    Normal-SK/Stück = 368,75 €, Ist-SK/Stück = 380,00 €<br>
+                    → Unterdeckung = 380,00 – 368,75 = <span class="red">11,25 €/Stück</span>
+                </div>
+            </div>
+
+            <div style="text-align:center;margin-top:40px;">
+                <a href="index.html"
+                    style="padding:12px 28px;background:#7f5c00;color:white;border-radius:8px;text-decoration:none;">←
+                    Zurück zur Übersicht</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

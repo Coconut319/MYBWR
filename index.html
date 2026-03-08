@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <title>BWR Masterguide – Vorprüfung</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #0f0f1a;
+            color: white;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 80px 20px 40px;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 10px;
+            background: linear-gradient(90deg, #fdbb2d, #f97316);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero p {
+            color: #aaa;
+            font-size: 1.2rem;
+        }
+
+        .cards {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            flex-wrap: wrap;
+            padding: 40px 20px 80px;
+        }
+
+        .card {
+            background: #1a1a2e;
+            border: 1px solid #333;
+            border-radius: 16px;
+            padding: 40px 30px;
+            width: 280px;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .card-icon {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+        }
+
+        .card h2 {
+            margin: 0 0 10px;
+        }
+
+        .card p {
+            color: #aaa;
+            font-size: 0.95rem;
+            margin: 0 0 20px;
+        }
+
+        .card .hf-num {
+            display: inline-block;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .hf3 {
+            border-top: 4px solid #3498db;
+        }
+
+        .hf3 .hf-num {
+            background: #3498db22;
+            color: #3498db;
+        }
+
+        .hf4 {
+            border-top: 4px solid #e74c3c;
+        }
+
+        .hf4 .hf-num {
+            background: #e74c3c22;
+            color: #e74c3c;
+        }
+
+        .hf7 {
+            border-top: 4px solid #f39c12;
+        }
+
+        .hf7 .hf-num {
+            background: #f39c1222;
+            color: #f39c12;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="hero">
+        <h1>BWR MASTERGUIDE</h1>
+        <p>Deine vollständige Prüfungsvorbereitung – Vorprüfung 2026</p>
+    </div>
+    <div class="cards">
+        <a class="card hf3" href="hf3_leistungserstellung.html">
+            <div class="card-icon">🏭</div>
+            <h2>Leistungserstellung</h2>
+            <p>Kosten, Kapazität, Losgrößen, Produktionsplanung, Qualitätskontrolle</p>
+            <span class="hf-num">HF 3 → Öffnen</span>
+        </a>
+        <a class="card hf4" href="hf4_absatz.html">
+            <div class="card-icon">🛒</div>
+            <h2>Absatz & Marketing</h2>
+            <p>Marketing-Mix, alle 4 Ps, Preiskalkulation, Produktlebenszyklus</p>
+            <span class="hf-num">HF 4 → Öffnen</span>
+        </a>
+        <a class="card hf7" href="hf7_wertströme.html">
+            <div class="card-icon">💰</div>
+            <h2>Wertströme (KLR)</h2>
+            <p>Kostenartenrechnung, BAB, Vor- und Nachkalkulation</p>
+            <span class="hf-num">HF 7 → Öffnen</span>
+        </a>
+    </div>
+</body>
+
+</html>

@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <title>HF 4: Absatz – BWR Masterguide</title>
+    <style>
+        :root {
+            --accent: #e74c3c;
+            --dark: #1a1a2e;
+            --text: #2c3e50;
+            --border: #e0e0e0;
+            --formula-bg: #fff0f0;
+            --example-bg: #fffbf0;
+            --warn: #e74c3c;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            color: var(--text);
+        }
+
+        .topbar {
+            background: var(--dark);
+            color: white;
+            padding: 12px 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .topbar a {
+            color: #fdbb2d;
+            text-decoration: none;
+        }
+
+        .topbar h1 {
+            font-size: 1.1rem;
+            margin: 0;
+            color: white;
+        }
+
+        .layout {
+            display: flex;
+        }
+
+        .sidebar {
+            width: 250px;
+            min-height: 100vh;
+            background: var(--dark);
+            color: #ccc;
+            padding: 20px;
+            position: fixed;
+            top: 48px;
+            overflow-y: auto;
+            height: calc(100vh - 48px);
+        }
+
+        .sidebar h3 {
+            color: var(--accent);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 20px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #aaa;
+            text-decoration: none;
+            padding: 6px 0 6px 10px;
+            font-size: 0.85rem;
+            border-left: 2px solid transparent;
+            transition: 0.2s;
+        }
+
+        .sidebar a:hover {
+            color: white;
+            border-left-color: var(--accent);
+        }
+
+        .content {
+            margin-left: 250px;
+            padding: 40px;
+            max-width: 870px;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #b21f1f, #e74c3c);
+            color: white;
+            padding: 40px;
+            border-radius: 16px;
+            margin-bottom: 40px;
+        }
+
+        .hero h1 {
+            margin: 0 0 10px;
+            font-size: 2.2rem;
+        }
+
+        .hero p {
+            margin: 0;
+            opacity: 0.85;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+            border-top: 5px solid var(--accent);
+        }
+
+        .section h2 {
+            margin-top: 0;
+            color: var(--dark);
+            font-size: 1.4rem;
+        }
+
+        .section h3 {
+            color: var(--accent);
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
+        }
+
+        .formula {
+            background: var(--formula-bg);
+            border: 1.5px dashed var(--accent);
+            padding: 16px;
+            text-align: center;
+            font-size: 1.05rem;
+            font-weight: bold;
+            border-radius: 8px;
+            margin: 16px 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .example {
+            background: var(--example-bg);
+            border-left: 5px solid #f39c12;
+            padding: 18px;
+            margin: 16px 0;
+            border-radius: 0 8px 8px 0;
+            position: relative;
+        }
+
+        .example::before {
+            content: "✎ Beispiel";
+            font-weight: bold;
+            color: #f39c12;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .merke {
+            background: #fff0f0;
+            border-left: 5px solid var(--warn);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .merke::before {
+            content: "⚠ Merke:";
+            font-weight: bold;
+            color: var(--warn);
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 16px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--border);
+            padding: 12px;
+            text-align: left;
+            font-size: 0.95rem;
+        }
+
+        th {
+            background: var(--dark);
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .grid2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 16px 0;
+        }
+
+        .grid3 {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin: 16px 0;
+        }
+
+        .box {
+            border: 1px solid var(--border);
+            padding: 18px;
+            border-radius: 8px;
+        }
+
+        .box h4 {
+            margin-top: 0;
+        }
+
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        svg text {
+            font-family: 'Segoe UI', Arial, sans-serif;
+        }
+
+        @media print {
+
+            .sidebar,
+            .topbar {
+                display: none;
+            }
+
+            .content {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="topbar">
+        <a href="index.html">← Zurück zur Übersicht</a>
+        <h1>HF 4: Absatz & Marketing</h1>
+    </div>
+    <div class="layout">
+        <div class="sidebar">
+            <h3>Grundlagen</h3>
+            <a href="#markt">Käufer- & Verkäufermarkt</a>
+            <a href="#marktf">Primär- & Sekundärforschung</a>
+            <a href="#marktf">Marketingziele</a>
+            <h3>Marketing-Mix</h3>
+            <a href="#produkt">Produktpolitik</a>
+            <a href="#produkt">Produktlebenszyklus</a>
+            <a href="#produkt">Sortimentspolitik</a>
+            <a href="#preis">Preispolitik</a>
+            <a href="#preis">Preisstrategien</a>
+            <a href="#preis">Preisdifferenzierung</a>
+            <a href="#preis">Preisuntergrenzen</a>
+            <a href="#komm">Kommunikationspolitik</a>
+            <a href="#dist">Distributionspolitik</a>
+            <h3>Kalkulationen</h3>
+            <a href="#kalk">Vorwärtskalkulation</a>
+            <a href="#kalk">Rückwärtskalkulation</a>
+            <a href="#kalk">Differenzkalkulation</a>
+            <h3>Portfolio</h3>
+            <a href="#portfolio">Portfolio-Analyse</a>
+        </div>
+        <div class="content">
+            <div class="hero">
+                <h1>🛒 HF 4: Absatz & Marketing</h1>
+                <p>Von der Marktforschung bis zur Preiskalkulation – jeder Punkt deiner Checkliste, schritt für schritt
+                    erklärt.</p>
+            </div>
+
+            <!-- MARKT & MARKTFORSCHUNG -->
+            <div class="section" id="markt">
+                <h2>1. Marketingbegriff & Markt</h2>
+                <h3>Käufermarkt vs. Verkäufermarkt</h3>
+                <div class="grid2">
+                    <div class="box">
+                        <span class="tag" style="background:#eaf4fb;color:#2980b9">Käufermarkt</span>
+                        <h4>Angebot > Nachfrage</h4>
+                        <p>Der <strong>Käufer</strong> ist in der Macht. Es gibt mehr Produkte als Kunden. Das
+                            Unternehmen muss um jeden Kunden kämpfen und Marketing betreiben.</p>
+                        <div class="example">Heute typisch: Konsumgüter, Autos, Kleidung. Es gibt viele Marken, der
+                            Kunde wählt aus.</div>
+                    </div>
+                    <div class="box">
+                        <span class="tag" style="background:#fdf2f8;color:#8e44ad">Verkäufermarkt</span>
+                        <h4>Nachfrage > Angebot</h4>
+                        <p>Der <strong>Verkäufer</strong> ist in der Macht. Ware ist knapp, Kunden reißen sich darum.
+                            Wenig Marketing nötig.</p>
+                        <div class="example">Früher: Nachkriegszeit. Heute noch: seltene Rohstoffe, Konzerttickets kurz
+                            vor Show.</div>
+                    </div>
+                </div>
+                <div class="merke">In einem Käufermarkt ist Marketing ÜBERLEBENSWICHTIG. Ohne es verliert man Kunden an
+                    die Konkurrenz.</div>
+            </div>
+
+            <!-- MARKTFORSCHUNG -->
+            <div class="section" id="marktf">
+                <h2>2. Marktforschung</h2>
+                <h3>Primäre vs. Sekundäre Marktforschung</h3>
+                <table>
+                    <tr>
+                        <th>Merkmal</th>
+                        <th>Primärforschung ("Feldforschung")</th>
+                        <th>Sekundärforschung ("Schreibtischforschung")</th>
+                    </tr>
+                    <tr>
+                        <td>Daten</td>
+                        <td>Neu erhobene Daten</td>
+                        <td>Vorhandene/bereits erhobene Daten</td>
+                    </tr>
+                    <tr>
+                        <td>Methoden</td>
+                        <td>Befragung, Beobachtung, Experiment, Panels</td>
+                        <td>Geschäftsberichte, Statistiken, Studien</td>
+                    </tr>
+                    <tr>
+                        <td>Kosten</td>
+                        <td>hoch</td>
+                        <td>niedrig</td>
+                    </tr>
+                    <tr>
+                        <td>Aktualität</td>
+                        <td>aktuell, genau auf Frage zugeschnitten</td>
+                        <td>evtl. veraltet, urspr. anderer Zweck</td>
+                    </tr>
+                </table>
+                <div class="example">
+                    <strong>Primär:</strong> Ikea befragt 1.000 Kunden im Laden: "Was stört Sie am
+                    Einkaufserlebnis?"<br>
+                    <strong>Sekundär:</strong> Volkswagen nutzt Statistiken des Kraftfahrtbundesamtes
+                    (Zulassungszahlen).
+                </div>
+
+                <h3>Erhebungsmethoden (Primärforschung)</h3>
+                <ul>
+                    <li><strong>Befragung:</strong> Fragebogen, Interview, Telefon.</li>
+                    <li><strong>Beobachtung:</strong> Kundenverhalten im Laden beobachten (Kameras, Mystery Shopper).
+                    </li>
+                    <li><strong>Experiment:</strong> Produkt zuerst nur in einer Stadt einführen, dann Reaktion messen.
+                    </li>
+                    <li><strong>Panel:</strong> Dieselbe Gruppe wird regelmäßig befragt (z.B. Verbraucherpanel über 2
+                        Jahre).</li>
+                </ul>
+
+                <h3>Marketingziele</h3>
+                <p>Was will das Unternehmen mit Marketing erreichen?</p>
+                <ul>
+                    <li><strong>Quantitativ (messbar):</strong> Marktanteil um 5 % steigern, Umsatz um 10 % erhöhen.
+                    </li>
+                    <li><strong>Qualitativ (nicht direkt messbar):</strong> Markenimage verbessern, Kundenzufriedenheit
+                        erhöhen, Bekanntheitsgrad steigern.</li>
+                </ul>
+            </div>
+
+            <!-- PRODUKTPOLITIK -->
+            <div class="section" id="produkt">
+                <h2>3. Produktpolitik</h2>
+
+                <h3>Produktpolitische Maßnahmen</h3>
+                <table>
+                    <tr>
+                        <th>Maßnahme</th>
+                        <th>Was passiert?</th>
+                        <th>Beispiel</th>
+                    </tr>
+                    <tr>
+                        <td>Innovation</td>
+                        <td>Völlig neues Produkt wird eingeführt</td>
+                        <td>1. iPhone (2007) – vorher gab es das so nicht</td>
+                    </tr>
+                    <tr>
+                        <td>Variation</td>
+                        <td>Bestehendes Produkt wird verändert (Nachfolger)</td>
+                        <td>iPhone 14 → iPhone 15</td>
+                    </tr>
+                    <tr>
+                        <td>Differenzierung</td>
+                        <td>Zusätzliche Variante neben dem bisherigen</td>
+                        <td>VW Golf und Golf Cabrio (gleichzeitig im Sortiment)</td>
+                    </tr>
+                    <tr>
+                        <td>Diversifikation</td>
+                        <td>Das Unternehmen betritt einen neuen Markt</td>
+                        <td>Amazon (Onlinehandel) → Amazon Web Services (Cloud)</td>
+                    </tr>
+                    <tr>
+                        <td>Elimination</td>
+                        <td>Produkt wird aus dem Sortiment genommen</td>
+                        <td>VW Golf VII läuft aus wegen Golf VIII</td>
+                    </tr>
+                </table>
+
+                <h3>Sortimentspolitik</h3>
+                <div class="grid2">
+                    <div class="box">
+                        <h4>Sortimentsbreite</h4>
+                        <p>Wie <strong>viele verschiedene Produktgruppen</strong> werden angeboten? (Viele = breites
+                            Sortiment)</p>
+                        <div class="example">Edeka: Lebensmittel, Hygiene, Wein, Tierfutter, Backwaren → sehr breit.
+                        </div>
+                    </div>
+                    <div class="box">
+                        <h4>Sortimentstiefe</h4>
+                        <p>Wie <strong>viele Varianten innerhalb einer Gruppe</strong>? (Viele = tiefes Sortiment)</p>
+                        <div class="example">Kaffeespezialist: Espresso, Lungo, Latte, Kapseln, Bohnen, 50 Sorten → sehr
+                            tief.</div>
+                    </div>
+                </div>
+
+                <h3>Produktlebenszyklus</h3>
+                <p>Jedes Produkt durchläuft typischerweise 5 Phasen. Die Marketingstrategie ändert sich je nach Phase!
+                </p>
+                <!-- SVG Produktlebenszyklus -->
+                <svg viewBox="0 0 560 230"
+                    style="width:100%;border:1px solid #eee;border-radius:8px;background:#fafafa;margin:16px 0;">
+                    <text x="20" y="20" font-size="11" fill="#555">Umsatz</text>
+                    <line x1="50" y1="200" x2="540" y2="200" stroke="#333" stroke-width="2" />
+                    <line x1="50" y1="200" x2="50" y2="20" stroke="#333" stroke-width="2" />
+                    <text x="542" y="204" font-size="10" fill="#333">Zeit</text>
+                    <!-- PLZ-Kurve als path -->
+                    <path
+                        d="M 55 190 Q 120 190 160 150 Q 220 80 280 50 Q 340 35 380 45 Q 430 60 470 150 Q 500 180 530 195"
+                        fill="none" stroke="#e74c3c" stroke-width="3" />
+                    <!-- Phasenlinien -->
+                    <line x1="140" y1="30" x2="140" y2="200" stroke="#bbb" stroke-width="1" stroke-dasharray="4,3" />
+                    <line x1="255" y1="30" x2="255" y2="200" stroke="#bbb" stroke-width="1" stroke-dasharray="4,3" />
+                    <line x1="360" y1="30" x2="360" y2="200" stroke="#bbb" stroke-width="1" stroke-dasharray="4,3" />
+                    <line x1="450" y1="30" x2="450" y2="200" stroke="#bbb" stroke-width="1" stroke-dasharray="4,3" />
+                    <!-- Phasenbezeichnungen -->
+                    <text x="55" y="218" font-size="10" fill="#3498db">Einführung</text>
+                    <text x="155" y="218" font-size="10" fill="#27ae60">Wachstum</text>
+                    <text x="274" y="218" font-size="10" fill="#f39c12">Reife</text>
+                    <text x="365" y="218" font-size="10" fill="#e67e22">Sättigung</text>
+                    <text x="452" y="218" font-size="10" fill="#e74c3c">Degeneration</text>
+                    <!-- Gewinnlinie -->
+                    <path
+                        d="M 55 200 Q 120 200 160 195 Q 230 160 280 120 Q 350 95 400 100 Q 450 130 480 180 Q 510 195 530 200"
+                        fill="none" stroke="#27ae60" stroke-width="2" stroke-dasharray="5,3" />
+                    <!-- Legende -->
+                    <line x1="65" y1="40" x2="90" y2="40" stroke="#e74c3c" stroke-width="3" /><text x="95" y="44"
+                        font-size="10">Umsatz</text>
+                    <line x1="65" y1="55" x2="90" y2="55" stroke="#27ae60" stroke-width="2" stroke-dasharray="4,2" />
+                    <text x="95" y="59" font-size="10">Gewinn</text>
+                </svg>
+                <table>
+                    <tr>
+                        <th>Phase</th>
+                        <th>Merkmal</th>
+                        <th>Marketingstrategie</th>
+                    </tr>
+                    <tr>
+                        <td>Einführung</td>
+                        <td>Niedriger Umsatz, hohe Kosten, negatives Ergebnis</td>
+                        <td>Viel Werbung, evtl. Penetrationspreise</td>
+                    </tr>
+                    <tr>
+                        <td>Wachstum</td>
+                        <td>Umsatz steigt stark, Konkurrenz kommt dazu</td>
+                        <td>Markt sichern, Differenzierung</td>
+                    </tr>
+                    <tr>
+                        <td>Reife</td>
+                        <td>Maximaler Umsatz, viel Konkurrenz</td>
+                        <td>Preiskämpfe, Produktvariationen</td>
+                    </tr>
+                    <tr>
+                        <td>Sättigung</td>
+                        <td>Umsatz stagniert, Preise sinken</td>
+                        <td>Kosten senken, Eliminierung planen</td>
+                    </tr>
+                    <tr>
+                        <td>Degeneration</td>
+                        <td>Umsatz sinkt, Verlust droht</td>
+                        <td>Produkt eliminieren oder Nische halten</td>
+                    </tr>
+                </table>
+            </div>
+
+            <!-- PREISPOLITIK -->
+            <div class="section" id="preis">
+                <h2>4. Preispolitik</h2>
+
+                <h3>Preisbildung: Orientierung</h3>
+                <div class="grid3">
+                    <div class="box">
+                        <h4>Kostenorientiert</h4>
+                        <p>Preis basiert auf den Selbstkosten des Unternehmens plus einem Gewinnaufschlag.</p>
+                        <p><em>Problem: Ignoriert den Markt und was der Kunde zahlen würde.</em></p>
+                    </div>
+                    <div class="box">
+                        <h4>Konkurrenzorientiert</h4>
+                        <p>Man schaut, was die Mitbewerber verlangen und passt sich an (über oder unter deren Preis).
+                        </p>
+                        <p><em>Problem: Kein echter Wettbewerbsvorteil.</em></p>
+                    </div>
+                    <div class="box">
+                        <h4>Kundenorientiert</h4>
+                        <p>Man ermittelt, wie viel der Kunde zu zahlen bereit ist (Zahlungsbereitschaft) und setzt den
+                            Preis danach.</p>
+                        <p><em>Vorteil: Optimal für den Markt.</em></p>
+                    </div>
+                </div>
+
+                <h3>Preisstrategien</h3>
+                <div class="grid2">
+                    <div class="box">
+                        <h4>Skimming-Strategie (Abschöpfung)</h4>
+                        <p>Das Produkt wird zu einem <strong>sehr hohen Einführungspreis</strong> auf den Markt
+                            gebracht. Die Kunden, die bereit sind sehr viel zu zahlen, kaufen zuerst ("abgeschöpft").
+                            Danach sinkt der Preis schrittweise.</p>
+                        <div class="example">iPhone: Bei Einführung 1.300 €, ein Jahr später 900 €, nach 2 Jahren 650 €.
+                        </div>
+                        <p><strong>Geeignet für:</strong> Innovative, hochwertige Produkte mit treuen Fans.</p>
+                    </div>
+                    <div class="box">
+                        <h4>Penetrations-Strategie (Durchdringung)</h4>
+                        <p>Das Produkt wird zu einem <strong>sehr niedrigen Einführungspreis</strong> auf den Markt
+                            gebracht, um möglichst schnell viele Kunden zu gewinnen und Konkurrenz zu verdrängen. Später
+                            kann der Preis steigen.</p>
+                        <div class="example">Netflix: Anfangs sehr günstig, jetzt höhere Preise wegen Marktdominanz.
+                        </div>
+                        <p><strong>Geeignet für:</strong> Massenprodukte, wenn man schnell Marktanteile sichern will.
+                        </p>
+                    </div>
+                </div>
+
+                <h3>Preisdifferenzierung</h3>
+                <p>Das <strong>gleiche Produkt</strong> wird zu <strong>unterschiedlichen Preisen</strong> an
+                    verschiedene Kundengruppen oder unter verschiedenen Bedingungen verkauft. Ziel: Gewinnmaximierung.
+                </p>
+                <table>
+                    <tr>
+                        <th>Art</th>
+                        <th>Erklärung</th>
+                        <th>Beispiel</th>
+                    </tr>
+                    <tr>
+                        <td>Räumlich</td>
+                        <td>Preis variiert je nach Ort, Region</td>
+                        <td>Benzin an der Autobahn teurer als in der Stadt; Gleicher Kaffee in München vs. Kleinststadt
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Zeitlich</td>
+                        <td>Preis variiert je nach Uhrzeit oder Saison</td>
+                        <td>Hotel im Sommer teurer; Happy Hour in der Bar; Flüge in den Ferien teurer</td>
+                    </tr>
+                    <tr>
+                        <td>Personell</td>
+                        <td>Preis variiert je nach Personengruppe</td>
+                        <td>Schülerticket ÖPNV; Seniorenrabatt; Studentenrabatt im Kino</td>
+                    </tr>
+                    <tr>
+                        <td>Sachlich</td>
+                        <td>Preis variiert je nach Menge oder Ausführung</td>
+                        <td>Mengenrabatt; "Professional"-Version einer Software teurer als "Basic"</td>
+                    </tr>
+                </table>
+
+                <h3>Preisuntergrenzen (PUG)</h3>
+                <div class="grid2">
+                    <div class="box" style="border-top: 3px solid #e74c3c;">
+                        <h4 style="color:#e74c3c">Kurzfristige PUG</h4>
+                        <div class="formula" style="font-size:0.9rem">Preis ≥ variable Stückkosten (k<sub>v</sub>)</div>
+                        <p>Wenn der Preis <em>mindestens</em> die variablen Kosten deckt, lohnt es sich kurzfristig zu
+                            produzieren (weil die Fixkosten ja ohnehin da sind). Darf kein Dauerzustand sein!</p>
+                    </div>
+                    <div class="box" style="border-top: 3px solid #27ae60;">
+                        <h4 style="color:#27ae60">Langfristige PUG</h4>
+                        <div class="formula" style="font-size:0.9rem">Preis ≥ Selbstkosten (SK = k<sub>f</sub> +
+                            k<sub>v</sub>)</div>
+                        <p>Langfristig muss der Preis alle Kosten (fix + variabel) decken, sonst macht das Unternehmen
+                            dauerhaft Verlust und geht pleite.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- KOMMUNIKATIONSPOLITIK -->
+            <div class="section" id="komm">
+                <h2>5. Kommunikationspolitik</h2>
+                <p>Wie kommuniziert das Unternehmen nach außen?</p>
+                <table>
+                    <tr>
+                        <th>Instrument</th>
+                        <th>Erklärung</th>
+                        <th>Beispiel</th>
+                    </tr>
+                    <tr>
+                        <td>Werbung (Advertising)</td>
+                        <td>Bezahlte Kommunikation über Medien</td>
+                        <td>TV-Spot, Google-Ads, Radiowerbung</td>
+                    </tr>
+                    <tr>
+                        <td>Öffentlichkeitsarbeit (PR)</td>
+                        <td>Aufbau eines guten Images, nicht direkt verkaufend</td>
+                        <td>Pressemitteilungen, Nachhaltigkeitsberichte</td>
+                    </tr>
+                    <tr>
+                        <td>Sponsoring</td>
+                        <td>Finanzielle Unterstützung gegen Namensnennung</td>
+                        <td>Adidas sponsored die Nationalmannschaft</td>
+                    </tr>
+                    <tr>
+                        <td>Verkaufsförderung</td>
+                        <td>Kurzfristige Maßnahmen zum Ankurbeln des Absatzes</td>
+                        <td>Sonderangebote, Proben, Gewinnspiele</td>
+                    </tr>
+                    <tr>
+                        <td>Persönlicher Verkauf</td>
+                        <td>Direkte Kommunikation zw. Verkäufer und Käufer</td>
+                        <td>Außendienstmitarbeiter beim Kunden</td>
+                    </tr>
+                </table>
+                <h3>Werbeplan (Grundstruktur)</h3>
+                <p>Ein Werbeplan enthält: <strong>Werbeziele</strong> (Was soll erreicht werden?) →
+                    <strong>Zielgruppe</strong> → <strong>Werbebotschaft</strong> → <strong>Werbemedien</strong> →
+                    <strong>Werbebudget</strong> → <strong>Erfolgskontrolle</strong></p>
+            </div>
+
+            <!-- DISTRIBUTIONSPOLITIK -->
+            <div class="section" id="dist">
+                <h2>6. Distributionspolitik</h2>
+                <p>Wie kommt das Produkt vom Hersteller zum Endkunden?</p>
+                <h3>Handlungsreisender vs. Handelsvertreter</h3>
+                <table>
+                    <tr>
+                        <th>Merkmal</th>
+                        <th>Handlungsreisender</th>
+                        <th>Handelsvertreter</th>
+                    </tr>
+                    <tr>
+                        <td>Rechtsstatus</td>
+                        <td>Angestellter des Unternehmens</td>
+                        <td>Selbstständiger Unternehmer</td>
+                    </tr>
+                    <tr>
+                        <td>Weisungsgebunden?</td>
+                        <td>Ja, muss Anweisungen folgen</td>
+                        <td>Nein, arbeitet eigenverantwortlich</td>
+                    </tr>
+                    <tr>
+                        <td>Vergütung</td>
+                        <td>Fixgehalt + ggf. Provision</td>
+                        <td>Nur Provision (% vom Umsatz)</td>
+                    </tr>
+                    <tr>
+                        <td>Risiko</td>
+                        <td>Beim Unternehmen</td>
+                        <td>Beim Handelsvertreter selbst</td>
+                    </tr>
+                    <tr>
+                        <td>Sozialversicherung</td>
+                        <td>Arbeitgeber zahlt mit</td>
+                        <td>Selbst zuständig</td>
+                    </tr>
+                </table>
+                <div class="merke">Handlungsreisender = Angestellter (teurer bei Festgehalt, aber volle Kontrolle).
+                    Handelsvertreter = Selbstständig (günstiger bei kleinem Absatz, weil nur Provision).</div>
+            </div>
+
+            <!-- KALKULATION -->
+            <div class="section" id="kalk">
+                <h2>7. Preiskalkulationen</h2>
+                <p>Es gibt drei Berechnungsrichtungen desselben Schemas:</p>
+
+                <h3>Schema für den Handel</h3>
+                <div class="formula" style="text-align:left; line-height: 2.2;">
+                    Einkaufspreis des Lieferanten (brutto)<br>
+                    – Lieferantenrabatt<br>
+                    = Zieleinkaufspreis (brutto)<br>
+                    – Lieferantenskonto<br>
+                    = Bareinkaufspreis<br>
+                    + Bezugskosten<br>
+                    = <strong>Einstandspreis / Bezugspreis</strong><br>
+                    + Handlungskosten (Gemeinkostenzuschlag)<br>
+                    = <strong>Selbstkosten</strong><br>
+                    + Gewinn<br>
+                    = Barverkaufspreis<br>
+                    + Kundenskonto<br>
+                    = Zielverkaufspreis<br>
+                    + Kundenrabatt<br>
+                    = <strong>Listenverkaufspreis (netto)</strong><br>
+                </div>
+                <div class="example">
+                    <strong>Vorwärts:</strong> Du kennst den Einstandspreis und rechnest hoch zum Listenpreis.<br>
+                    <strong>Rückwärts:</strong> Du kennst den Listenpreis und rechnest runter zum Einstandspreis.<br>
+                    <strong>Differenz:</strong> Du kennst Einstandspreis und Listenpreis und rechnest den Gewinn aus.
+                </div>
+                <div class="merke">Skonto zählt vom niedrigeren Preis, Rabatt vom höheren Preis – nicht verwechseln bei
+                    Vorwärts/Rückwärtskalkulation!</div>
+            </div>
+
+            <!-- PORTFOLIO -->
+            <div class="section" id="portfolio">
+                <h2>8. Portfolio-Analyse (BCG-Matrix)</h2>
+                <p>Die Portfolio-Analyse teilt Produkte in vier Kategorien ein, basierend auf Marktanteil und
+                    Marktwachstum:</p>
+                <table>
+                    <tr>
+                        <th></th>
+                        <th>Hoher Marktanteil</th>
+                        <th>Niedriger Marktanteil</th>
+                    </tr>
+                    <tr>
+                        <td><strong>Hohes Wachstum</strong></td>
+                        <td>⭐ Stars (investieren)</td>
+                        <td>❓ Question Marks (Entscheidung nötig)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Niedriges Wachstum</strong></td>
+                        <td>🐄 Cash Cows (melken, wenig investieren)</td>
+                        <td>🐕 Poor Dogs (eliminieren)</td>
+                    </tr>
+                </table>
+                <div class="example">
+                    iPhone = Cash Cow (riesiger Marktanteil, stabiler Markt) | Apple Vision Pro = Question Mark (neues
+                    Produkt, unklar ob es sich durchsetzt)
+                </div>
+            </div>
+
+            <div style="text-align:center;margin-top:40px;">
+                <a href="index.html"
+                    style="padding:12px 28px;background:#b21f1f;color:white;border-radius:8px;text-decoration:none;">←
+                    Zurück zur Übersicht</a>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
