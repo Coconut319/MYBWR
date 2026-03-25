@@ -29,6 +29,8 @@
         .incorrect { background-color: #fceceb !important; border-color: var(--danger) !important; color: #c0392b; font-weight: bold; }
         .solution { display: none; color: var(--success); font-size: 12px; margin-top: 5px; font-weight: bold; }
         .show-solutions .solution { display: block; }
+        .step { display: none; color: #2c3e50; font-size: 12px; margin-top: 4px; background: #fbfcfc; border: 1px dashed var(--border); padding: 6px 8px; border-radius: 4px; }
+        .show-steps .step { display: block; }
         .sum-row { font-weight: bold; background-color: #eaeded; }
         @media print { .btn, .header-actions button { display: none; } .container { box-shadow: none; padding: 0; } body { background: white; } .aufgabe-section { page-break-inside: avoid; border: none; padding: 10px 0; } }
     </style>
@@ -44,6 +46,7 @@
         <div>
             <button class="btn btn-primary" onclick="generateNewExercise()">🔄 Neue Zahlen generieren</button>
             <button class="btn btn-outline" onclick="toggleSolutions()" id="btn-toggle-sol">👁️ Musterlösung einblenden</button>
+            <button class="btn btn-outline" onclick="toggleSteps()" id="btn-toggle-steps">📝 Rechenwege anzeigen</button>
             <button class="btn btn-outline" onclick="checkAnswers()">✅ Eingaben prüfen</button>
         </div>
     </div>
@@ -67,11 +70,11 @@
             <tr><th style="width: 50%">Wert</th><th>Berechnung (in €)</th></tr>
             <tr>
                 <td>1. Bilanzielle AfA pro Jahr (für GuV Aufwand)</td>
-                <td><input type="number" class="num-input" id="afa_fibu" data-sol="afa_fibu"><div class="solution" id="sol_afa_fibu"></div></td>
+                <td><input type="number" class="num-input" id="afa_fibu" data-sol="afa_fibu"><div class="solution" id="sol_afa_fibu"></div><div class="step" id="step_afa_fibu"></div></td>
             </tr>
             <tr>
                 <td>2. Kalkulatorische AfA pro Jahr (für KLR Kosten)</td>
-                <td><input type="number" class="num-input" id="afa_klr" data-sol="afa_klr"><div class="solution" id="sol_afa_klr"></div></td>
+                <td><input type="number" class="num-input" id="afa_klr" data-sol="afa_klr"><div class="solution" id="sol_afa_klr"></div><div class="step" id="step_afa_klr"></div></td>
             </tr>
             <tr>
                 <td>3. Art der Kosten (Anderskosten oder Zusatzkosten?)</td>
@@ -82,6 +85,7 @@
                         <option value="Zusatzkosten">Zusatzkosten</option>
                     </select>
                     <div class="solution" id="sol_afa_art"></div>
+                    <div class="step" id="step_afa_art"></div>
                 </td>
             </tr>
         </table>
@@ -106,27 +110,27 @@
             <tr><th style="width: 50%">Wert</th><th>Betrag (in €)</th></tr>
             <tr>
                 <td>Betriebsnotwendiges Anlagevermögen</td>
-                <td><input type="number" class="num-input" id="zins_av_netto" data-sol="zins_av_netto"><div class="solution" id="sol_zins_av_netto"></div></td>
+                <td><input type="number" class="num-input" id="zins_av_netto" data-sol="zins_av_netto"><div class="solution" id="sol_zins_av_netto"></div><div class="step" id="step_zins_av_netto"></div></td>
             </tr>
             <tr>
                 <td>+ Betriebsnotwendiges Umlaufvermögen</td>
-                <td><input type="number" class="num-input" id="zins_uv" data-sol="zins_uv"><div class="solution" id="sol_zins_uv"></div></td>
+                <td><input type="number" class="num-input" id="zins_uv" data-sol="zins_uv"><div class="solution" id="sol_zins_uv"></div><div class="step" id="step_zins_uv"></div></td>
             </tr>
             <tr class="sum-row">
                 <td>= Betriebsnotwendiges Vermögen</td>
-                <td><input type="number" class="num-input" id="zins_vermogen" data-sol="zins_vermogen"><div class="solution" id="sol_zins_vermogen"></div></td>
+                <td><input type="number" class="num-input" id="zins_vermogen" data-sol="zins_vermogen"><div class="solution" id="sol_zins_vermogen"></div><div class="step" id="step_zins_vermogen"></div></td>
             </tr>
             <tr>
                 <td>- Abzugskapital</td>
-                <td><input type="number" class="num-input" id="zins_abzug" data-sol="zins_abzug"><div class="solution" id="sol_zins_abzug"></div></td>
+                <td><input type="number" class="num-input" id="zins_abzug" data-sol="zins_abzug"><div class="solution" id="sol_zins_abzug"></div><div class="step" id="step_zins_abzug"></div></td>
             </tr>
             <tr class="sum-row" style="background-color: var(--primary); color: white;">
                 <td>= Betriebsnotwendiges Kapital</td>
-                <td><input type="number" class="num-input" id="zins_kapital" data-sol="zins_kapital"><div class="solution" id="sol_zins_kapital"></div></td>
+                <td><input type="number" class="num-input" id="zins_kapital" data-sol="zins_kapital"><div class="solution" id="sol_zins_kapital"></div><div class="step" id="step_zins_kapital"></div></td>
             </tr>
             <tr>
                 <td><strong>Kalkulatorische Zinsen (pro Jahr)</strong></td>
-                <td><input type="number" class="num-input" id="zins_klr" data-sol="zins_klr"><div class="solution" id="sol_zins_klr"></div></td>
+                <td><input type="number" class="num-input" id="zins_klr" data-sol="zins_klr"><div class="solution" id="sol_zins_klr"></div><div class="step" id="step_zins_klr"></div></td>
             </tr>
             <tr>
                 <td>Kostenart (Anders- oder Zusatzkosten?)</td>
@@ -137,6 +141,7 @@
                         <option value="Zusatzkosten">Zusatzkosten</option>
                     </select>
                     <div class="solution" id="sol_zins_art"></div>
+                    <div class="step" id="step_zins_art"></div>
                 </td>
             </tr>
         </table>
@@ -158,7 +163,7 @@
             <tr><th style="width: 50%">Wert</th><th>Berechnung (in €)</th></tr>
             <tr>
                 <td>1. Kalkulatorischer Unternehmerlohn JAHRESwert gesamt</td>
-                <td><input type="number" class="num-input" id="ul_klr" data-sol="ul_klr"><div class="solution" id="sol_ul_klr"></div></td>
+                <td><input type="number" class="num-input" id="ul_klr" data-sol="ul_klr"><div class="solution" id="sol_ul_klr"></div><div class="step" id="step_ul_klr"></div></td>
             </tr>
             <tr>
                 <td>2. Art der Kosten</td>
@@ -169,6 +174,7 @@
                         <option value="Zusatzkosten">Zusatzkosten</option>
                     </select>
                     <div class="solution" id="sol_ul_art"></div>
+                    <div class="step" id="step_ul_art"></div>
                 </td>
             </tr>
         </table>
@@ -177,11 +183,14 @@
 
 <script>
 let sol = {};
+let steps = {};
 const formatNumber = (val) => new Intl.NumberFormat('de-DE').format(val);
 function randomInt(min, max, step=10) { return Math.floor(Math.random() * ((max - min)/step + 1)) * step + min; }
 
 function generateNewExercise() {
     clearInputs();
+    sol = {};
+    steps = {};
     
     // 1. AFA
     let afa_ahk = randomInt(500000, 1500000, 10000);
@@ -197,6 +206,9 @@ function generateNewExercise() {
     sol.afa_fibu = Math.round(afa_ahk / afa_nd_fibu);
     sol.afa_klr = Math.round(afa_wbk / afa_nd_klr);
     sol.afa_art = "Anderskosten";
+    steps.afa_fibu = `Rechenweg: ${formatNumber(afa_ahk)} € / ${afa_nd_fibu} Jahre = ${formatNumber(sol.afa_fibu)} €`;
+    steps.afa_klr = `Rechenweg: ${formatNumber(afa_wbk)} € / ${afa_nd_klr} Jahre = ${formatNumber(sol.afa_klr)} €`;
+    steps.afa_art = `Begründung: Anderskosten, weil in der GuV bilanzielle AfA enthalten ist, die KLR aber mit WBK und anderer Nutzungsdauer rechnet.`;
 
     // 2. ZINSEN
     let z_av_brutto = randomInt(2000000, 5000000, 100000);
@@ -223,6 +235,13 @@ function generateNewExercise() {
     sol.zins_kapital = z_kapital;
     sol.zins_klr = Math.round(z_kapital * (z_satz / 100));
     sol.zins_art = "Anderskosten"; // Because there are Fremdkapitalzinsen in the GuV (txt_zins_fibu)
+    steps.zins_av_netto = `Rechenweg: ${formatNumber(z_av_brutto)} € - ${formatNumber(z_av_privat)} € = ${formatNumber(z_av_netto)} €`;
+    steps.zins_uv = `Rechenweg: gegeben = ${formatNumber(z_uv)} €`;
+    steps.zins_vermogen = `Rechenweg: ${formatNumber(z_av_netto)} € + ${formatNumber(z_uv)} € = ${formatNumber(z_verm)} €`;
+    steps.zins_abzug = `Rechenweg: gegeben = ${formatNumber(z_abzug)} €`;
+    steps.zins_kapital = `Rechenweg: ${formatNumber(z_verm)} € - ${formatNumber(z_abzug)} € = ${formatNumber(z_kapital)} €`;
+    steps.zins_klr = `Rechenweg: ${formatNumber(z_kapital)} € * ${z_satz} % = ${formatNumber(sol.zins_klr)} €`;
+    steps.zins_art = `Begründung: Anderskosten, weil in der GuV Fremdkapitalzinsen (${formatNumber(z_fibu)} €) enthalten sind, die KLR aber mit kalkulatorischen Zinsen auf betriebsnotwendigem Kapital arbeitet.`;
 
     // 3. UNTERNEHMERLOHN
     let ul_zahl = randomInt(2, 4, 1);
@@ -232,6 +251,8 @@ function generateNewExercise() {
 
     sol.ul_klr = ul_zahl * ul_gehalt * 12;
     sol.ul_art = "Zusatzkosten";
+    steps.ul_klr = `Rechenweg: ${ul_zahl} * ${formatNumber(ul_gehalt)} € * 12 = ${formatNumber(sol.ul_klr)} €`;
+    steps.ul_art = `Begründung: Zusatzkosten, weil in der GuV kein Unternehmerlohn als Aufwand erfasst wird (Personengesellschaft/Privatentnahmen), die KLR die Arbeitsleistung aber kalkulatorisch ansetzt.`;
 
     // Inject Solutions visual
     for (let key in sol) {
@@ -241,6 +262,12 @@ function generateNewExercise() {
             else el.innerText = `Lösung: ${formatNumber(sol[key])} €`;
         }
     }
+
+    // Inject Steps visual
+    for (let key in steps) {
+        let el = document.getElementById(`step_${key}`);
+        if (el) el.innerText = steps[key];
+    }
 }
 
 function clearInputs() {
@@ -248,6 +275,7 @@ function clearInputs() {
         inp.value = '';
         inp.classList.remove('correct', 'incorrect');
     });
+    document.querySelectorAll('.step').forEach(el => { el.innerText = ''; });
 }
 
 function checkAnswers() {
@@ -270,6 +298,10 @@ function checkAnswers() {
 
 function toggleSolutions() {
     document.body.classList.toggle('show-solutions');
+}
+
+function toggleSteps() {
+    document.body.classList.toggle('show-steps');
 }
 
 window.onload = generateNewExercise;

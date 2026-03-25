@@ -136,6 +136,8 @@
         }
 
         .show-solutions .solution { display: block; }
+        .step { display: none; color: #2c3e50; font-size: 12px; margin-top: 4px; background: #fbfcfc; border: 1px dashed var(--border); padding: 6px 8px; border-radius: 4px; text-align: left; }
+        .show-steps .step { display: block; }
         
         .calc-row { background-color: #f8f9fa; font-style: italic; }
         .sum-row { font-weight: bold; background-color: #eef2f5; }
@@ -159,6 +161,7 @@
         <div>
             <button class="btn btn-primary" onclick="generateNewExercise()">🔄 Neue Zahlen generieren</button>
             <button class="btn btn-outline" onclick="toggleSolutions()" id="btn-toggle-sol">👁️ Musterlösung einblenden</button>
+            <button class="btn btn-outline" onclick="toggleSteps()" id="btn-toggle-steps">📝 Rechenwege anzeigen</button>
             <button class="btn btn-outline" onclick="checkAnswers()">✅ Eingaben prüfen</button>
         </div>
     </div>
@@ -223,23 +226,23 @@
                 <tfoot>
                     <tr class="sum-row">
                         <td><strong>Summen</strong></td>
-                        <td><input type="number" id="abg_sum_rk1_a" data-sol="sum_rk1_a"><div class="solution" id="sol_abg_sum_rk1_a"></div></td>
-                        <td><input type="number" id="abg_sum_rk1_e" data-sol="sum_rk1_e"><div class="solution" id="sol_abg_sum_rk1_e"></div></td>
-                        <td><input type="number" id="abg_sum_neut_a" data-sol="sum_neut_a"><div class="solution" id="sol_abg_sum_neut_a"></div></td>
-                        <td><input type="number" id="abg_sum_neut_e" data-sol="sum_neut_e"><div class="solution" id="sol_abg_sum_neut_e"></div></td>
-                        <td><input type="number" id="abg_sum_klr_k" data-sol="sum_klr_k"><div class="solution" id="sol_abg_sum_klr_k"></div></td>
-                        <td><input type="number" id="abg_sum_klr_l" data-sol="sum_klr_l"><div class="solution" id="sol_abg_sum_klr_l"></div></td>
+                        <td><input type="number" id="abg_sum_rk1_a" data-sol="sum_rk1_a"><div class="solution" id="sol_abg_sum_rk1_a"></div><div class="step" id="step_sum_rk1_a"></div></td>
+                        <td><input type="number" id="abg_sum_rk1_e" data-sol="sum_rk1_e"><div class="solution" id="sol_abg_sum_rk1_e"></div><div class="step" id="step_sum_rk1_e"></div></td>
+                        <td><input type="number" id="abg_sum_neut_a" data-sol="sum_neut_a"><div class="solution" id="sol_abg_sum_neut_a"></div><div class="step" id="step_sum_neut_a"></div></td>
+                        <td><input type="number" id="abg_sum_neut_e" data-sol="sum_neut_e"><div class="solution" id="sol_abg_sum_neut_e"></div><div class="step" id="step_sum_neut_e"></div></td>
+                        <td><input type="number" id="abg_sum_klr_k" data-sol="sum_klr_k"><div class="solution" id="sol_abg_sum_klr_k"></div><div class="step" id="step_sum_klr_k"></div></td>
+                        <td><input type="number" id="abg_sum_klr_l" data-sol="sum_klr_l"><div class="solution" id="sol_abg_sum_klr_l"></div><div class="step" id="step_sum_klr_l"></div></td>
                     </tr>
                     <tr class="calc-row">
                         <td><strong>Ergebnisse (Saldo)</strong></td>
                         <td colspan="2">Gesamtergebnis: <input type="number" style="width: 120px" id="abg_saldo_gesamt" data-sol="saldo_gesamt">
-                            <span id="sol_abg_saldo_gesamt" class="solution"></span>
+                            <span id="sol_abg_saldo_gesamt" class="solution"></span><div class="step" id="step_saldo_gesamt"></div>
                         </td>
                         <td colspan="2">Neutrales Ergebnis: <input type="number" style="width: 120px" id="abg_saldo_neutral" data-sol="saldo_neutral">
-                            <span id="sol_abg_saldo_neutral" class="solution"></span>
+                            <span id="sol_abg_saldo_neutral" class="solution"></span><div class="step" id="step_saldo_neutral"></div>
                         </td>
                         <td colspan="2">Betriebsergebnis: <input type="number" style="width: 120px" id="abg_saldo_betrieb" data-sol="saldo_betrieb">
-                            <span id="sol_abg_saldo_betrieb" class="solution"></span>
+                            <span id="sol_abg_saldo_betrieb" class="solution"></span><div class="step" id="step_saldo_betrieb"></div>
                         </td>
                     </tr>
                 </tfoot>
@@ -274,10 +277,10 @@
                 <tfoot>
                     <tr class="sum-row">
                         <td colspan="3"><strong>Summe Gemeinkosten</strong></td>
-                        <td><input type="number" id="bab_sum_mat" data-sol="bab_sum_mat"><div class="solution" id="sol_bab_sum_mat"></div></td>
-                        <td><input type="number" id="bab_sum_fert" data-sol="bab_sum_fert"><div class="solution" id="sol_bab_sum_fert"></div></td>
-                        <td><input type="number" id="bab_sum_verw" data-sol="bab_sum_verw"><div class="solution" id="sol_bab_sum_verw"></div></td>
-                        <td><input type="number" id="bab_sum_vert" data-sol="bab_sum_vert"><div class="solution" id="sol_bab_sum_vert"></div></td>
+                        <td><input type="number" id="bab_sum_mat" data-sol="bab_sum_mat"><div class="solution" id="sol_bab_sum_mat"></div><div class="step" id="step_bab_sum_mat"></div></td>
+                        <td><input type="number" id="bab_sum_fert" data-sol="bab_sum_fert"><div class="solution" id="sol_bab_sum_fert"></div><div class="step" id="step_bab_sum_fert"></div></td>
+                        <td><input type="number" id="bab_sum_verw" data-sol="bab_sum_verw"><div class="solution" id="sol_bab_sum_verw"></div><div class="step" id="step_bab_sum_verw"></div></td>
+                        <td><input type="number" id="bab_sum_vert" data-sol="bab_sum_vert"><div class="solution" id="sol_bab_sum_vert"></div><div class="step" id="step_bab_sum_vert"></div></td>
                     </tr>
                     <tr>
                         <td colspan="3"><strong>Bezugsgrößen (Zuschlagsgrundlage)</strong></td>
@@ -287,10 +290,10 @@
                     </tr>
                     <tr class="calc-row">
                         <td colspan="3"><strong>Gemeinkostenzuschlagssätze (%)</strong></td>
-                        <td><input type="number" id="zs_mgk" step="0.01" data-sol="zs_mgk"><div class="solution" id="sol_zs_mgk"></div></td>
-                        <td><input type="number" id="zs_fgk" step="0.01" data-sol="zs_fgk"><div class="solution" id="sol_zs_fgk"></div></td>
-                        <td><input type="number" id="zs_vwgk" step="0.01" data-sol="zs_vwgk"><div class="solution" id="sol_zs_vwgk"></div></td>
-                        <td><input type="number" id="zs_vtgk" step="0.01" data-sol="zs_vtgk"><div class="solution" id="sol_zs_vtgk"></div></td>
+                        <td><input type="number" id="zs_mgk" step="0.01" data-sol="zs_mgk"><div class="solution" id="sol_zs_mgk"></div><div class="step" id="step_zs_mgk"></div></td>
+                        <td><input type="number" id="zs_fgk" step="0.01" data-sol="zs_fgk"><div class="solution" id="sol_zs_fgk"></div><div class="step" id="step_zs_fgk"></div></td>
+                        <td><input type="number" id="zs_vwgk" step="0.01" data-sol="zs_vwgk"><div class="solution" id="sol_zs_vwgk"></div><div class="step" id="step_zs_vwgk"></div></td>
+                        <td><input type="number" id="zs_vtgk" step="0.01" data-sol="zs_vtgk"><div class="solution" id="sol_zs_vtgk"></div><div class="step" id="step_zs_vtgk"></div></td>
                     </tr>
                 </tfoot>
             </table>
@@ -305,22 +308,22 @@
         <p>Kalkulieren Sie den Bruttoverkaufspreis für 1 Stück (verwenden Sie die Zuschlagssätze aus Aufgabe C. Runden Sie kaufmännisch auf 2 Nachkommastellen).</p>
         
         <table style="max-width: 500px; margin: 0 auto;">
-            <tr><td style="width:60%">Fertigungsmaterial (FM)</td><td><input type="number" id="kalk_fm" data-sol="kalk_fm"><div class="solution" id="sol_kalk_fm"></div></td></tr>
-            <tr><td>+ Materialgemeinkosten (MGK) in %</td><td><input type="number" id="kalk_mgk" data-sol="kalk_mgk"><div class="solution" id="sol_kalk_mgk"></div></td></tr>
-            <tr><td>Fertigungslöhne (FL)</td><td><input type="number" id="kalk_fl" data-sol="kalk_fl"><div class="solution" id="sol_kalk_fl"></div></td></tr>
-            <tr><td>+ Fertigungsgemeinkosten (FGK) in %</td><td><input type="number" id="kalk_fgk" data-sol="kalk_fgk"><div class="solution" id="sol_kalk_fgk"></div></td></tr>
-            <tr class="sum-row"><td>= Herstellkosten d. Erzeugung (HK)</td><td><input type="number" id="kalk_hke" data-sol="kalk_hke"><div class="solution" id="sol_kalk_hke"></div></td></tr>
-            <tr><td>+ Verwaltungsgemeinkosten (VwGK) in %</td><td><input type="number" id="kalk_vwgk" data-sol="kalk_vwgk"><div class="solution" id="sol_kalk_vwgk"></div></td></tr>
-            <tr><td>+ Vertriebsgemeinkosten (VtGK) in %</td><td><input type="number" id="kalk_vtgk" data-sol="kalk_vtgk"><div class="solution" id="sol_kalk_vtgk"></div></td></tr>
-            <tr class="sum-row"><td>= Selbstkosten (SK)</td><td><input type="number" id="kalk_sk" data-sol="kalk_sk"><div class="solution" id="sol_kalk_sk"></div></td></tr>
-            <tr><td>+ Gewinnzuschlag in %</td><td><input type="number" id="kalk_gewinn" data-sol="kalk_gewinn"><div class="solution" id="sol_kalk_gewinn"></div></td></tr>
-            <tr class="calc-row"><td>= Barverkaufspreis (BVP)</td><td><input type="number" id="kalk_bvp" data-sol="kalk_bvp"><div class="solution" id="sol_kalk_bvp"></div></td></tr>
-            <tr><td>+ Kundenskonto in % (i.H.v. ZVK)</td><td><input type="number" id="kalk_skonto" data-sol="kalk_skonto"><div class="solution" id="sol_kalk_skonto"></div></td></tr>
-            <tr class="calc-row"><td>= Zielverkaufspreis (ZVP)</td><td><input type="number" id="kalk_zvp" data-sol="kalk_zvp"><div class="solution" id="sol_kalk_zvp"></div></td></tr>
-            <tr><td>+ Kundenrabatt in % (i.H.v. LVP)</td><td><input type="number" id="kalk_rabatt" data-sol="kalk_rabatt"><div class="solution" id="sol_kalk_rabatt"></div></td></tr>
-            <tr class="sum-row"><td>= Listenverkaufspreis (netto)</td><td><input type="number" id="kalk_lvp" data-sol="kalk_lvp"><div class="solution" id="sol_kalk_lvp"></div></td></tr>
-            <tr><td>+ Umsatzsteuer (19%)</td><td><input type="number" id="kalk_ust" data-sol="kalk_ust"><div class="solution" id="sol_kalk_ust"></div></td></tr>
-            <tr class="sum-row" style="background-color: var(--primary); color: white;"><td>= Bruttoverkaufspreis</td><td><input type="number" id="kalk_brutto" data-sol="kalk_brutto"><div class="solution" id="sol_kalk_brutto"></div></td></tr>
+            <tr><td style="width:60%">Fertigungsmaterial (FM)</td><td><input type="number" id="kalk_fm" data-sol="kalk_fm"><div class="solution" id="sol_kalk_fm"></div><div class="step" id="step_kalk_fm"></div></td></tr>
+            <tr><td>+ Materialgemeinkosten (MGK) in %</td><td><input type="number" id="kalk_mgk" data-sol="kalk_mgk"><div class="solution" id="sol_kalk_mgk"></div><div class="step" id="step_kalk_mgk"></div></td></tr>
+            <tr><td>Fertigungslöhne (FL)</td><td><input type="number" id="kalk_fl" data-sol="kalk_fl"><div class="solution" id="sol_kalk_fl"></div><div class="step" id="step_kalk_fl"></div></td></tr>
+            <tr><td>+ Fertigungsgemeinkosten (FGK) in %</td><td><input type="number" id="kalk_fgk" data-sol="kalk_fgk"><div class="solution" id="sol_kalk_fgk"></div><div class="step" id="step_kalk_fgk"></div></td></tr>
+            <tr class="sum-row"><td>= Herstellkosten d. Erzeugung (HK)</td><td><input type="number" id="kalk_hke" data-sol="kalk_hke"><div class="solution" id="sol_kalk_hke"></div><div class="step" id="step_kalk_hke"></div></td></tr>
+            <tr><td>+ Verwaltungsgemeinkosten (VwGK) in %</td><td><input type="number" id="kalk_vwgk" data-sol="kalk_vwgk"><div class="solution" id="sol_kalk_vwgk"></div><div class="step" id="step_kalk_vwgk"></div></td></tr>
+            <tr><td>+ Vertriebsgemeinkosten (VtGK) in %</td><td><input type="number" id="kalk_vtgk" data-sol="kalk_vtgk"><div class="solution" id="sol_kalk_vtgk"></div><div class="step" id="step_kalk_vtgk"></div></td></tr>
+            <tr class="sum-row"><td>= Selbstkosten (SK)</td><td><input type="number" id="kalk_sk" data-sol="kalk_sk"><div class="solution" id="sol_kalk_sk"></div><div class="step" id="step_kalk_sk"></div></td></tr>
+            <tr><td>+ Gewinnzuschlag in %</td><td><input type="number" id="kalk_gewinn" data-sol="kalk_gewinn"><div class="solution" id="sol_kalk_gewinn"></div><div class="step" id="step_kalk_gewinn"></div></td></tr>
+            <tr class="calc-row"><td>= Barverkaufspreis (BVP)</td><td><input type="number" id="kalk_bvp" data-sol="kalk_bvp"><div class="solution" id="sol_kalk_bvp"></div><div class="step" id="step_kalk_bvp"></div></td></tr>
+            <tr><td>+ Kundenskonto in % (i.H.v. ZVK)</td><td><input type="number" id="kalk_skonto" data-sol="kalk_skonto"><div class="solution" id="sol_kalk_skonto"></div><div class="step" id="step_kalk_skonto"></div></td></tr>
+            <tr class="calc-row"><td>= Zielverkaufspreis (ZVP)</td><td><input type="number" id="kalk_zvp" data-sol="kalk_zvp"><div class="solution" id="sol_kalk_zvp"></div><div class="step" id="step_kalk_zvp"></div></td></tr>
+            <tr><td>+ Kundenrabatt in % (i.H.v. LVP)</td><td><input type="number" id="kalk_rabatt" data-sol="kalk_rabatt"><div class="solution" id="sol_kalk_rabatt"></div><div class="step" id="step_kalk_rabatt"></div></td></tr>
+            <tr class="sum-row"><td>= Listenverkaufspreis (netto)</td><td><input type="number" id="kalk_lvp" data-sol="kalk_lvp"><div class="solution" id="sol_kalk_lvp"></div><div class="step" id="step_kalk_lvp"></div></td></tr>
+            <tr><td>+ Umsatzsteuer (19%)</td><td><input type="number" id="kalk_ust" data-sol="kalk_ust"><div class="solution" id="sol_kalk_ust"></div><div class="step" id="step_kalk_ust"></div></td></tr>
+            <tr class="sum-row" style="background-color: var(--primary); color: white;"><td>= Bruttoverkaufspreis</td><td><input type="number" id="kalk_brutto" data-sol="kalk_brutto"><div class="solution" id="sol_kalk_brutto"></div><div class="step" id="step_kalk_brutto"></div></td></tr>
         </table>
     </div>
 </div>
@@ -328,6 +331,7 @@
 <script>
 // State container for our exact correct answers
 let solutions = {};
+let steps = {};
 
 const formatCurrency = (val) => new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' }).format(val);
 const formatNumber = (val) => new Intl.NumberFormat('de-DE').format(val);
@@ -355,6 +359,7 @@ const ergebnisPosten = [
 
 function generateNewExercise() {
     clearInputs();
+    steps = {};
     
     // 1. Core Randomization
     const fv = {
@@ -390,6 +395,9 @@ function generateNewExercise() {
     fv.kalk_afa = fv.wbw / fv.nd;
     fv.kalk_zins = fv.kapital * (fv.zinsSatz / 100);
     fv.kalk_ulohn = fv.gsapZahl * fv.gsapLohn * 12;
+    steps.klr_k_k_afa = `Rechenweg: WBW / ND = ${formatNumber(fv.wbw)} € / ${fv.nd} Jahre = ${formatNumber(fv.kalk_afa)} €`;
+    steps.klr_k_k_zins = `Rechenweg: Kapital * Zinssatz = ${formatNumber(fv.kapital)} € * ${fv.zinsSatz} % = ${formatNumber(fv.kalk_zins)} €`;
+    steps.klr_k_k_ulohn = `Rechenweg: 2 Personen * ${formatNumber(fv.gsapLohn)} € * 12 = ${formatNumber(fv.kalk_ulohn)} €`;
 
     // Summen GuV
     fv.sum_aufwand = fv.matAufwand + fv.persAufwand + fv.afaSachanlagen + fv.zinsAufwand + fv.steuern + fv.sbAufwand;
@@ -462,7 +470,7 @@ function generateNewExercise() {
             let key = `${col}_${p.id}`;
             let isDisabled = (abgSol[key] === 0) ? 'disabled style="background:#f1f1f1;"' : ''; // simplify view
             // Actually, in exams you have to know which one is zero. So don't disable, let them type 0 or leave empty.
-            abgHtml += `<td><input type="number" id="${key}" data-sol="${key}"><div class="solution" id="sol_${key}"></div></td>`;
+            abgHtml += `<td><input type="number" id="${key}" data-sol="${key}"><div class="solution" id="sol_${key}"></div><div class="step" id="step_${key}"></div></td>`;
         });
         abgHtml += `</tr>`;
     });
@@ -507,10 +515,10 @@ function generateNewExercise() {
             <td>${k.lbl}</td>
             <td>${formatNumber(k.total)}</td>
             <td>${k.s.join(':')}</td>
-            <td><input type="number" id="bab_mat_${k.id}" data-sol="bab_mat_${k.id}"><div class="solution" id="sol_bab_mat_${k.id}"></div></td>
-            <td><input type="number" id="bab_fer_${k.id}" data-sol="bab_fer_${k.id}"><div class="solution" id="sol_bab_fer_${k.id}"></div></td>
-            <td><input type="number" id="bab_ver_${k.id}" data-sol="bab_ver_${k.id}"><div class="solution" id="sol_bab_ver_${k.id}"></div></td>
-            <td><input type="number" id="bab_vtr_${k.id}" data-sol="bab_vtr_${k.id}"><div class="solution" id="sol_bab_vtr_${k.id}"></div></td>
+            <td><input type="number" id="bab_mat_${k.id}" data-sol="bab_mat_${k.id}"><div class="solution" id="sol_bab_mat_${k.id}"></div><div class="step" id="step_bab_mat_${k.id}"></div></td>
+            <td><input type="number" id="bab_fer_${k.id}" data-sol="bab_fer_${k.id}"><div class="solution" id="sol_bab_fer_${k.id}"></div><div class="step" id="step_bab_fer_${k.id}"></div></td>
+            <td><input type="number" id="bab_ver_${k.id}" data-sol="bab_ver_${k.id}"><div class="solution" id="sol_bab_ver_${k.id}"></div><div class="step" id="step_bab_ver_${k.id}"></div></td>
+            <td><input type="number" id="bab_vtr_${k.id}" data-sol="bab_vtr_${k.id}"><div class="solution" id="sol_bab_vtr_${k.id}"></div><div class="step" id="step_bab_vtr_${k.id}"></div></td>
         </tr>`;
     });
     document.getElementById('bab_body').innerHTML = babHtml;
@@ -527,6 +535,10 @@ function generateNewExercise() {
     babSol.zs_fgk = round2((babSol.bab_sum_fert / fv.fl) * 100);
     babSol.zs_vwgk = round2((babSol.bab_sum_verw / hk_umsatz) * 100);
     babSol.zs_vtgk = round2((babSol.bab_sum_vert / hk_umsatz) * 100);
+    steps.zs_mgk = `Rechenweg: MGK-Summe / FM * 100 = ${formatNumber(babSol.bab_sum_mat)} / ${formatNumber(fv.fm)} * 100 = ${formatNumber(babSol.zs_mgk)} %`;
+    steps.zs_fgk = `Rechenweg: FGK-Summe / FL * 100 = ${formatNumber(babSol.bab_sum_fert)} / ${formatNumber(fv.fl)} * 100 = ${formatNumber(babSol.zs_fgk)} %`;
+    steps.zs_vwgk = `Rechenweg: VwGK-Summe / HK d. Umsatzes * 100 = ${formatNumber(babSol.bab_sum_verw)} / ${formatNumber(hk_umsatz)} * 100 = ${formatNumber(babSol.zs_vwgk)} %`;
+    steps.zs_vtgk = `Rechenweg: VtGK-Summe / HK d. Umsatzes * 100 = ${formatNumber(babSol.bab_sum_vert)} / ${formatNumber(hk_umsatz)} * 100 = ${formatNumber(babSol.zs_vtgk)} %`;
 
     // Save HK Ums for view
     document.querySelector('#td_bz_mat').parentElement.children[3].innerText = `HK Ums = ${formatNumber(hk_umsatz)} €`;
@@ -565,9 +577,41 @@ function generateNewExercise() {
         kalk_gewinn: k_gw, kalk_bvp: k_bvp, kalk_skonto: k_skt, kalk_zvp: k_zvp,
         kalk_rabatt: k_rab, kalk_lvp: k_lvp, kalk_ust: k_ust, kalk_brutto: k_brutto
     };
+    steps.kalk_fm = `Rechenweg: gegeben (Stückliste) = ${formatNumber(k_fm)} €`;
+    steps.kalk_fl = `Rechenweg: gegeben (Vorgabe) = ${formatNumber(k_fl)} €`;
+    steps.kalk_mgk = `Rechenweg: FM * MGK-Satz = ${formatNumber(k_fm)} € * ${formatNumber(babSol.zs_mgk)} % = ${formatNumber(k_mgk)} €`;
+    steps.kalk_fgk = `Rechenweg: FL * FGK-Satz = ${formatNumber(k_fl)} € * ${formatNumber(babSol.zs_fgk)} % = ${formatNumber(k_fgk)} €`;
+    steps.kalk_hke = `Rechenweg: FM + MGK + FL + FGK = ${formatNumber(k_fm)} + ${formatNumber(k_mgk)} + ${formatNumber(k_fl)} + ${formatNumber(k_fgk)} = ${formatNumber(k_hke)} €`;
+    steps.kalk_vwgk = `Rechenweg: HKE * VwGK-Satz = ${formatNumber(k_hke)} € * ${formatNumber(babSol.zs_vwgk)} % = ${formatNumber(k_vwgk)} €`;
+    steps.kalk_vtgk = `Rechenweg: HKE * VtGK-Satz = ${formatNumber(k_hke)} € * ${formatNumber(babSol.zs_vtgk)} % = ${formatNumber(k_vtgk)} €`;
+    steps.kalk_sk = `Rechenweg: HKE + VwGK + VtGK = ${formatNumber(k_hke)} + ${formatNumber(k_vwgk)} + ${formatNumber(k_vtgk)} = ${formatNumber(k_sk)} €`;
+    steps.kalk_gewinn = `Rechenweg: SK * Gewinn% = ${formatNumber(k_sk)} € * ${k_gewinn} % = ${formatNumber(k_gw)} €`;
+    steps.kalk_bvp = `Rechenweg: SK + Gewinn = ${formatNumber(k_sk)} + ${formatNumber(k_gw)} = ${formatNumber(k_bvp)} €`;
+    steps.kalk_skonto = `Rechenweg: BVP * Skonto/(100-Skonto) = ${formatNumber(k_bvp)} * ${k_skonto}/(100-${k_skonto}) = ${formatNumber(k_skt)} €`;
+    steps.kalk_zvp = `Rechenweg: BVP + Skonto-Betrag = ${formatNumber(k_bvp)} + ${formatNumber(k_skt)} = ${formatNumber(k_zvp)} €`;
+    steps.kalk_rabatt = `Rechenweg: ZVP * Rabatt/(100-Rabatt) = ${formatNumber(k_zvp)} * ${k_rabatt}/(100-${k_rabatt}) = ${formatNumber(k_rab)} €`;
+    steps.kalk_lvp = `Rechenweg: ZVP + Rabatt-Betrag = ${formatNumber(k_zvp)} + ${formatNumber(k_rab)} = ${formatNumber(k_lvp)} €`;
+    steps.kalk_ust = `Rechenweg: LVP * 19% = ${formatNumber(k_lvp)} * 19% = ${formatNumber(k_ust)} €`;
+    steps.kalk_brutto = `Rechenweg: LVP + USt = ${formatNumber(k_lvp)} + ${formatNumber(k_ust)} = ${formatNumber(k_brutto)} €`;
 
     // MERGE ALL SOLUTIONS globally
     solutions = { ...abgSol, ...babSol, ...kalkSol };
+    steps = { 
+        ...steps,
+        sum_rk1_a: `Rechenweg: Summe aller RK I-Aufwände = ${formatNumber(sums.sum_rk1_a)} €`,
+        sum_rk1_e: `Rechenweg: Summe aller RK I-Erträge = ${formatNumber(sums.sum_rk1_e)} €`,
+        sum_neut_a: `Rechenweg: Summe neutraler Aufwände = ${formatNumber(sums.sum_neut_a)} €`,
+        sum_neut_e: `Rechenweg: Summe neutraler Erträge = ${formatNumber(sums.sum_neut_e)} €`,
+        sum_klr_k: `Rechenweg: Summe KLR-Kosten (RK II) = ${formatNumber(sums.sum_klr_k)} €`,
+        sum_klr_l: `Rechenweg: Summe KLR-Leistungen (RK II) = ${formatNumber(sums.sum_klr_l)} €`,
+        saldo_gesamt: `Rechenweg: Summe Erträge - Summe Aufwände = ${formatNumber(sums.sum_rk1_e)} - ${formatNumber(sums.sum_rk1_a)} = ${formatNumber(abgSol.saldo_gesamt)} €`,
+        saldo_neutral: `Rechenweg: neutr. Erträge - neutr. Aufwände = ${formatNumber(sums.sum_neut_e)} - ${formatNumber(sums.sum_neut_a)} = ${formatNumber(abgSol.saldo_neutral)} €`,
+        saldo_betrieb: `Rechenweg: Leistungen - Kosten = ${formatNumber(sums.sum_klr_l)} - ${formatNumber(sums.sum_klr_k)} = ${formatNumber(abgSol.saldo_betrieb)} €`,
+        bab_sum_mat: `Rechenweg: Summe aller BAB-Anteile Material = ${formatNumber(babSol.bab_sum_mat)} €`,
+        bab_sum_fert: `Rechenweg: Summe aller BAB-Anteile Fertigung = ${formatNumber(babSol.bab_sum_fert)} €`,
+        bab_sum_verw: `Rechenweg: Summe aller BAB-Anteile Verwaltung = ${formatNumber(babSol.bab_sum_verw)} €`,
+        bab_sum_vert: `Rechenweg: Summe aller BAB-Anteile Vertrieb = ${formatNumber(babSol.bab_sum_vert)} €`,
+    };
 
     // Inject solutions into DOM hints
     for(let key in solutions) {
@@ -575,6 +619,12 @@ function generateNewExercise() {
         if(solDiv) {
             solDiv.innerText = `Lösung: ${formatNumber(solutions[key])}`;
         }
+    }
+
+    // Inject steps into DOM
+    for (let key in steps) {
+        let stepDiv = document.getElementById(`step_${key}`);
+        if (stepDiv) stepDiv.innerText = steps[key];
     }
 }
 
@@ -585,6 +635,7 @@ function clearInputs() {
         inp.classList.remove('correct');
         inp.classList.remove('incorrect');
     });
+    document.querySelectorAll('.step').forEach(el => { el.innerText = ''; });
 }
 
 function checkAnswers() {
@@ -617,6 +668,21 @@ function toggleSolutions() {
         btn.classList.remove('btn-outline');
     } else {
         btn.innerText = '👁️ Musterlösung einblenden';
+        btn.classList.add('btn-outline');
+        btn.classList.remove('btn-primary');
+    }
+}
+
+function toggleSteps() {
+    document.body.classList.toggle('show-steps');
+    let btn = document.getElementById('btn-toggle-steps');
+    if (!btn) return;
+    if (document.body.classList.contains('show-steps')) {
+        btn.innerText = '📄 Rechenwege verbergen';
+        btn.classList.add('btn-primary');
+        btn.classList.remove('btn-outline');
+    } else {
+        btn.innerText = '📝 Rechenwege anzeigen';
         btn.classList.add('btn-outline');
         btn.classList.remove('btn-primary');
     }

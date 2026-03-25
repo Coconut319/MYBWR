@@ -42,6 +42,8 @@
         
         .solution { display: none; color: var(--success); font-size: 12px; margin-top: 4px; }
         .show-solutions .solution { display: block; }
+        .step { display: none; color: #2c3e50; font-size: 12px; margin-top: 4px; background: #fbfcfc; border: 1px dashed var(--border); padding: 6px 8px; border-radius: 4px; text-align: left; }
+        .show-steps .step { display: block; }
         
         .calc-row { background-color: #f9f9f9; font-style: italic; }
         .sum-row { font-weight: bold; background-color: #f2edf4; }
@@ -65,6 +67,7 @@
         <div>
             <button class="btn btn-primary" onclick="generateNewExercise()">🔄 Neue Zahlen generieren</button>
             <button class="btn btn-outline" onclick="toggleSolutions()" id="btn-toggle-sol">👁️ Musterlösung einblenden</button>
+            <button class="btn btn-outline" onclick="toggleSteps()" id="btn-toggle-steps">📝 Rechenwege anzeigen</button>
             <button class="btn btn-outline" onclick="checkAnswers()">✅ Eingaben prüfen</button>
         </div>
     </div>
@@ -102,23 +105,23 @@
                 <tfoot>
                     <tr class="sum-row">
                         <td colspan="3"><strong>Summe Ist-Gemeinkosten</strong></td>
-                        <td><input type="number" id="bab_sum_mat" data-sol="bab_sum_mat"><div class="solution" id="sol_bab_sum_mat"></div></td>
-                        <td><input type="number" id="bab_sum_fert" data-sol="bab_sum_fert"><div class="solution" id="sol_bab_sum_fert"></div></td>
-                        <td><input type="number" id="bab_sum_verw" data-sol="bab_sum_verw"><div class="solution" id="sol_bab_sum_verw"></div></td>
-                        <td><input type="number" id="bab_sum_vert" data-sol="bab_sum_vert"><div class="solution" id="sol_bab_sum_vert"></div></td>
+                        <td><input type="number" id="bab_sum_mat" data-sol="bab_sum_mat"><div class="solution" id="sol_bab_sum_mat"></div><div class="step" id="step_bab_sum_mat"></div></td>
+                        <td><input type="number" id="bab_sum_fert" data-sol="bab_sum_fert"><div class="solution" id="sol_bab_sum_fert"></div><div class="step" id="step_bab_sum_fert"></div></td>
+                        <td><input type="number" id="bab_sum_verw" data-sol="bab_sum_verw"><div class="solution" id="sol_bab_sum_verw"></div><div class="step" id="step_bab_sum_verw"></div></td>
+                        <td><input type="number" id="bab_sum_vert" data-sol="bab_sum_vert"><div class="solution" id="sol_bab_sum_vert"></div><div class="step" id="step_bab_sum_vert"></div></td>
                     </tr>
                     <tr>
                         <td colspan="3"><strong>Zuschlagsgrundlage (Bezugsgröße) in €</strong></td>
-                        <td><input type="number" id="bez_mat" data-sol="bez_mat"><div class="solution" id="sol_bez_mat"></div></td>
-                        <td><input type="number" id="bez_fert" data-sol="bez_fert"><div class="solution" id="sol_bez_fert"></div></td>
-                        <td colspan="2" style="text-align: center;">Herstellkosten des Umsatzes = <input type="number" style="width: 120px" id="bez_hkums" data-sol="bez_hkums"><div class="solution" id="sol_bez_hkums"></div></td>
+                        <td><input type="number" id="bez_mat" data-sol="bez_mat"><div class="solution" id="sol_bez_mat"></div><div class="step" id="step_bez_mat"></div></td>
+                        <td><input type="number" id="bez_fert" data-sol="bez_fert"><div class="solution" id="sol_bez_fert"></div><div class="step" id="step_bez_fert"></div></td>
+                        <td colspan="2" style="text-align: center;">Herstellkosten des Umsatzes = <input type="number" style="width: 120px" id="bez_hkums" data-sol="bez_hkums"><div class="solution" id="sol_bez_hkums"></div><div class="step" id="step_bez_hkums"></div></td>
                     </tr>
                     <tr class="calc-row">
                         <td colspan="3"><strong>Ist-Zuschlagssätze (auf 2 Nachkommastellen)</strong></td>
-                        <td><input type="number" id="ist_zs_mgk" step="0.01" data-sol="ist_zs_mgk"> %<div class="solution" id="sol_ist_zs_mgk"></div></td>
-                        <td><input type="number" id="ist_zs_fgk" step="0.01" data-sol="ist_zs_fgk"> %<div class="solution" id="sol_ist_zs_fgk"></div></td>
-                        <td><input type="number" id="ist_zs_vwgk" step="0.01" data-sol="ist_zs_vwgk"> %<div class="solution" id="sol_ist_zs_vwgk"></div></td>
-                        <td><input type="number" id="ist_zs_vtgk" step="0.01" data-sol="ist_zs_vtgk"> %<div class="solution" id="sol_ist_zs_vtgk"></div></td>
+                        <td><input type="number" id="ist_zs_mgk" step="0.01" data-sol="ist_zs_mgk"> %<div class="solution" id="sol_ist_zs_mgk"></div><div class="step" id="step_ist_zs_mgk"></div></td>
+                        <td><input type="number" id="ist_zs_fgk" step="0.01" data-sol="ist_zs_fgk"> %<div class="solution" id="sol_ist_zs_fgk"></div><div class="step" id="step_ist_zs_fgk"></div></td>
+                        <td><input type="number" id="ist_zs_vwgk" step="0.01" data-sol="ist_zs_vwgk"> %<div class="solution" id="sol_ist_zs_vwgk"></div><div class="step" id="step_ist_zs_vwgk"></div></td>
+                        <td><input type="number" id="ist_zs_vtgk" step="0.01" data-sol="ist_zs_vtgk"> %<div class="solution" id="sol_ist_zs_vtgk"></div><div class="step" id="step_ist_zs_vtgk"></div></td>
                     </tr>
                 </tfoot>
             </table>
@@ -150,37 +153,37 @@
             <tbody>
                 <tr>
                     <td>Materialgemeinkosten (MGK)</td>
-                    <td><input type="number" id="zt_bz_mat" data-sol="zt_bz_mat"><div class="solution" id="sol_zt_bz_mat"></div></td>
-                    <td><input type="number" id="zt_norm_mgk" data-sol="zt_norm_mgk"><div class="solution" id="sol_zt_norm_mgk"></div></td>
+                    <td><input type="number" id="zt_bz_mat" data-sol="zt_bz_mat"><div class="solution" id="sol_zt_bz_mat"></div><div class="step" id="step_zt_bz_mat"></div></td>
+                    <td><input type="number" id="zt_norm_mgk" data-sol="zt_norm_mgk"><div class="solution" id="sol_zt_norm_mgk"></div><div class="step" id="step_zt_norm_mgk"></div></td>
                     <td id="td_ist_mgk">siehe BAB</td>
-                    <td><input type="number" id="zt_diff_mgk" data-sol="zt_diff_mgk"><div class="solution" id="sol_zt_diff_mgk"></div></td>
+                    <td><input type="number" id="zt_diff_mgk" data-sol="zt_diff_mgk"><div class="solution" id="sol_zt_diff_mgk"></div><div class="step" id="step_zt_diff_mgk"></div></td>
                 </tr>
                 <tr>
                     <td>Fertigungsgemeinkosten (FGK)</td>
-                    <td><input type="number" id="zt_bz_fert" data-sol="zt_bz_fert"><div class="solution" id="sol_zt_bz_fert"></div></td>
-                    <td><input type="number" id="zt_norm_fgk" data-sol="zt_norm_fgk"><div class="solution" id="sol_zt_norm_fgk"></div></td>
+                    <td><input type="number" id="zt_bz_fert" data-sol="zt_bz_fert"><div class="solution" id="sol_zt_bz_fert"></div><div class="step" id="step_zt_bz_fert"></div></td>
+                    <td><input type="number" id="zt_norm_fgk" data-sol="zt_norm_fgk"><div class="solution" id="sol_zt_norm_fgk"></div><div class="step" id="step_zt_norm_fgk"></div></td>
                     <td id="td_ist_fgk">siehe BAB</td>
-                    <td><input type="number" id="zt_diff_fgk" data-sol="zt_diff_fgk"><div class="solution" id="sol_zt_diff_fgk"></div></td>
+                    <td><input type="number" id="zt_diff_fgk" data-sol="zt_diff_fgk"><div class="solution" id="sol_zt_diff_fgk"></div><div class="step" id="step_zt_diff_fgk"></div></td>
                 </tr>
                 <tr>
                     <td>Verwaltungsgemeinkosten (VwGK)</td>
-                    <td><input type="number" id="zt_bz_verw" data-sol="zt_bz_verw"><div class="solution" id="sol_zt_bz_verw"></div></td>
-                    <td><input type="number" id="zt_norm_vwgk" data-sol="zt_norm_vwgk"><div class="solution" id="sol_zt_norm_vwgk"></div></td>
+                    <td><input type="number" id="zt_bz_verw" data-sol="zt_bz_verw"><div class="solution" id="sol_zt_bz_verw"></div><div class="step" id="step_zt_bz_verw"></div></td>
+                    <td><input type="number" id="zt_norm_vwgk" data-sol="zt_norm_vwgk"><div class="solution" id="sol_zt_norm_vwgk"></div><div class="step" id="step_zt_norm_vwgk"></div></td>
                     <td id="td_ist_vwgk">siehe BAB</td>
-                    <td><input type="number" id="zt_diff_vwgk" data-sol="zt_diff_vwgk"><div class="solution" id="sol_zt_diff_vwgk"></div></td>
+                    <td><input type="number" id="zt_diff_vwgk" data-sol="zt_diff_vwgk"><div class="solution" id="sol_zt_diff_vwgk"></div><div class="step" id="step_zt_diff_vwgk"></div></td>
                 </tr>
                 <tr>
                     <td>Vertriebsgemeinkosten (VtGK)</td>
-                    <td><input type="number" id="zt_bz_vert" data-sol="zt_bz_vert"><div class="solution" id="sol_zt_bz_vert"></div></td>
-                    <td><input type="number" id="zt_norm_vtgk" data-sol="zt_norm_vtgk"><div class="solution" id="sol_zt_norm_vtgk"></div></td>
+                    <td><input type="number" id="zt_bz_vert" data-sol="zt_bz_vert"><div class="solution" id="sol_zt_bz_vert"></div><div class="step" id="step_zt_bz_vert"></div></td>
+                    <td><input type="number" id="zt_norm_vtgk" data-sol="zt_norm_vtgk"><div class="solution" id="sol_zt_norm_vtgk"></div><div class="step" id="step_zt_norm_vtgk"></div></td>
                     <td id="td_ist_vtgk">siehe BAB</td>
-                    <td><input type="number" id="zt_diff_vtgk" data-sol="zt_diff_vtgk"><div class="solution" id="sol_zt_diff_vtgk"></div></td>
+                    <td><input type="number" id="zt_diff_vtgk" data-sol="zt_diff_vtgk"><div class="solution" id="sol_zt_diff_vtgk"></div><div class="step" id="step_zt_diff_vtgk"></div></td>
                 </tr>
             </tbody>
             <tfoot>
                 <tr class="sum-row">
                     <td colspan="4" style="text-align: right"><strong>Gesamtabweichung (Gemeinkosten):</strong></td>
-                    <td><input type="number" id="zt_diff_gesamt" data-sol="zt_diff_gesamt"><div class="solution" id="sol_zt_diff_gesamt"></div></td>
+                    <td><input type="number" id="zt_diff_gesamt" data-sol="zt_diff_gesamt"><div class="solution" id="sol_zt_diff_gesamt"></div><div class="step" id="step_zt_diff_gesamt"></div></td>
                 </tr>
             </tfoot>
         </table>
@@ -201,25 +204,25 @@
         <p>Ermitteln Sie durch Rückwärts/Vorwärts-Kalkulation, welchen <strong>tatsächlichen Gewinn in Euro und in Prozent</strong> (bezogen auf die Selbstkosten) Sie mit den 1.000 Füllern erzielt haben. Verwenden Sie für die Gemeinkosten die <strong>Ist-Zuschlagssätze</strong> aus dem BAB!</p>
 
         <table style="max-width: 600px; margin: 0 auto;">
-            <tr><td style="width:60%">Fertigungsmaterial (FM)</td><td><input type="number" id="nk_fm" data-sol="nk_fm"><div class="solution" id="sol_nk_fm"></div></td></tr>
-            <tr><td>+ MGK (mit Ist-Satz)</td><td><input type="number" id="nk_mgk" data-sol="nk_mgk"><div class="solution" id="sol_nk_mgk"></div></td></tr>
-            <tr><td>Fertigungslöhne (FL)</td><td><input type="number" id="nk_fl" data-sol="nk_fl"><div class="solution" id="sol_nk_fl"></div></td></tr>
-            <tr><td>+ FGK (mit Ist-Satz)</td><td><input type="number" id="nk_fgk" data-sol="nk_fgk"><div class="solution" id="sol_nk_fgk"></div></td></tr>
-            <tr class="sum-row"><td>= Herstellkosten</td><td><input type="number" id="nk_hk" data-sol="nk_hk"><div class="solution" id="sol_nk_hk"></div></td></tr>
-            <tr><td>+ VwGK (mit Ist-Satz)</td><td><input type="number" id="nk_vwgk" data-sol="nk_vwgk"><div class="solution" id="sol_nk_vwgk"></div></td></tr>
-            <tr><td>+ VtGK (mit Ist-Satz)</td><td><input type="number" id="nk_vtgk" data-sol="nk_vtgk"><div class="solution" id="sol_nk_vtgk"></div></td></tr>
-            <tr class="calc-row"><td>= Selbstkosten (SK) gesamt</td><td><input type="number" id="nk_sk" data-sol="nk_sk"><div class="solution" id="sol_nk_sk"></div></td></tr>
-            <tr class="sum-row"><td><strong>+ Tatsächlicher Gewinn (Euro)</strong></td><td><input type="number" id="nk_gewinn_eur" data-sol="nk_gewinn_eur" style="border-color: var(--accent); border-width: 2px;"><div class="solution" id="sol_nk_gewinn_eur"></div></td></tr>
-            <tr><td>= Barverkaufspreis gesamt</td><td><input type="number" id="nk_bvp" data-sol="nk_bvp"><div class="solution" id="sol_nk_bvp"></div></td></tr>
-            <tr><td>+ Kundenskonto gesamt (2%)</td><td><input type="number" id="nk_skonto" data-sol="nk_skonto"><div class="solution" id="sol_nk_skonto"></div></td></tr>
-            <tr><td>= Zielverkaufspreis gesamt</td><td><input type="number" id="nk_zvp" data-sol="nk_zvp"><div class="solution" id="sol_nk_zvp"></div></td></tr>
-            <tr><td>+ Kundenrabatt gesamt (10%)</td><td><input type="number" id="nk_rabatt" data-sol="nk_rabatt"><div class="solution" id="sol_nk_rabatt"></div></td></tr>
-            <tr class="calc-row"><td>= Listenverkaufspreis gesamt (1.000 Stk.)</td><td><input type="number" id="nk_lvp" data-sol="nk_lvp"><div class="solution" id="sol_nk_lvp"></div></td></tr>
+            <tr><td style="width:60%">Fertigungsmaterial (FM)</td><td><input type="number" id="nk_fm" data-sol="nk_fm"><div class="solution" id="sol_nk_fm"></div><div class="step" id="step_nk_fm"></div></td></tr>
+            <tr><td>+ MGK (mit Ist-Satz)</td><td><input type="number" id="nk_mgk" data-sol="nk_mgk"><div class="solution" id="sol_nk_mgk"></div><div class="step" id="step_nk_mgk"></div></td></tr>
+            <tr><td>Fertigungslöhne (FL)</td><td><input type="number" id="nk_fl" data-sol="nk_fl"><div class="solution" id="sol_nk_fl"></div><div class="step" id="step_nk_fl"></div></td></tr>
+            <tr><td>+ FGK (mit Ist-Satz)</td><td><input type="number" id="nk_fgk" data-sol="nk_fgk"><div class="solution" id="sol_nk_fgk"></div><div class="step" id="step_nk_fgk"></div></td></tr>
+            <tr class="sum-row"><td>= Herstellkosten</td><td><input type="number" id="nk_hk" data-sol="nk_hk"><div class="solution" id="sol_nk_hk"></div><div class="step" id="step_nk_hk"></div></td></tr>
+            <tr><td>+ VwGK (mit Ist-Satz)</td><td><input type="number" id="nk_vwgk" data-sol="nk_vwgk"><div class="solution" id="sol_nk_vwgk"></div><div class="step" id="step_nk_vwgk"></div></td></tr>
+            <tr><td>+ VtGK (mit Ist-Satz)</td><td><input type="number" id="nk_vtgk" data-sol="nk_vtgk"><div class="solution" id="sol_nk_vtgk"></div><div class="step" id="step_nk_vtgk"></div></td></tr>
+            <tr class="calc-row"><td>= Selbstkosten (SK) gesamt</td><td><input type="number" id="nk_sk" data-sol="nk_sk"><div class="solution" id="sol_nk_sk"></div><div class="step" id="step_nk_sk"></div></td></tr>
+            <tr class="sum-row"><td><strong>+ Tatsächlicher Gewinn (Euro)</strong></td><td><input type="number" id="nk_gewinn_eur" data-sol="nk_gewinn_eur" style="border-color: var(--accent); border-width: 2px;"><div class="solution" id="sol_nk_gewinn_eur"></div><div class="step" id="step_nk_gewinn_eur"></div></td></tr>
+            <tr><td>= Barverkaufspreis gesamt</td><td><input type="number" id="nk_bvp" data-sol="nk_bvp"><div class="solution" id="sol_nk_bvp"></div><div class="step" id="step_nk_bvp"></div></td></tr>
+            <tr><td>+ Kundenskonto gesamt (2%)</td><td><input type="number" id="nk_skonto" data-sol="nk_skonto"><div class="solution" id="sol_nk_skonto"></div><div class="step" id="step_nk_skonto"></div></td></tr>
+            <tr><td>= Zielverkaufspreis gesamt</td><td><input type="number" id="nk_zvp" data-sol="nk_zvp"><div class="solution" id="sol_nk_zvp"></div><div class="step" id="step_nk_zvp"></div></td></tr>
+            <tr><td>+ Kundenrabatt gesamt (10%)</td><td><input type="number" id="nk_rabatt" data-sol="nk_rabatt"><div class="solution" id="sol_nk_rabatt"></div><div class="step" id="step_nk_rabatt"></div></td></tr>
+            <tr class="calc-row"><td>= Listenverkaufspreis gesamt (1.000 Stk.)</td><td><input type="number" id="nk_lvp" data-sol="nk_lvp"><div class="solution" id="sol_nk_lvp"></div><div class="step" id="step_nk_lvp"></div></td></tr>
             <tr><td colspan="2" style="text-align: center; font-weight: bold; padding-top: 20px;">
                 Tatsächlicher Gewinn in Prozent (Gewinn / SK * 100): 
                 <br><br>
                 <input type="number" step="0.01" id="nk_gewinn_prozent" data-sol="nk_gewinn_prozent" style="width: 150px; text-align: center; border-color: var(--accent); border-width: 2px;"> %
-                <div class="solution" id="sol_nk_gewinn_prozent"></div>
+                <div class="solution" id="sol_nk_gewinn_prozent"></div><div class="step" id="step_nk_gewinn_prozent"></div>
             </td></tr>
         </table>
     </div>
@@ -228,6 +231,7 @@
 
 <script>
 let solutions = {};
+let steps = {};
 
 const formatNumber = (val) => new Intl.NumberFormat('de-DE').format(val);
 const round2 = (val) => Math.round(val * 100) / 100;
@@ -235,6 +239,7 @@ function randomInt(min, max, step=10) { return Math.floor(Math.random() * ((max 
 
 function generateNewExercise() {
     clearInputs();
+    steps = {};
     
     // 1. BAB Basis-Werte
     const fm = randomInt(400000, 800000, 5000);
@@ -284,11 +289,16 @@ function generateNewExercise() {
             <td>${k.lbl}</td>
             <td>${formatNumber(k.total)}</td>
             <td>${k.s.join(':')}</td>
-            <td><input type="number" id="bab_mat_${k.id}" data-sol="bab_mat_${k.id}"><div class="solution" id="sol_bab_mat_${k.id}"></div></td>
-            <td><input type="number" id="bab_fer_${k.id}" data-sol="bab_fer_${k.id}"><div class="solution" id="sol_bab_fer_${k.id}"></div></td>
-            <td><input type="number" id="bab_ver_${k.id}" data-sol="bab_ver_${k.id}"><div class="solution" id="sol_bab_ver_${k.id}"></div></td>
-            <td><input type="number" id="bab_vtr_${k.id}" data-sol="bab_vtr_${k.id}"><div class="solution" id="sol_bab_vtr_${k.id}"></div></td>
+            <td><input type="number" id="bab_mat_${k.id}" data-sol="bab_mat_${k.id}"><div class="solution" id="sol_bab_mat_${k.id}"></div><div class="step" id="step_bab_mat_${k.id}"></div></td>
+            <td><input type="number" id="bab_fer_${k.id}" data-sol="bab_fer_${k.id}"><div class="solution" id="sol_bab_fer_${k.id}"></div><div class="step" id="step_bab_fer_${k.id}"></div></td>
+            <td><input type="number" id="bab_ver_${k.id}" data-sol="bab_ver_${k.id}"><div class="solution" id="sol_bab_ver_${k.id}"></div><div class="step" id="step_bab_ver_${k.id}"></div></td>
+            <td><input type="number" id="bab_vtr_${k.id}" data-sol="bab_vtr_${k.id}"><div class="solution" id="sol_bab_vtr_${k.id}"></div><div class="step" id="step_bab_vtr_${k.id}"></div></td>
         </tr>`;
+
+        steps[`bab_mat_${k.id}`] = `Rechenweg: ${formatNumber(k.total)} € * ${k.s[0]} % = ${formatNumber(mat)} €`;
+        steps[`bab_fer_${k.id}`] = `Rechenweg: ${formatNumber(k.total)} € * ${k.s[1]} % = ${formatNumber(fer)} €`;
+        steps[`bab_ver_${k.id}`] = `Rechenweg: ${formatNumber(k.total)} € * ${k.s[2]} % = ${formatNumber(ver)} €`;
+        steps[`bab_vtr_${k.id}`] = `Rechenweg: Rest = ${formatNumber(k.total)} - (${formatNumber(mat)} + ${formatNumber(fer)} + ${formatNumber(ver)}) = ${formatNumber(vtr)} €`;
     });
     document.getElementById('bab_body').innerHTML = babHtml;
 
@@ -300,11 +310,18 @@ function generateNewExercise() {
     babSol.bez_mat = fm;
     babSol.bez_fert = fl;
     babSol.bez_hkums = hk_ums;
+    steps.bez_mat = `Rechenweg: gegeben = ${formatNumber(fm)} €`;
+    steps.bez_fert = `Rechenweg: gegeben = ${formatNumber(fl)} €`;
+    steps.bez_hkums = `Rechenweg: HK Erzeugung + Minderbestand = (${formatNumber(fm)} + ${formatNumber(babSol.bab_sum_mat)} + ${formatNumber(fl)} + ${formatNumber(babSol.bab_sum_fert)}) + ${formatNumber(bv_minder)} = ${formatNumber(hk_ums)} €`;
 
     babSol.ist_zs_mgk = round2((babSol.bab_sum_mat / fm) * 100);
     babSol.ist_zs_fgk = round2((babSol.bab_sum_fert / fl) * 100);
     babSol.ist_zs_vwgk = round2((babSol.bab_sum_verw / hk_ums) * 100);
     babSol.ist_zs_vtgk = round2((babSol.bab_sum_vert / hk_ums) * 100);
+    steps.ist_zs_mgk = `Rechenweg: MGK / FM * 100 = ${formatNumber(babSol.bab_sum_mat)} / ${formatNumber(fm)} * 100 = ${formatNumber(babSol.ist_zs_mgk)} %`;
+    steps.ist_zs_fgk = `Rechenweg: FGK / FL * 100 = ${formatNumber(babSol.bab_sum_fert)} / ${formatNumber(fl)} * 100 = ${formatNumber(babSol.ist_zs_fgk)} %`;
+    steps.ist_zs_vwgk = `Rechenweg: VwGK / HK Umsatz * 100 = ${formatNumber(babSol.bab_sum_verw)} / ${formatNumber(hk_ums)} * 100 = ${formatNumber(babSol.ist_zs_vwgk)} %`;
+    steps.ist_zs_vtgk = `Rechenweg: VtGK / HK Umsatz * 100 = ${formatNumber(babSol.bab_sum_vert)} / ${formatNumber(hk_ums)} * 100 = ${formatNumber(babSol.ist_zs_vtgk)} %`;
 
     // 2. ZEITRECHNUNG (Normal vs Ist)
     // We create Normal ZS by slightly modifying the IST ZS (+- 1 to 5 %)
@@ -344,6 +361,19 @@ function generateNewExercise() {
         zt_diff_mgk: diff_mgk, zt_diff_fgk: diff_fgk, zt_diff_vwgk: diff_vwgk, zt_diff_vtgk: diff_vtgk,
         zt_diff_gesamt: diff_mgk + diff_fgk + diff_vwgk + diff_vtgk
     };
+    steps.zt_bz_mat = `Rechenweg: Ist-Basis aus BAB = ${formatNumber(fm)} €`;
+    steps.zt_bz_fert = `Rechenweg: Ist-Basis aus BAB = ${formatNumber(fl)} €`;
+    steps.zt_bz_verw = `Rechenweg: Basis = Normal-HK Umsatz = ${formatNumber(norm_hk_ums)} €`;
+    steps.zt_bz_vert = `Rechenweg: Basis = Normal-HK Umsatz = ${formatNumber(norm_hk_ums)} €`;
+    steps.zt_norm_mgk = `Rechenweg: FM * Normal-MGK% = ${formatNumber(fm)} * ${formatNumber(n_mgk)} % = ${formatNumber(norm_mgk_val)} €`;
+    steps.zt_norm_fgk = `Rechenweg: FL * Normal-FGK% = ${formatNumber(fl)} * ${formatNumber(n_fgk)} % = ${formatNumber(norm_fgk_val)} €`;
+    steps.zt_norm_vwgk = `Rechenweg: Normal-HK Umsatz * Normal-VwGK% = ${formatNumber(norm_hk_ums)} * ${formatNumber(n_vwgk)} % = ${formatNumber(norm_vwgk_val)} €`;
+    steps.zt_norm_vtgk = `Rechenweg: Normal-HK Umsatz * Normal-VtGK% = ${formatNumber(norm_hk_ums)} * ${formatNumber(n_vtgk)} % = ${formatNumber(norm_vtgk_val)} €`;
+    steps.zt_diff_mgk = `Rechenweg: Normal-MGK - Ist-MGK = ${formatNumber(norm_mgk_val)} - ${formatNumber(babSol.bab_sum_mat)} = ${formatNumber(diff_mgk)} €`;
+    steps.zt_diff_fgk = `Rechenweg: ${formatNumber(norm_fgk_val)} - ${formatNumber(babSol.bab_sum_fert)} = ${formatNumber(diff_fgk)} €`;
+    steps.zt_diff_vwgk = `Rechenweg: ${formatNumber(norm_vwgk_val)} - ${formatNumber(babSol.bab_sum_verw)} = ${formatNumber(diff_vwgk)} €`;
+    steps.zt_diff_vtgk = `Rechenweg: ${formatNumber(norm_vtgk_val)} - ${formatNumber(babSol.bab_sum_vert)} = ${formatNumber(diff_vtgk)} €`;
+    steps.zt_diff_gesamt = `Rechenweg: Summe Abweichungen = ${formatNumber(diff_mgk)} + ${formatNumber(diff_fgk)} + ${formatNumber(diff_vwgk)} + ${formatNumber(diff_vtgk)} = ${formatNumber(zeitSol.zt_diff_gesamt)} €`;
 
     // 3. NACHKALKULATION (Rückwärts + Vorwärts)
     let nach_fm = randomInt(5000, 15000, 100);
@@ -385,13 +415,37 @@ function generateNewExercise() {
         nk_bvp: nk_bvp, nk_skonto: nk_skonto, nk_zvp: nk_zvp, nk_rabatt: nk_rabatt, nk_lvp: nk_lvp_gesamt,
         nk_gewinn_prozent: nk_gewinn_proz
     };
+    steps.nk_fm = `Rechenweg: gegeben (Ist-FM) = ${formatNumber(nach_fm)} €`;
+    steps.nk_fl = `Rechenweg: gegeben (Ist-FL) = ${formatNumber(nach_fl)} €`;
+    steps.nk_mgk = `Rechenweg: FM * Ist-MGK% = ${formatNumber(nach_fm)} * ${formatNumber(babSol.ist_zs_mgk)} % = ${formatNumber(nk_mgk)} €`;
+    steps.nk_fgk = `Rechenweg: FL * Ist-FGK% = ${formatNumber(nach_fl)} * ${formatNumber(babSol.ist_zs_fgk)} % = ${formatNumber(nk_fgk)} €`;
+    steps.nk_hk = `Rechenweg: FM+MGK+FL+FGK = ${formatNumber(nach_fm)} + ${formatNumber(nk_mgk)} + ${formatNumber(nach_fl)} + ${formatNumber(nk_fgk)} = ${formatNumber(nk_hk)} €`;
+    steps.nk_vwgk = `Rechenweg: HK * Ist-VwGK% = ${formatNumber(nk_hk)} * ${formatNumber(babSol.ist_zs_vwgk)} % = ${formatNumber(nk_vwgk)} €`;
+    steps.nk_vtgk = `Rechenweg: HK * Ist-VtGK% = ${formatNumber(nk_hk)} * ${formatNumber(babSol.ist_zs_vtgk)} % = ${formatNumber(nk_vtgk)} €`;
+    steps.nk_sk = `Rechenweg: HK + VwGK + VtGK = ${formatNumber(nk_hk)} + ${formatNumber(nk_vwgk)} + ${formatNumber(nk_vtgk)} = ${formatNumber(nk_sk)} €`;
+    steps.nk_rabatt = `Rechenweg: Rabatt 10% vom LVP = ${formatNumber(nk_lvp_gesamt)} * 10% = ${formatNumber(nk_rabatt)} €`;
+    steps.nk_zvp = `Rechenweg: LVP - Rabatt = ${formatNumber(nk_lvp_gesamt)} - ${formatNumber(nk_rabatt)} = ${formatNumber(nk_zvp)} €`;
+    steps.nk_skonto = `Rechenweg: Skonto 2% vom ZVP = ${formatNumber(nk_zvp)} * 2% = ${formatNumber(nk_skonto)} €`;
+    steps.nk_bvp = `Rechenweg: ZVP - Skonto = ${formatNumber(nk_zvp)} - ${formatNumber(nk_skonto)} = ${formatNumber(nk_bvp)} €`;
+    steps.nk_gewinn_eur = `Rechenweg: Gewinn = BVP - SK = ${formatNumber(nk_bvp)} - ${formatNumber(nk_sk)} = ${formatNumber(nk_gewinn)} €`;
+    steps.nk_lvp = `Rechenweg: LVP netto (1.000 Stk.) = ${formatNumber(nk_lvp_gesamt)} €`;
+    steps.nk_gewinn_prozent = `Rechenweg: Gewinn / SK * 100 = ${formatNumber(nk_gewinn)} / ${formatNumber(nk_sk)} * 100 = ${formatNumber(nk_gewinn_proz)} %`;
 
     // MERGE ALL
     solutions = { ...babSol, ...zeitSol, ...nkSol };
+    steps.bab_sum_mat = `Rechenweg: Summe BAB-Material = ${formatNumber(babSol.bab_sum_mat)} €`;
+    steps.bab_sum_fert = `Rechenweg: Summe BAB-Fertigung = ${formatNumber(babSol.bab_sum_fert)} €`;
+    steps.bab_sum_verw = `Rechenweg: Summe BAB-Verwaltung = ${formatNumber(babSol.bab_sum_verw)} €`;
+    steps.bab_sum_vert = `Rechenweg: Summe BAB-Vertrieb = ${formatNumber(babSol.bab_sum_vert)} €`;
 
     for(let key in solutions) {
         let solDiv = document.getElementById(`sol_${key}`);
         if(solDiv) solDiv.innerText = `Lösung: ${formatNumber(solutions[key])}`;
+    }
+
+    for (let key in steps) {
+        let stepDiv = document.getElementById(`step_${key}`);
+        if (stepDiv) stepDiv.innerText = steps[key];
     }
 }
 
@@ -400,6 +454,7 @@ function clearInputs() {
         inp.value = '';
         inp.classList.remove('correct', 'incorrect');
     });
+    document.querySelectorAll('.step').forEach(el => { el.innerText = ''; });
 }
 
 function checkAnswers() {
@@ -425,6 +480,19 @@ function toggleSolutions() {
         btn.classList.add('btn-primary'); btn.classList.remove('btn-outline');
     } else {
         btn.innerText = '👁️ Musterlösung einblenden';
+        btn.classList.add('btn-outline'); btn.classList.remove('btn-primary');
+    }
+}
+
+function toggleSteps() {
+    document.body.classList.toggle('show-steps');
+    let btn = document.getElementById('btn-toggle-steps');
+    if (!btn) return;
+    if (document.body.classList.contains('show-steps')) {
+        btn.innerText = '📄 Rechenwege verbergen';
+        btn.classList.add('btn-primary'); btn.classList.remove('btn-outline');
+    } else {
+        btn.innerText = '📝 Rechenwege anzeigen';
         btn.classList.add('btn-outline'); btn.classList.remove('btn-primary');
     }
 }

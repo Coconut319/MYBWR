@@ -29,6 +29,8 @@
         .incorrect { background-color: #fceceb !important; border-color: var(--danger) !important; color: #c0392b; font-weight: bold; }
         .solution { display: none; color: var(--success); font-size: 11px; margin-top: 4px; }
         .show-solutions .solution { display: block; }
+        .step { display: none; color: #2c3e50; font-size: 11px; margin-top: 4px; background: #fbfcfc; border: 1px dashed var(--border); padding: 6px 8px; border-radius: 4px; text-align: left; }
+        .show-steps .step { display: block; }
         .calc-row { background-color: #f9f9f9; font-style: italic; }
         .sum-row { font-weight: bold; background-color: #eaeded; }
         @media print { .btn, .header-actions button { display: none; } .container { box-shadow: none; padding: 0; } body { background: white; } .aufgabe-section { page-break-inside: avoid; border: none; padding: 10px 0; } }
@@ -45,6 +47,7 @@
         <div>
             <button class="btn btn-primary" onclick="generateNewExercise()">🔄 Neue Zahlen generieren</button>
             <button class="btn btn-outline" onclick="toggleSolutions()" id="btn-toggle-sol">👁️ Musterlösung einblenden</button>
+            <button class="btn btn-outline" onclick="toggleSteps()" id="btn-toggle-steps">📝 Rechenwege anzeigen</button>
             <button class="btn btn-outline" onclick="checkAnswers()">✅ Eingaben prüfen</button>
         </div>
     </div>
@@ -101,23 +104,23 @@
                 <tfoot>
                     <tr class="sum-row">
                         <td><strong>Summen</strong></td>
-                        <td><input type="number" id="sum_rk1_a" data-sol="sum_rk1_a"><div class="solution" id="sol_sum_rk1_a"></div></td>
-                        <td><input type="number" id="sum_rk1_e" data-sol="sum_rk1_e"><div class="solution" id="sol_sum_rk1_e"></div></td>
-                        <td><input type="number" id="sum_neut_a" data-sol="sum_neut_a"><div class="solution" id="sol_sum_neut_a"></div></td>
-                        <td><input type="number" id="sum_neut_e" data-sol="sum_neut_e"><div class="solution" id="sol_sum_neut_e"></div></td>
-                        <td><input type="number" id="sum_klr_k" data-sol="sum_klr_k"><div class="solution" id="sol_sum_klr_k"></div></td>
-                        <td><input type="number" id="sum_klr_l" data-sol="sum_klr_l"><div class="solution" id="sol_sum_klr_l"></div></td>
+                        <td><input type="number" id="sum_rk1_a" data-sol="sum_rk1_a"><div class="solution" id="sol_sum_rk1_a"></div><div class="step" id="step_sum_rk1_a"></div></td>
+                        <td><input type="number" id="sum_rk1_e" data-sol="sum_rk1_e"><div class="solution" id="sol_sum_rk1_e"></div><div class="step" id="step_sum_rk1_e"></div></td>
+                        <td><input type="number" id="sum_neut_a" data-sol="sum_neut_a"><div class="solution" id="sol_sum_neut_a"></div><div class="step" id="step_sum_neut_a"></div></td>
+                        <td><input type="number" id="sum_neut_e" data-sol="sum_neut_e"><div class="solution" id="sol_sum_neut_e"></div><div class="step" id="step_sum_neut_e"></div></td>
+                        <td><input type="number" id="sum_klr_k" data-sol="sum_klr_k"><div class="solution" id="sol_sum_klr_k"></div><div class="step" id="step_sum_klr_k"></div></td>
+                        <td><input type="number" id="sum_klr_l" data-sol="sum_klr_l"><div class="solution" id="sol_sum_klr_l"></div><div class="step" id="step_sum_klr_l"></div></td>
                     </tr>
                     <tr class="calc-row">
                         <td><strong>Ergebnisse (Saldo = Ertrag/Leist. minus Aufwand/Kosten)</strong></td>
                         <td colspan="2" style="text-align:center">Gesamtergebnis:<br> 
-                            <input type="number" style="width: 120px" id="saldo_gesamt" data-sol="saldo_gesamt"><div class="solution" id="sol_saldo_gesamt"></div>
+                            <input type="number" style="width: 120px" id="saldo_gesamt" data-sol="saldo_gesamt"><div class="solution" id="sol_saldo_gesamt"></div><div class="step" id="step_saldo_gesamt"></div>
                         </td>
                         <td colspan="2" style="text-align:center">Neutrales Ergebnis:<br> 
-                            <input type="number" style="width: 120px" id="saldo_neutral" data-sol="saldo_neutral"><div class="solution" id="sol_saldo_neutral"></div>
+                            <input type="number" style="width: 120px" id="saldo_neutral" data-sol="saldo_neutral"><div class="solution" id="sol_saldo_neutral"></div><div class="step" id="step_saldo_neutral"></div>
                         </td>
                         <td colspan="2" style="text-align:center">Betriebsergebnis:<br> 
-                            <input type="number" style="width: 120px" id="saldo_betrieb" data-sol="saldo_betrieb"><div class="solution" id="sol_saldo_betrieb"></div>
+                            <input type="number" style="width: 120px" id="saldo_betrieb" data-sol="saldo_betrieb"><div class="solution" id="sol_saldo_betrieb"></div><div class="step" id="step_saldo_betrieb"></div>
                         </td>
                     </tr>
                 </tfoot>
@@ -128,6 +131,7 @@
 
 <script>
 let solutions = {};
+let steps = {};
 const formatNumber = (val) => new Intl.NumberFormat('de-DE').format(val);
 function randomInt(min, max, step=10) { return Math.floor(Math.random() * ((max - min)/step + 1)) * step + min; }
 
@@ -157,6 +161,7 @@ const guvStructure = [
 
 function generateNewExercise() {
     clearInputs();
+    steps = {};
     
     // Basiswerte
     const vals = {
@@ -203,6 +208,9 @@ function generateNewExercise() {
         kalk_zins: vals.k_kapital * (vals.k_zsatz / 100),
         kalk_ulohn: vals.k_ul_m * 12 * vals.k_ul_zahl
     };
+    steps[`klr_k_kalk_afa`] = `Rechenweg: WBW / ND = ${formatNumber(vals.k_wbw)} € / ${vals.k_nd} Jahre = ${formatNumber(guv.kalk_afa)} €`;
+    steps[`klr_k_kalk_zins`] = `Rechenweg: Kapital * Zinssatz = ${formatNumber(vals.k_kapital)} € * ${vals.k_zsatz} % = ${formatNumber(guv.kalk_zins)} €`;
+    steps[`klr_k_kalk_ulohn`] = `Rechenweg: ${vals.k_ul_zahl} * ${formatNumber(vals.k_ul_m)} € * 12 = ${formatNumber(guv.kalk_ulohn)} €`;
 
     // Update Text Hints
     document.getElementById('txt_spenden').innerText = formatNumber(vals.spenden);
@@ -245,6 +253,20 @@ function generateNewExercise() {
         solutions[`neut_a_${p.id}`] = na; solutions[`neut_e_${p.id}`] = ne;
         solutions[`klr_k_${p.id}`] = kk;  solutions[`klr_l_${p.id}`] = kl;
 
+        // Step strings for input fields (Neutral/KLR columns)
+        steps[`neut_a_${p.id}`] = (na !== 0)
+            ? `Rechenweg: Neutraler Aufwand aus Zusatzinfo = ${formatNumber(na)} €`
+            : `Rechenweg: kein neutraler Aufwand (0 €)`;
+        steps[`neut_e_${p.id}`] = (ne !== 0)
+            ? `Rechenweg: Neutraler Ertrag aus Zusatzinfo = ${formatNumber(ne)} €`
+            : `Rechenweg: kein neutraler Ertrag (0 €)`;
+        steps[`klr_k_${p.id}`] = (kk !== 0)
+            ? `Rechenweg: KLR-Kosten = ${formatNumber(kk)} €`
+            : `Rechenweg: keine KLR-Kosten (0 €)`;
+        steps[`klr_l_${p.id}`] = (kl !== 0)
+            ? `Rechenweg: KLR-Leistung = ${formatNumber(kl)} €`
+            : `Rechenweg: keine KLR-Leistung (0 €)`;
+
         solutions.sum_rk1_a += r1a; solutions.sum_rk1_e += r1e;
         solutions.sum_neut_a += na; solutions.sum_neut_e += ne;
         solutions.sum_klr_k += kk;  solutions.sum_klr_l += kl;
@@ -255,22 +277,36 @@ function generateNewExercise() {
         html += `<tr><td>${p.label}</td>
             <td>${p.t === 'A' ? guvVal : ''}</td>
             <td>${p.t === 'E' ? guvVal : ''}</td>
-            <td><input type="number" id="neut_a_${p.id}" data-sol="neut_a_${p.id}"><div class="solution" id="sol_neut_a_${p.id}"></div></td>
-            <td><input type="number" id="neut_e_${p.id}" data-sol="neut_e_${p.id}"><div class="solution" id="sol_neut_e_${p.id}"></div></td>
-            <td><input type="number" id="klr_k_${p.id}" data-sol="klr_k_${p.id}"><div class="solution" id="sol_klr_k_${p.id}"></div></td>
-            <td><input type="number" id="klr_l_${p.id}" data-sol="klr_l_${p.id}"><div class="solution" id="sol_klr_l_${p.id}"></div></td>
+            <td><input type="number" id="neut_a_${p.id}" data-sol="neut_a_${p.id}"><div class="solution" id="sol_neut_a_${p.id}"></div><div class="step" id="step_neut_a_${p.id}"></div></td>
+            <td><input type="number" id="neut_e_${p.id}" data-sol="neut_e_${p.id}"><div class="solution" id="sol_neut_e_${p.id}"></div><div class="step" id="step_neut_e_${p.id}"></div></td>
+            <td><input type="number" id="klr_k_${p.id}" data-sol="klr_k_${p.id}"><div class="solution" id="sol_klr_k_${p.id}"></div><div class="step" id="step_klr_k_${p.id}"></div></td>
+            <td><input type="number" id="klr_l_${p.id}" data-sol="klr_l_${p.id}"><div class="solution" id="sol_klr_l_${p.id}"></div><div class="step" id="step_klr_l_${p.id}"></div></td>
         </tr>`;
     });
 
     solutions.saldo_gesamt = solutions.sum_rk1_e - solutions.sum_rk1_a;
     solutions.saldo_neutral = solutions.sum_neut_e - solutions.sum_neut_a;
     solutions.saldo_betrieb = solutions.sum_klr_l - solutions.sum_klr_k;
+    steps.sum_rk1_a = `Rechenweg: Summe RK I Aufwand = ${formatNumber(solutions.sum_rk1_a)} €`;
+    steps.sum_rk1_e = `Rechenweg: Summe RK I Ertrag = ${formatNumber(solutions.sum_rk1_e)} €`;
+    steps.sum_neut_a = `Rechenweg: Summe neutraler Aufwand = ${formatNumber(solutions.sum_neut_a)} €`;
+    steps.sum_neut_e = `Rechenweg: Summe neutraler Ertrag = ${formatNumber(solutions.sum_neut_e)} €`;
+    steps.sum_klr_k = `Rechenweg: Summe KLR-Kosten = ${formatNumber(solutions.sum_klr_k)} €`;
+    steps.sum_klr_l = `Rechenweg: Summe KLR-Leistungen = ${formatNumber(solutions.sum_klr_l)} €`;
+    steps.saldo_gesamt = `Rechenweg: Ertrag - Aufwand = ${formatNumber(solutions.sum_rk1_e)} - ${formatNumber(solutions.sum_rk1_a)} = ${formatNumber(solutions.saldo_gesamt)} €`;
+    steps.saldo_neutral = `Rechenweg: neutr. Ertrag - neutr. Aufwand = ${formatNumber(solutions.sum_neut_e)} - ${formatNumber(solutions.sum_neut_a)} = ${formatNumber(solutions.saldo_neutral)} €`;
+    steps.saldo_betrieb = `Rechenweg: Leistungen - Kosten = ${formatNumber(solutions.sum_klr_l)} - ${formatNumber(solutions.sum_klr_k)} = ${formatNumber(solutions.saldo_betrieb)} €`;
 
     document.getElementById('ergebnis_body').innerHTML = html;
 
     for (let key in solutions) {
         let el = document.getElementById(`sol_${key}`);
         if(el) el.innerText = `Lsg: ${formatNumber(solutions[key])}`;
+    }
+
+    for (let key in steps) {
+        let el = document.getElementById(`step_${key}`);
+        if (el) el.innerText = steps[key];
     }
 }
 
@@ -279,6 +315,7 @@ function clearInputs() {
         inp.value = '';
         inp.classList.remove('correct', 'incorrect');
     });
+    document.querySelectorAll('.step').forEach(el => { el.innerText = ''; });
 }
 
 function checkAnswers() {
@@ -296,6 +333,21 @@ function checkAnswers() {
 
 function toggleSolutions() {
     document.body.classList.toggle('show-solutions');
+}
+
+function toggleSteps() {
+    document.body.classList.toggle('show-steps');
+    let btn = document.getElementById('btn-toggle-steps');
+    if (!btn) return;
+    if (document.body.classList.contains('show-steps')) {
+        btn.innerText = '📄 Rechenwege verbergen';
+        btn.classList.add('btn-primary');
+        btn.classList.remove('btn-outline');
+    } else {
+        btn.innerText = '📝 Rechenwege anzeigen';
+        btn.classList.add('btn-outline');
+        btn.classList.remove('btn-primary');
+    }
 }
 
 window.onload = generateNewExercise;
