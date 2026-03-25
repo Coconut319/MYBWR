@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>BWR Übung: Vorwärtskalkulation</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; color: #333; line-height: 1.2; font-size: 14px; }
+        h1 { font-size: 1.5rem; margin: 0 0 10px; border-bottom: 2px solid #e67e22; }
+        .task-box { border: 1px solid #e67e22; padding: 12px; margin-bottom: 15px; background-color: #fff9f4; font-size: 0.9rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #333; padding: 6px 10px; text-align: left; height: 24px; }
+        th { background-color: #f2f2f2; font-size: 0.85rem; }
+        .col-names { width: 50%; }
+        .col-percent { width: 15%; }
+        .col-euro { width: 35%; }
+        .footer { margin-top: 20px; font-size: 0.7rem; text-align: center; color: #888; }
+        @media print { 
+            body { padding: 0; }
+            .no-print { display: none; }
+            @page { margin: 1cm; }
+        }
+    </style>
+</head>
+<body>
+    <h1>BWR Übung: Vorwärtskalkulation</h1>
+    
+    <div class="task-box">
+        <strong>Aufgabe:</strong> Ein Händler bezieht Bluetooth-Kopfhörer zum <strong>Listeneinkaufspreis von 160,00 €</strong>. 
+        Der Hersteller gewährt <strong>20 % Händlerrabatt</strong> und <strong>3 % Liefererskonto</strong>. 
+        Die <strong>Bezugskosten</strong> betragen <strong>6,50 €</strong>. 
+        Geplant sind ein <strong>Handlungskostenzuschlag von 38 %</strong> und ein <strong>Gewinnzuschlag von 22 %</strong>. 
+        Kunden erhalten <strong>2 % Kundenskonto</strong> und <strong>10 % Kundenrabatt</strong>. 
+        Die Umsatzsteuer beträgt <strong>19 %</strong>.<br>
+        <em>-> Berechnen Sie den <strong>Listenverkaufspreis (brutto)</strong>.</em>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="col-names">Kalkulationsbegriff (ausfüllen!)</th>
+                <th class="col-percent">%</th>
+                <th class="col-euro">Betrag in €</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 17 leere Zeilen für das Schema -->
+            <tr><td></td><td>100 %</td><td>160,00</td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td>---</td><td></td></tr>
+            <tr><td></td><td>100 %</td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td>100 %</td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td>100 %</td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td>100 %</td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        BWR Training - Vorwärtskalkulation (Handel)
+    </div>
+</body>
+</html>

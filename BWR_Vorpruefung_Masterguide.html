@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ULTIMATIVER BWR MASTERGUIDE - VORPRÜFUNG</title>
+    <style>
+        :root {
+            --primary: #1a2a6c;
+            --secondary: #b21f1f;
+            --accent: #fdbb2d;
+            --bg: #f4f7f6;
+            --text: #333;
+            --white: #ffffff;
+            --border: #dcdde1;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            line-height: 1.7;
+            color: var(--text);
+            background-color: var(--bg);
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            width: 280px;
+            position: fixed;
+            height: 100vh;
+            background: var(--primary);
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .sidebar h2 {
+            font-size: 1.2rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+            padding-bottom: 10px;
+        }
+
+        .sidebar a {
+            display: block;
+            color: #ecf0f1;
+            text-decoration: none;
+            padding: 8px 0;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            color: var(--accent);
+            padding-left: 5px;
+        }
+
+        .main-content {
+            margin-left: 320px;
+            padding: 40px;
+            max-width: 1000px;
+        }
+
+        .card {
+            background: var(--white);
+            padding: 30px;
+            margin-bottom: 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            border-left: 6px solid var(--primary);
+        }
+
+        .hf-header {
+            background: linear-gradient(to right, var(--primary), var(--secondary));
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        h1,
+        h2,
+        h3 {
+            color: var(--primary);
+        }
+
+        .hf-header h1 {
+            color: white;
+            margin: 0;
+        }
+
+        .topic-badge {
+            background: var(--accent);
+            color: #000;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 10px;
+        }
+
+        .formula {
+            background: #f8f9fa;
+            border: 1px dashed var(--primary);
+            padding: 15px;
+            text-align: center;
+            font-size: 1.1rem;
+            font-weight: bold;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+
+        .example {
+            background: #fff9e6;
+            border: 1px solid #ffeaa7;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+            position: relative;
+        }
+
+        .example::before {
+            content: "Beispiel";
+            position: absolute;
+            top: -12px;
+            left: 20px;
+            background: var(--accent);
+            color: black;
+            padding: 2px 10px;
+            font-size: 0.7rem;
+            font-weight: bold;
+            border-radius: 4px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+
+        th,
+        td {
+            border: 1px solid var(--border);
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background: #f1f2f6;
+            color: var(--primary);
+        }
+
+        .important {
+            background: #fab1a0;
+            border-left: 5px solid var(--secondary);
+            padding: 15px;
+            margin: 15px 0;
+            font-weight: bold;
+        }
+
+        .graphic-box {
+            border: 1px solid #ccc;
+            padding: 20px;
+            margin: 20px 0;
+            background: #fafafa;
+            text-align: center;
+        }
+
+        @media print {
+            .sidebar {
+                display: none;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 0;
+            }
+
+            .card {
+                break-inside: avoid;
+                box-shadow: none;
+                border: 1px solid #eee;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="sidebar">
+        <h2>Navigationsmenü</h2>
+        <p><strong>HF 3: Leistungserstellung</strong></p>
+        <a href="#hf3-1">- Kennzahlen & Wirtschaftlichkeit</a>
+        <a href="#hf3-2">- Kosten- & Produktionstheorie</a>
+        <a href="#hf3-3">- Organisationstypen</a>
+        <a href="#hf3-4">- Mengen- & Zeitplanung</a>
+        <a href="#hf3-5">- Deckungsbeitragsrechnung</a>
+        <a href="#hf3-6">- Optimale Losgröße</a>
+        <a href="#hf3-7">- Qualitätskontrolle</a>
+
+        <p><strong>HF 4: Absatz</strong></p>
+        <a href="#hf4-1">- Marketingbegriff & Marktforschung</a>
+        <a href="#hf4-2">- Produktpolitik</a>
+        <a href="#hf4-3">- Preispolitik & Strategien</a>
+        <a href="#hf4-4">- Kommunikationspolitik</a>
+        <a href="#hf4-5">- Distributionspolitik</a>
+        <a href="#hf4-6">- Kalkulationen (Vorw/Rückw)</a>
+
+        <p><strong>HF 7: Wertströme (KLR)</strong></p>
+        <a href="#hf7-1">- Grund-, Anders- & Zusatzkosten</a>
+        <a href="#hf7-2">- Betriebsabrechnungsbogen (BAB)</a>
+        <a href="#hf7-3">- Kostenträger (Vor/Nachkalkulation)</a>
+    </div>
+
+    <div class="main-content">
+
+        <header class="hf-header">
+            <h1>BWR MASTERGUIDE VORPRÜFUNG</h1>
+            <p>Jeder Punkt deiner Checkliste – Vollständig & Detailliert</p>
+        </header>
+
+        <!-- SECTION HF 3 -->
+        <h2 id="hf3">HANDLUNGSFELD 3: LEISTUNGSERSTELLUNG</h2>
+
+        <div class="card" id="hf3-1">
+            <span class="topic-badge">Kennzahlen</span>
+            <h3>1. Kennzahlen der Wirtschaftlichkeit</h3>
+            <p>Hier geht es darum, den Erfolg des Unternehmens mit Zahlen zu belegen.</p>
+
+            <p><strong>Eigenkapitalrentabilität:</strong> Wie stark hat sich mein eigenes Geld verzinst?</p>
+            <div class="formula">EK-Rentabilität = (Gewinn / Eigenkapital) * 100</div>
+
+            <p><strong>Umsatzrentabilität:</strong> Wie viel % Gewinn mache ich pro 1 € Umsatz?</p>
+            <div class="formula">Umsatzrentabilität = (Gewinn / Umsatz) * 100</div>
+
+            <p><strong>Arbeitsproduktivität:</strong> Wie viel schafft ein Mitarbeiter in einer Stunde?</p>
+            <div class="formula">Menge / Arbeitsstunden</div>
+
+            <p><strong>Kapitalproduktivität:</strong> Wie viel Menge wird pro eingesetztem Euro (Maschinenkapital)
+                erzeugt?</p>
+            <div class="formula">Menge / Sachkapital</div>
+        </div>
+
+        <div class="card" id="hf3-2">
+            <span class="topic-badge">Kostentheorie</span>
+            <h3>2. Grundlagen der Produkions- und Kostentheorie</h3>
+
+            <p><strong>Fixkosten (Kf):</strong> Zeitabhängig (Miete, Gehälter, kalk. Abschr.). Sie fallen auch bei 0
+                Produktion an.</p>
+            <p><strong>Variable Kosten (Kv):</strong> Mengenabhängig (Rohstoffe, Energie, Akkordlohn).</p>
+
+            <p><strong>Leerkosten:</strong> Fixkosten, die anfallen, obwohl die Maschine stillsteht (nicht genutzt
+                wird).</p>
+            <p><strong>Nutzkosten:</strong> Fixkostenanteil, der durch die tatsächliche Produktion "genutzt" wird.</p>
+
+            <p><strong>Kapazitätsauslastung:</strong> Wie viel % meiner maximalen Leistung nutze ich?</p>
+            <div class="formula">Auslastung = (Tatsächliche Menge / Max. Kapazität) * 100</div>
+
+            <div class="important">
+                Folgen bei zu geringer Auslastung: Hohe Stückkosten (Fixkosten degredieren nicht), Verlustgefahr.<br>
+                Folgen bei zu hoher Auslastung (Überlast): Verschleiß, Fehlerquote steigt, Überstundenzuschläge.
+            </div>
+        </div>
+
+        <div class="card" id="hf3-3">
+            <span class="topic-badge">Organisation</span>
+            <h3>3. Organisation der Leistungserstellung</h3>
+            <table>
+                <tr>
+                    <th>Prinzip</th>
+                    <th>Organisationstypen</th>
+                    <th>Vorteile</th>
+                </tr>
+                <tr>
+                    <td>Verrichtungsprinzip</td>
+                    <td>Werkstattfertigung</td>
+                    <td>Hohe Flexibilität, einfache Umstellung.</td>
+                </tr>
+                <tr>
+                    <td>Objektprinzip</td>
+                    <td>Reihenfertigung / Fließfertigung</td>
+                    <td>Kurze Wege, hohe Menge, geringe Stückkosten.</td>
+                </tr>
+            </table>
+
+            <p><strong>Fertigungstypen:</strong>
+            <ul>
+                <li><strong>Einzelfertigung:</strong> Jedes Produkt ein Unikat (Maßanzug).</li>
+                <li><strong>Serienfertigung:</strong> Begrenzte Anzahl gleicher Produkte (Kühlschränke).</li>
+                <li><strong>Sortenfertigung:</strong> Eng verwandte Produkte (Joghurt Erdbeere vs. Kirsche).</li>
+                <li><strong>Massentfertigung:</strong> Unbegrenzte Menge gleicher Produkte (Schrauben).</li>
+            </ul>
+            </p>
+        </div>
+
+        <div class="card" id="hf3-4">
+            <span class="topic-badge">Planung</span>
+            <h3>4. Mengen-, Produktions- & Zeitplanung</h3>
+            <p>Wie passe ich meine Produktion an die Nachfrage an?</p>
+
+            <p><strong>Synchronisation:</strong> Die Produktion folgt exakt dem Absatz (kein Lager nötig, aber Personal
+                muss flexibel sein).</p>
+            <p><strong>Emanzipation:</strong> Die Produktion läuft stetig (gleichmäßig) durch, egal wie viel verkauft
+                wird. Überschuss geht ins Lager.</p>
+            <p><strong>Eskalation (Selektive Anpassung):</strong> Eine Mischform, bei der stufenweise angepasst wird.
+            </p>
+        </div>
+
+        <div class="card" id="hf3-5">
+            <span class="topic-badge">Deckungsbeitrag</span>
+            <h3>5. Teilkostenrechnung & Deckungsbeitrag (DB)</h3>
+            <p>Der DB sagt uns, wie viel ein Produkt dazu beiträgt, die Fixkosten zu decken.</p>
+            <div class="formula">DB = Nettoerlös - variable Kosten (Kv)</div>
+
+            <p><strong>Relative Deckungsbeitragsrechnung (Engpassrechnung):</strong><br>
+                Wenn eine Maschine (z.B. der Ofen) voll ausgelastet ist, berechnet man den DB pro Minute!</p>
+            <div class="example">
+                Produkt A: DB 10€, braucht 2 Min -> Rel. DB = 5€/Min.<br>
+                Produkt B: DB 12€, braucht 4 Min -> Rel. DB = 3€/Min.<br>
+                <strong>Entscheidung:</strong> Wir produzieren erst A, weil der Ofen dort mehr Geld pro Minute
+                "verdient".
+            </div>
+        </div>
+
+        <div class="card" id="hf3-6">
+            <span class="topic-badge">Losgröße</span>
+            <h3>6. Optimale Losgröße</h3>
+            <p>Wann ist die Produktion am günstigsten? (Rüstkosten vs. Lagerkosten)</p>
+            <div class="formula">Andler-Formel: Wurzel aus [ (200 * Jahresbedarf * Rüstkosten) / (Herstellkosten *
+                Lagersatz) ]</div>
+        </div>
+
+        <!-- SECTION HF 4 -->
+        <header class="hf-header" id="hf4">
+            <h1>HANDLUNGSFELD 4: ABSATZ (MARKETING)</h1>
+        </header>
+
+        <div class="card" id="hf4-1">
+            <span class="topic-badge">Markt</span>
+            <h3>1. Marketing & Marktforschung</h3>
+            <p><strong>Primärforschung:</strong> "Feldforschung" - Direktbefragung, Beobachtung (Teuer, aber aktuell).
+            </p>
+            <p><strong>Sekundärforschung:</strong> "Schreibtischforschung" - Auswertung alter Bilanzen, Statistiken
+                (Billig, aber alt).</p>
+        </div>
+
+        <div class="card" id="hf4-2">
+            <span class="topic-badge">Produkt</span>
+            <h3>2. Produktpolitik</h3>
+            <ul>
+                <li><strong>Innovation:</strong> Ein völlig neues Produkt.</li>
+                <li><strong>Variation:</strong> Das aktuelle Produkt wird verändert (Facelift beim Auto).</li>
+                <li><strong>Differenzierung:</strong> Ein zweites Modell kommt hinzu (VW Golf und Golf Kombi).</li>
+                <li><strong>Diversifikation:</strong> In einen neuen Markt gehen (Kamerahersteller baut jetzt Handys).
+                </li>
+                <li><strong>Elimination:</strong> Produkt wird vom Markt genommen.</li>
+            </ul>
+            <p><strong>Sortimentsbreite:</strong> Viele verschiedene Produktgruppen (z.B. Supermarkt).</p>
+            <p><strong>Sortimentstiefe:</strong> Viele Varianten einer Gruppe (z.B. Teeladen mit 100 Sorten Tee).</p>
+        </div>
+
+        <div class="card" id="hf4-3">
+            <span class="topic-badge">Preis</span>
+            <h3>3. Preispolitik & Strategien</h3>
+            <p><strong>Preisuntergrenzen (PUG):</strong>
+            <ul>
+                <li><strong>Kurzfristige PUG:</strong> Preis = variable Kosten (Fixkosten werden nicht gedeckt, okay für
+                    kurze Zeit).</li>
+                <li><strong>Langfristige PUG:</strong> Preis = Selbstkosten (Alle Kosten werden gedeckt).</li>
+            </ul>
+            </p>
+            <p><strong>Strategien:</strong>
+            <ul>
+                <li><strong>Skimming (Abschöpfung):</strong> Erst sehr teuer, dann billiger (Technik).</li>
+                <li><strong>Penetration (Marktdurchdringung):</strong> Billig starten, um Konkurrenz zu verdrängen.</li>
+            </ul>
+            </p>
+            <p><strong>Preisdifferenzierung:</strong> Gleiches Produkt, anderer Preis durch:
+            <ul>
+                <li>Räumlich (Benzin in Stadt vs. Autobahn)</li>
+                <li>Zeitlich (Hotel im Sommer vs. Winter)</li>
+                <li>Personell (Schülerrabatt)</li>
+                <li>Sachlich (Gleiche Farbe, ein Mal für Profis, ein Mal für Hobby)</li>
+            </ul>
+            </p>
+        </div>
+
+        <div class="card" id="hf4-6">
+            <span class="topic-badge">Rechnung</span>
+            <h3>4. Preiskalkulation (Das Schema)</h3>
+            <div class="example">
+                Listenverkaufspreis (netto) <br>
+                - Kundenrabatt <br>
+                = Zieleinkaufspreis <br>
+                - Kundenskonto <br>
+                = Barverkaufspreis <br>
+                - Vertreterprovision <br>
+                = Selbstkostenpreis <br>
+                - Gewinn <br>
+                = ... (Rückwärtskalkulation funktioniert genau anders herum!)
+            </div>
+        </div>
+
+        <!-- SECTION HF 7 -->
+        <header class="hf-header" id="hf7">
+            <h1>HANDLUNGSFELD 7: WERTSTRÖME (KLR)</h1>
+        </header>
+
+        <div class="card" id="hf7-1">
+            <span class="topic-badge">Kostenarten</span>
+            <h3>1. Grund-, Anders- & Zusatzkosten</h3>
+            <p>Wir unterscheiden Aufwendungen (Finanzbuchhaltung) von Kosten (KLR).</p>
+            <ul>
+                <li><strong>Grundkosten:</strong> Aufwand = Kosten (z.B. Lohn für Arbeiter).</li>
+                <li><strong>Anderskosten:</strong> Kosten stehen ein anderes Datum oder Wert gegenüber (z.B. kalkul.
+                    Abschreibung).</li>
+                <li><strong>Zusatzkosten:</strong> Kosten, denen KEIN Aufwand gegenübersteht (z.B. kalkulatorischer
+                    Unternehmerlohn).</li>
+            </ul>
+        </div>
+
+        <div class="card" id="hf7-2">
+            <span class="topic-badge">BAB</span>
+            <h3>2. Betriebsabrechnungsbogen (BAB)</h3>
+            <p>Die Brücke zwischen Kostenarten und Produkten.</p>
+            <p><strong>Einzelkosten:</strong> Gehen direkt aufs Produkt (Holz).</p>
+            <p><strong>Gemeinkosten:</strong> Werden per Schlüssel auf Material, Fertigung, Verwaltung und Vertrieb
+                verteilt.</p>
+            <div class="formula">Zuschlagssatz (%) = (Gemeinkosten / Einzelkosten) * 100</div>
+        </div>
+
+        <div class="card" id="hf7-3">
+            <span class="topic-badge">Kalkulation</span>
+            <h3>3. Vor- und Nachkalkulation</h3>
+            <p><strong>Vorkalkulation (Normal):</strong> Planung mit Durchschnittswerten.</p>
+            <p><strong>Nachkalkulation (Ist):</strong> Was haben wir wirklich bezahlt?</p>
+            <div class="important">
+                Ist-Kosten < Normal-Kosten=Überdeckung (Wir haben gespart!) <br>
+                    Ist-Kosten > Normal-Kosten = Unterdeckung (Wir haben zu viel ausgegeben!)
+            </div>
+        </div>
+
+        <footer
+            style="margin-top: 50px; text-align: center; color: #999; font-size: 0.8rem; border-top: 1px solid #eee; padding-top: 20px;">
+            &copy; 2026 BWR Masterguide - Alle Checklisten-Punkte berücksichtigt.
+            <br>Tipp: Nutze STRG+F um nach Schlagworten zu suchen!
+        </footer>
+
+    </div>
+
+</body>
+
+</html>

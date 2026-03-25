@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>HF 7 Übung: Abgrenzungsrechnung & Ergebnistabelle</title>
+<style>
+  :root { --accent: #f39c12; --dark: #1a1a2e; --border: #bbb; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; color: #2c3e50; }
+  .topbar { background: var(--dark); color: white; padding: 12px 30px; display: flex; align-items: center; gap: 20px; position: sticky; top: 0; z-index: 99; }
+  .topbar a { color: #fdbb2d; text-decoration: none; }
+  .topbar h1 { font-size: 1.1rem; margin: 0; }
+  .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+  .hero { background: linear-gradient(135deg, #7f5c00, #f39c12); color: white; padding: 28px 32px; border-radius: 12px; margin-bottom: 24px; }
+  .hero h2 { margin: 0 0 6px; font-size: 1.6rem; }
+  .hero p { margin: 0; opacity: 0.9; font-size: 0.95rem; }
+  .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); border-top: 4px solid var(--accent); }
+  .card h3 { margin-top: 0; color: var(--dark); font-size: 1.15rem; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+  .aufgaben-nr { display: inline-block; background: var(--accent); color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: bold; margin-bottom: 8px; }
+  .aufgabe-text { background: #fffbf0; border-left: 4px solid #f39c12; padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 14px; font-size: 0.88rem; line-height: 1.6; }
+  .hinweis { background: #f0fff4; border-left: 4px solid #27ae60; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 0.86rem; margin-bottom: 12px; }
+  .merke { background: #fff0f0; border-left: 4px solid #e74c3c; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 0.86rem; margin-bottom: 12px; }
+
+  /* Klassifizierungstabelle */
+  table.cls { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-bottom: 16px; }
+  table.cls th { background: var(--dark); color: white; padding: 8px 10px; border: 1px solid #333; font-size: 0.8rem; }
+  table.cls td { border: 1px solid #ccc; padding: 7px 10px; vertical-align: middle; }
+  table.cls td.nr { width: 36px; text-align: center; background: #f5f5f5; font-weight: bold; }
+  table.cls td.pos { background: #fafafa; }
+  table.cls tr:nth-child(even) td.pos { background: #f0f0f0; }
+  table.cls input[type=text] { width: 95%; border: 1px solid #ccc; border-radius: 4px; padding: 4px 6px; font-size: 0.82rem; }
+  table.cls input[type=text]:focus { outline: 2px solid var(--accent); background: #fffde7; }
+
+  /* Ergebnistabelle groß */
+  .ergt-wrap { overflow-x: auto; }
+  table.ergt { border-collapse: collapse; font-size: 0.81rem; min-width: 920px; width: 100%; }
+  table.ergt th, table.ergt td { border: 1px solid var(--border); padding: 5px 7px; text-align: center; vertical-align: middle; }
+  table.ergt th { background: var(--dark); color: white; font-size: 0.77rem; }
+  table.ergt th.h1 { background: #7f5c00; }
+  table.ergt th.h2 { background: #2e4057; }
+  table.ergt th.h3 { background: #1a5c1a; }
+  table.ergt td.label { text-align: left; background: #f9f9f9; font-weight: 500; font-size: 0.82rem; width: 180px; }
+  table.ergt tr.sum-row td { font-weight: bold; border-top: 2px solid #777; background: #fffbe6; }
+  table.ergt input[type=text] { width: 82px; border: 1px solid #ccc; border-radius: 4px; padding: 4px 5px; font-size: 0.8rem; text-align: right; }
+  table.ergt input[type=text]:focus { outline: 2px solid var(--accent); background: #fffde7; }
+
+  /* Richtig/Falsch */
+  table.rf { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
+  table.rf th { background: var(--dark); color: white; padding: 8px 10px; border: 1px solid #444; }
+  table.rf td { border: 1px solid #ccc; padding: 8px 10px; }
+  table.rf td.stmt { background: #fafafa; }
+  table.rf input[type=text] { width: 100%; border: 1px solid #ccc; border-radius: 4px; padding: 4px 6px; font-size: 0.82rem; }
+  table.rf input[type=text]:focus { outline: 2px solid var(--accent); background: #fffde7; }
+
+  /* Freitext */
+  .freitext { width: 100%; border: 1px solid #ccc; border-radius: 6px; min-height: 60px; padding: 8px; font-size: 0.86rem; box-sizing: border-box; resize: vertical; font-family: inherit; }
+  .freitext:focus { outline: 2px solid var(--accent); background: #fffde7; }
+
+  /* Drucken */
+  @media print {
+    .topbar { display: none; }
+    body { background: white; }
+    .container { margin: 5px; }
+    input[type=text] { border-bottom: 1px solid #999; border-top:none; border-left:none; border-right:none; background:transparent; }
+    textarea { border: 1px solid #999; }
+    .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html">← Übersicht</a>
+  <h1>HF 7: Abgrenzungsrechnung & Ergebnistabelle</h1>
+</div>
+<div class="container">
+  <div class="hero">
+    <h2>📊 Abgrenzungsrechnung – Vollständige Übungsserie</h2>
+    <p>6 Aufgaben zur Beurteilung neutraler Aufwendungen/Erträge, Ergebnistabellen, Richtig/Falsch und offene Erklärungsaufgaben.</p>
+  </div>
+
+  <!-- ======== THEORIE ======== -->
+  <div class="card">
+    <h3>⚡ Theorie-Kurzüberblick</h3>
+    <div class="hinweis">
+      <strong>Neutrales Ergebnis</strong> = Aufwendungen/Erträge, die NICHT zum normalen Betriebszweck gehören:<br>
+      &bull; <strong>Betriebsfremd</strong>: Außerhalb des Betriebszwecks (Zinserträge, Miete für vermietetes Gebäude, Aktiengewinne)<br>
+      &bull; <strong>Außerordentlich</strong>: Einmalig, unregelmäßig, unvorhergesehen (Kassenfehlbetrag, Brand, Unfallschaden, Diebstahl)<br>
+      &bull; <strong>Periodenfremd</strong>: Zeitlich zu einem anderen Jahr gehörig (Steuernachzahlung Vorjahr, verspätete Rechnung)
+    </div>
+    <div class="hinweis" style="background:#eef7ff;border-color:#3498db;">
+      <strong>Betriebsergebnis (KLR-Bereich)</strong> = Alles, was zum <em>eigentlichen Betriebszweck</em>, <em>regelmäßig</em>, <em>im laufenden Jahr</em> anfällt (Materialkosten, Löhne, Mieten für Produktion, betriebliche Steuern).
+    </div>
+  </div>
+
+  <!-- ======== AUFGABE 1: Beurteilung (26 Positionen) ======== -->
+  <div class="card">
+    <h3>📝 Aufgabe 1 – Klassifizierung von Aufwendungen und Erträgen</h3>
+    <span class="aufgaben-nr">Übung 1</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Die Bergmann & Sohn Produktions-GmbH hat im laufenden Jahr folgende Aufwendungen und Erträge zu verbuchen. Entscheide für jede Position, ob sie ein <em>Kosten/Leistung</em> (= betriebliches Ergebnis) oder ein <em>neutraler Aufwand/Ertrag</em> ist. Wenn neutral: welcher Typ (Betriebsfremd, Außerordentlich oder Periodenfremd)?
+    </div>
+    <table class="cls">
+      <tr><th style="width:36px;">Nr.</th><th>Aufwendung / Ertrag</th><th style="width:115px;">Kosten / Leistung</th><th style="width:105px;">Betriebs-fremd</th><th style="width:105px;">Außer-ordentlich</th><th style="width:105px;">Perioden-fremd</th></tr>
+      <tr><td class="nr">1</td><td class="pos">Rohstoffverbrauch für laufende Produktion</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">2</td><td class="pos">Steuernachzahlung für das vorherige Geschäftsjahr</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">3</td><td class="pos">Lohnaufwand der Produktionsmitarbeiter</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">4</td><td class="pos">Kursgewinne aus dem Verkauf von Wertpapieren</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">5</td><td class="pos">Verlust durch Brand in der Lagerhalle</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">6</td><td class="pos">Mieteinnahmen aus einer betriebsfremden Immobilie</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">7</td><td class="pos">Abschreibung auf Produktionsmaschinen</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">8</td><td class="pos">Diebstahlverlust aus betrieblichen Lagerbeständen</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">9</td><td class="pos">Zinsen für ein Hypothekendarlehen (betriebsfremdes EFH)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">10</td><td class="pos">Leasingrate für eine Produktionsmaschine</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">11</td><td class="pos">Rückzahlung zuviel bezahlter Lieferantenrechnungen (Vorjahr)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">12</td><td class="pos">Erträge aus dem Verkauf einer Betriebsimmobilie über Buchwert</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">13</td><td class="pos">Sozialversicherungsbeiträge (Arbeitgeberanteil)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">14</td><td class="pos">Kassenfehlbetrag am Monatsende</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">15</td><td class="pos">Betriebliche Steuern (Gewerbesteuer, laufendes Jahr)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">16</td><td class="pos">Werbungskosten (Inserate, aktuelles Quartal)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">17</td><td class="pos">Dividendenerträge aus Beteiligungen an anderen Unternehmen</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">18</td><td class="pos">Verlust aus Abgang eines Fahrzeugs (Unfallschaden, Totalschaden)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">19</td><td class="pos">Miete für die genutzte Produktionshalle</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">20</td><td class="pos">Reparaturkosten an einer vermieteten (betriebsfremden) Lagerhalle</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">21</td><td class="pos">Zinserträge für Bankguthaben des Unternehmens</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">22</td><td class="pos">Versicherungsentschädigung nach einer Sturmkatastrophe</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">23</td><td class="pos">Güterverkehr / Frachtkosten für Kundenlieferungen</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">24</td><td class="pos">Lohnvorauszahlung an einen Mitarbeiter (Oktober, wird im Dez. verrechnet)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">25</td><td class="pos">Kraftfahrzeugsteuer für den Geschäftsführer-PKW</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">26</td><td class="pos">Erlöse aus dem Verkauf von Produktionsabfällen</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+    </table>
+  </div>
+
+  <!-- ======== AUFGABE 2: Betrieblich oder Neutral? ======== -->
+  <div class="card">
+    <h3>📝 Aufgabe 2 – Betrieblich oder Neutral? (mit Begründungsfeld)</h3>
+    <span class="aufgaben-nr">Übung 2</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Bei der Kreuzfeld Sportmode AG sind im Monat Juli folgende Aufwendungen angefallen. Beurteile jeweils ob der Aufwand <em>betrieblich</em> oder <em>neutral</em> ist, und wenn neutral: welche Art. Begründe kurz.
+    </div>
+    <table class="cls">
+      <tr><th style="width:36px;">Nr.</th><th>Aufwand / Ertrag</th><th style="width:100px;">Betrieblich</th><th style="width:100px;">Neutral</th><th style="width:130px;">Falls neutral – welche Art?</th></tr>
+      <tr><td class="nr">1</td><td class="pos">Kraftfahrzeugsteuer für den PKW der Geschäftsleitung</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">2</td><td class="pos">Reparaturaufwendungen an der Heizungsanlage des Bürogebäudes</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">3</td><td class="pos">Lohnvorauszahlung für einen Mitarbeiter</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">4</td><td class="pos">Maschinenschaden aufgrund eines Bedienungsfehlers eines Mitarbeiters</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">5</td><td class="pos">Zinsaufwendungen für ein Hypothekendarlehen für eine vermietete Lagerhalle</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">6</td><td class="pos">Diebstahlversicherung für das Papierlager</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">7</td><td class="pos">Soziale Abgaben (Arbeitgeberanteil) auf Gehälter der Mitarbeiter</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">8</td><td class="pos">Abfälle aus der Produktion können für 380 € verkauft werden</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">9</td><td class="pos">Die Kasse weist am Monatsende einen Fehlbetrag von 67,50 € auf</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="nr">10</td><td class="pos">Das Unternehmen erhält eine Steuerrückzahlung aus dem Vorjahr</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+    </table>
+  </div>
+
+  <!-- ======== AUFGABE 3: Beispiele nennen ======== -->
+  <div class="card">
+    <h3>📝 Aufgabe 3 – Beispiele nennen</h3>
+    <span class="aufgaben-nr">Übung 3</span>
+    <div class="aufgabe-text">Nenne je <strong>zwei</strong> konkrete Beispiele für die aufgeführten Aufwands- und Ertragsarten.</div>
+    <table class="cls">
+      <tr><th>Ertrags-/Aufwandsart</th><th>Beispiel 1</th><th>Beispiel 2</th></tr>
+      <tr><td class="pos">Betriebsfremde Aufwendungen</td><td><input type="text" style="width:95%;"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="pos">Betriebsfremde Erträge</td><td><input type="text" style="width:95%;"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="pos">Außerordentliche Aufwendungen</td><td><input type="text" style="width:95%;"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="pos">Außerordentliche Erträge</td><td><input type="text" style="width:95%;"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="pos">Periodenfremde Aufwendungen</td><td><input type="text" style="width:95%;"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="pos">Periodenfremde Erträge</td><td><input type="text" style="width:95%;"></td><td><input type="text" style="width:95%;"></td></tr>
+    </table>
+  </div>
+
+  <!-- ======== AUFGABE 4: Richtig oder Falsch ======== -->
+  <div class="card">
+    <h3>📝 Aufgabe 4 – Richtig oder Falsch? Korrigiere wenn nötig.</h3>
+    <span class="aufgaben-nr">Übung 4</span>
+    <table class="rf">
+      <tr><th style="width:55%;">Aussage</th><th style="width:80px;">R / F</th><th>Korrektur / Begründung</th></tr>
+      <tr><td class="stmt">Die Aufwendungen für Roh- und Hilfsstoffe stellen Kosten dar.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="stmt">Aufwendungen für Instandhaltung gehören zu den außerordentlichen Aufwendungen.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="stmt">Erträge aus Vermietung sind immer Leistungen des Betriebes.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="stmt">Umsatzerlöse für Handelswaren gehören zu den betriebsfremden Erträgen.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="stmt">Zinserträge aus dem Bankguthaben eines Produktionsunternehmens sind neutrale Erträge.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="stmt">Zinsaufwendungen für einen Betriebskredit des laufenden Jahres sind Kosten.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="stmt">Steuern sind immer betriebliche Aufwendungen.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="stmt">Ein Verlust durch einen Verkehrsunfall mit dem betrieblich genutzten LKW ist ein außerordentlicher betrieblicher Aufwand.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="stmt">Das Betriebsergebnis der KLR entspricht immer dem GuV-Ergebnis der Finanzbuchhaltung.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="stmt">Kalkulatorische Kosten erscheinen immer identisch auch in der GuV als Aufwand.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+    </table>
+  </div>
+
+  <!-- ======== AUFGABE 5: Ergebnistabelle A (Komplex, Allfit) ======== -->
+  <div class="card">
+    <h3>📝 Aufgabe 5 – Ergebnistabelle erstellen (Ziegler GmbH, aktuelles Jahr)</h3>
+    <span class="aufgaben-nr">Übung 5</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Die Ziegler Maschinenbau GmbH weist in ihrer GuV des aktuellen Jahres folgende Positionen aus (in Tsd. €). Erstelle daraus die vollständige betriebsbezogene Ergebnistabelle.<br><br>
+      <strong>GuV-Positionen (in Tsd. €):</strong><br>
+      Umsatzerlöse 2.140 | Mehrbestand an FE 35 | Ertr. aus Beteiligungen (Aktien) 18 | Mieterträge (vermietete Lagerhalle) 24 |
+      Rohstoffaufwand 560 | Löhne und Gehälter 480 | Soziale Aufwendungen 95 | AfA auf Anlagen 120 |
+      Aufwendungen für Mieten (Produktionshalle) 48 | Verlust aus Schadensfällen (Überschwemmung) 55 |
+      Verlust aus Abgang VA (Verkauf unter Buchwert, betriebsfremd) 14 | Verwaltung und Werbung 62 |
+      Betriebliche Steuern (lfd. Jahr) 30 | Zinsaufwendungen für Betriebskredit 18 | Steuernachzahlung Vorjahr 12
+    </div>
+    <div class="ergt-wrap">
+      <table class="ergt">
+        <thead>
+          <tr>
+            <th rowspan="2" class="h1" style="width:180px;">Position</th>
+            <th colspan="2" class="h1">Rechnungskreis I (G.u.V.)</th>
+            <th colspan="2" class="h2">RK II – Neutrales Ergebnis</th>
+            <th colspan="2" class="h3">RK II – Betriebsergebnis (KLR)</th>
+          </tr>
+          <tr>
+            <th class="h1" style="width:82px;">Aufwand</th><th class="h1" style="width:82px;">Ertrag</th>
+            <th class="h2" style="width:82px;">Aufwand</th><th class="h2" style="width:82px;">Ertrag</th>
+            <th class="h3" style="width:82px;">Kosten</th><th class="h3" style="width:82px;">Leistung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="label">Umsatzerlöse</td><td></td><td><input type="text" placeholder="2.140"></td><td></td><td></td><td></td><td><input type="text"></td></tr>
+          <tr><td class="label">Mehrbestand FE</td><td></td><td><input type="text" placeholder="35"></td><td></td><td></td><td></td><td><input type="text"></td></tr>
+          <tr><td class="label">Ertr. Beteiligungen</td><td></td><td><input type="text" placeholder="18"></td><td></td><td><input type="text"></td><td></td><td></td></tr>
+          <tr><td class="label">Mieterträge (Lagerhalle)</td><td></td><td><input type="text" placeholder="24"></td><td></td><td><input type="text"></td><td></td><td></td></tr>
+          <tr><td class="label">Rohstoffaufwand</td><td><input type="text" placeholder="560"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Löhne und Gehälter</td><td><input type="text" placeholder="480"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Soziale Aufwendungen</td><td><input type="text" placeholder="95"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">AfA auf Anlagen</td><td><input type="text" placeholder="120"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Aufwendungen Mieten</td><td><input type="text" placeholder="48"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Verlust Schadensfälle</td><td><input type="text" placeholder="55"></td><td></td><td><input type="text"></td><td></td><td></td><td></td></tr>
+          <tr><td class="label">Verlust Abgang VA</td><td><input type="text" placeholder="14"></td><td></td><td><input type="text"></td><td></td><td></td><td></td></tr>
+          <tr><td class="label">Verwaltung u. Werbung</td><td><input type="text" placeholder="62"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Betriebliche Steuern</td><td><input type="text" placeholder="30"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Zinsaufwendungen</td><td><input type="text" placeholder="18"></td><td></td><td><input type="text"></td><td></td><td></td><td></td></tr>
+          <tr><td class="label">Steuernachzahlung Vorj.</td><td><input type="text" placeholder="12"></td><td></td><td><input type="text"></td><td></td><td></td><td></td></tr>
+          <tr class="sum-row"><td class="label">Summe</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+          <tr class="sum-row"><td class="label">Ergebnis</td><td colspan="2"><input type="text" placeholder="GuV-Gewinn/Verlust" style="width:160px;"></td><td colspan="2"><input type="text" placeholder="Neutrales Erg." style="width:160px;"></td><td colspan="2"><input type="text" placeholder="Betriebsergebnis" style="width:160px;"></td></tr>
+          <tr class="sum-row"><td class="label">Kontrollsumme</td><td colspan="2"><input type="text" placeholder="=" style="width:160px;"></td><td colspan="2"><input type="text" placeholder="=" style="width:160px;"></td><td colspan="2"><input type="text" placeholder="=" style="width:160px;"></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ======== AUFGABE 6: Ergebnistabelle B (Taschenrechner – komplex) ======== -->
+  <div class="card">
+    <h3>📝 Aufgabe 6 – Ergebnistabelle mit Zusatzinformationen (Hersteller Taschenrechner GmbH)</h3>
+    <span class="aufgaben-nr">Übung 6</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Ein Hersteller von Taschenrechnern weist folgende GuV-Positionen aus (in €). Beachte dabei die <strong>Zusatzinformationen</strong>, die eine Abgrenzung notwendig machen!<br><br>
+      <table style="width:60%;font-size:0.87rem;border-collapse:collapse;margin:8px 0;">
+        <tr style="background:#f0f0f0;"><td style="padding:4px 8px;border:1px solid #ddd;font-weight:bold;">Position</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:right;font-weight:bold;">Betrag (€)</td></tr>
+        <tr><td style="padding:4px 8px;border:1px solid #ddd;">Umsatzerlöse für eigene Erzeugnisse</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:right;">980.000</td></tr>
+        <tr><td style="padding:4px 8px;border:1px solid #ddd;">Mieterträge aus Vermietung</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:right;">55.000</td></tr>
+        <tr><td style="padding:4px 8px;border:1px solid #ddd;">Zinserträge</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:right;">12.000</td></tr>
+        <tr><td style="padding:4px 8px;border:1px solid #ddd;">Aufwendungen Rohstoffe und Hilfsstoffe</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:right;">380.000</td></tr>
+        <tr><td style="padding:4px 8px;border:1px solid #ddd;">Löhne</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:right;">110.000</td></tr>
+        <tr><td style="padding:4px 8px;border:1px solid #ddd;">Gehälter</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:right;">52.000</td></tr>
+        <tr><td style="padding:4px 8px;border:1px solid #ddd;">Soziale Aufwendungen</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:right;">4.500</td></tr>
+        <tr><td style="padding:4px 8px;border:1px solid #ddd;">Aufwendungen Büromaterial und Verwaltung</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:right;">11.000</td></tr>
+        <tr><td style="padding:4px 8px;border:1px solid #ddd;">Sonstige (neutrale) Aufwendungen</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:right;">8.500</td></tr>
+        <tr><td style="padding:4px 8px;border:1px solid #ddd;">Zinsaufwendungen</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:right;">28.000</td></tr>
+        <tr><td style="padding:4px 8px;border:1px solid #ddd;">Betriebliche Steuern</td><td style="padding:4px 8px;border:1px solid #ddd;text-align:right;">15.000</td></tr>
+      </table>
+      <strong>Zusatzinformationen (Abgrenzungen!):</strong><br>
+      • In den Löhnen sind <strong>6.000 € Löhne für den Hausmeister</strong> der vermieteten Gebäude enthalten.<br>
+      • In den Aufwendungen für Büromaterial sind <strong>1.500 € für die vermieteten Gebäude</strong> entstanden.
+    </div>
+    <div class="ergt-wrap">
+      <table class="ergt">
+        <thead>
+          <tr>
+            <th rowspan="2" class="h1" style="width:180px;">Position</th>
+            <th colspan="2" class="h1">Rechnungskreis I (G.u.V.)</th>
+            <th colspan="2" class="h2">RK II – Neutrales Ergebnis</th>
+            <th colspan="2" class="h3">RK II – Betriebsergebnis (KLR)</th>
+          </tr>
+          <tr>
+            <th class="h1" style="width:82px;">Aufwand</th><th class="h1" style="width:82px;">Ertrag</th>
+            <th class="h2" style="width:82px;">Aufwand</th><th class="h2" style="width:82px;">Ertrag</th>
+            <th class="h3" style="width:82px;">Kosten</th><th class="h3" style="width:82px;">Leistung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="label">Umsatzerlöse</td><td></td><td><input type="text" placeholder="980.000"></td><td></td><td></td><td></td><td><input type="text"></td></tr>
+          <tr><td class="label">Mieterträge Vermietung</td><td></td><td><input type="text" placeholder="55.000"></td><td></td><td><input type="text"></td><td></td><td></td></tr>
+          <tr><td class="label">Zinserträge</td><td></td><td><input type="text" placeholder="12.000"></td><td></td><td><input type="text"></td><td></td><td></td></tr>
+          <tr><td class="label">Rohstoffe u. Hilfsstoffe</td><td><input type="text" placeholder="380.000"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Löhne (gesamt GuV)</td><td><input type="text" placeholder="110.000"></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td class="label" style="padding-left:20px;font-size:0.79rem;color:#666;">…davon Hausmeister (neutral)</td><td></td><td></td><td><input type="text" placeholder="6.000"></td><td></td><td></td><td></td></tr>
+          <tr><td class="label" style="padding-left:20px;font-size:0.79rem;color:#666;">…davon betrieblich</td><td></td><td></td><td></td><td></td><td><input type="text" placeholder="104.000"></td><td></td></tr>
+          <tr><td class="label">Gehälter</td><td><input type="text" placeholder="52.000"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Soziale Aufwendungen</td><td><input type="text" placeholder="4.500"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Büromaterial / Verwaltung</td><td><input type="text" placeholder="11.000"></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td class="label" style="padding-left:20px;font-size:0.79rem;color:#666;">…davon vermietete Gebäude</td><td></td><td></td><td><input type="text" placeholder="1.500"></td><td></td><td></td><td></td></tr>
+          <tr><td class="label" style="padding-left:20px;font-size:0.79rem;color:#666;">…davon betrieblich</td><td></td><td></td><td></td><td></td><td><input type="text" placeholder="9.500"></td><td></td></tr>
+          <tr><td class="label">Sonstige neutrale Aufw.</td><td><input type="text" placeholder="8.500"></td><td></td><td><input type="text"></td><td></td><td></td><td></td></tr>
+          <tr><td class="label">Zinsaufwendungen</td><td><input type="text" placeholder="28.000"></td><td></td><td><input type="text"></td><td></td><td></td><td></td></tr>
+          <tr><td class="label">Betriebliche Steuern</td><td><input type="text" placeholder="15.000"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr class="sum-row"><td class="label">Summe</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+          <tr class="sum-row"><td class="label">Ergebnis (Betriebsergebnis ermitteln!)</td><td colspan="2"><input type="text" placeholder="GuV-Gewinn" style="width:160px;"></td><td colspan="2"><input type="text" placeholder="Neutrales Erg." style="width:160px;"></td><td colspan="2"><input type="text" placeholder="Betriebsergebnis" style="width:160px;"></td></tr>
+          <tr class="sum-row"><td class="label">Kontrollsumme</td><td colspan="2"><input type="text" placeholder="=" style="width:160px;"></td><td colspan="2"><input type="text" placeholder="=" style="width:160px;"></td><td colspan="2"><input type="text" placeholder="=" style="width:160px;"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="merke" style="margin-top:12px;">⚠ Bei geteilten Positionen (z.B. Löhne) werden beide Teile in der GuV-Spalte NICHT nochmals eingetragen. Nur die Aufteilung rechts davon wird aufgeteilt. Die GuV-Spalte zeigt nur den Gesamtbetrag (einmal!).</div>
+  </div>
+
+  <!-- AUFGABE 7: Vergleich Vorjahr/aktuelles Jahr -->
+  <div class="card">
+    <h3>📝 Aufgabe 7 – Vergleich: Betriebsergebnis Vorjahr vs. aktuelles Jahr</h3>
+    <span class="aufgaben-nr">Übung 7</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Herr Brenner möchte das Betriebsergebnis des Vorjahres mit dem des aktuellen Jahres vergleichen.<br>
+      Im Vorjahr betrug der GuV-Gewinn <strong>175.000 €</strong>. Folgende Positionen sind bekannt (in Tsd. €):<br><br>
+      <em>Vorjahr:</em> Umsatzerlöse 1.680 | Mehrbestand FE 22 | Ertr. Beteiligungen 12 | Mieterträge (Vermietung) 30 |
+      Rohstoffaufwand 390 | Personalaufwendungen (davon 8 Tsd. für vermietete Gebäude) 210 |
+      AfA Anlagen 50 | Mietaufwand (Produktion) 35 | Verlust Schadensfälle 9 | Verlust Abgang VG (betriebsfremd) 18 |
+      Verwaltung u. Werbung 25 | Betriebliche Steuern 30 | Zinsaufwendungen 18 | Steuernachzahlung Vorjahr 7
+    </div>
+    <p style="font-size:0.87rem;font-weight:bold;margin-bottom:6px;">a) Ermittle das Betriebsergebnis des Vorjahres:</p>
+    <div class="ergt-wrap">
+      <table class="ergt">
+        <thead>
+          <tr>
+            <th rowspan="2" class="h1" style="width:180px;">Position</th>
+            <th colspan="2" class="h1">RK I (G.u.V.)</th>
+            <th colspan="2" class="h2">Neutrales Ergebnis</th>
+            <th colspan="2" class="h3">Betriebsergebnis</th>
+          </tr>
+          <tr>
+            <th class="h1" style="width:75px;">Aufwand</th><th class="h1" style="width:75px;">Ertrag</th>
+            <th class="h2" style="width:75px;">Aufwand</th><th class="h2" style="width:75px;">Ertrag</th>
+            <th class="h3" style="width:75px;">Kosten</th><th class="h3" style="width:75px;">Leistung</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="label">Umsatzerlöse</td><td></td><td><input type="text"></td><td></td><td></td><td></td><td><input type="text"></td></tr>
+          <tr><td class="label">Mehrbestand FE</td><td></td><td><input type="text"></td><td></td><td></td><td></td><td><input type="text"></td></tr>
+          <tr><td class="label">Ertr. Beteiligungen</td><td></td><td><input type="text"></td><td></td><td><input type="text"></td><td></td><td></td></tr>
+          <tr><td class="label">Mieterträge (Vermietung)</td><td></td><td><input type="text"></td><td></td><td><input type="text"></td><td></td><td></td></tr>
+          <tr><td class="label">Rohstoffaufwand</td><td><input type="text"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Personalaufwand</td><td><input type="text"></td><td></td><td></td><td></td><td></td><td></td></tr>
+          <tr><td class="label" style="padding-left:18px;font-size:0.79rem;color:#666;">…neutral (Vermietung)</td><td></td><td></td><td><input type="text"></td><td></td><td></td><td></td></tr>
+          <tr><td class="label" style="padding-left:18px;font-size:0.79rem;color:#666;">…betrieblich</td><td></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">AfA Anlagen</td><td><input type="text"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Mietaufwand Produktion</td><td><input type="text"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Verlust Schadensfälle</td><td><input type="text"></td><td></td><td><input type="text"></td><td></td><td></td><td></td></tr>
+          <tr><td class="label">Verlust Abgang VG</td><td><input type="text"></td><td></td><td><input type="text"></td><td></td><td></td><td></td></tr>
+          <tr><td class="label">Verwaltung u. Werbung</td><td><input type="text"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Betriebliche Steuern</td><td><input type="text"></td><td></td><td></td><td></td><td><input type="text"></td><td></td></tr>
+          <tr><td class="label">Zinsaufwendungen</td><td><input type="text"></td><td></td><td><input type="text"></td><td></td><td></td><td></td></tr>
+          <tr><td class="label">Steuernachzahlung Vorj.</td><td><input type="text"></td><td></td><td><input type="text"></td><td></td><td></td><td></td></tr>
+          <tr class="sum-row"><td class="label">Summe</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+          <tr class="sum-row"><td class="label">Ergebnis</td><td colspan="2"><input type="text" placeholder="Gewinn = 175 Tsd.€" style="width:150px;"></td><td colspan="2"><input type="text" placeholder="Neutrales Erg." style="width:150px;"></td><td colspan="2"><input type="text" placeholder="Betriebsergebnis" style="width:150px;"></td></tr>
+          <tr class="sum-row"><td class="label">Kontrollsumme</td><td colspan="2"><input type="text" style="width:150px;"></td><td colspan="2"><input type="text" style="width:150px;"></td><td colspan="2"><input type="text" style="width:150px;"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.87rem;font-weight:bold;margin:12px 0 6px;">b) Formuliere in Stichworten, wo du ein Problem in der GuV siehst (warum weicht das Betriebsergebnis vom GuV-Ergebnis ab?):</p>
+    <textarea class="freitext" rows="4" placeholder="Das Problem liegt darin, dass ..."></textarea>
+  </div>
+
+  <div style="text-align:center;margin:30px 0 50px;">
+    <a href="hf7_wertströme.html" style="padding:12px 24px;background:#7f5c00;color:white;border-radius:8px;text-decoration:none;margin-right:10px;">← Zurück zur Theorie</a>
+    <a href="hf7_bab_uebung.html" style="padding:12px 24px;background:var(--dark);color:white;border-radius:8px;text-decoration:none;">Weiter: BAB-Übung →</a>
+  </div>
+</div>
+</body>
+</html>

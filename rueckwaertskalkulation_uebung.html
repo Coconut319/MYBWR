@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>BWR Übung: Rückwärtskalkulation (Von unten nach oben)</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; color: #333; line-height: 1.2; font-size: 14px; }
+        h1 { font-size: 1.5rem; margin: 0 0 10px; border-bottom: 2px solid #2c3e50; }
+        .task-box { border: 1px solid #2c3e50; padding: 12px; margin-bottom: 15px; background-color: #f9f9f9; font-size: 0.9rem; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #333; padding: 6px 10px; text-align: left; height: 24px; }
+        th { background-color: #f2f2f2; font-size: 0.85rem; }
+        .col-names { width: 52%; }
+        .col-percent { width: 13%; }
+        .col-euro { width: 35%; }
+        .footer { margin-top: 20px; font-size: 0.7rem; text-align: center; color: #888; }
+        @media print { 
+            body { padding: 0; }
+            @page { margin: 1cm; }
+        }
+    </style>
+</head>
+<body>
+    <h1>BWR Übung: Rückwärtskalkulation</h1>
+    
+    <div class="task-box">
+        <strong>Aufgabe:</strong> Gaming-Tablet für <strong>549,00 € brutto</strong> (USt 19 %). 
+        Kundenrabatt 10 %, Kundenskonto 3 %. 
+        Gewinnzuschlag 25 %, Handlungskostenzuschlag 40 %. 
+        Bezugskosten 5,00 €/Stück. 
+        Liefererrabatt 15 %, Liefererskonto 2 %.<br>
+        <em>-> Starte ganz unten und rechne hoch zum <strong>Listeneinkaufspreis</strong>.</em>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="col-names">Kalkulationsbegriff (fang unten an!)</th>
+                <th class="col-percent">%</th>
+                <th class="col-euro">Betrag in €</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- 17 leere Zeilen, Startwert ganz unten -->
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td></td><td></td><td></td></tr>
+            <tr><td><strong>Listenverkaufspreis (brutto)</strong></td><td></td><td><strong>549,00</strong></td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        BWR Training - Rückwärtskalkulation (Handel)
+    </div>
+</body>
+</html>

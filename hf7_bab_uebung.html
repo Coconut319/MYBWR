@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>HF 7 Übung: Betriebsabrechnungsbogen & Zuschlagssätze</title>
+<style>
+  :root { --accent: #3498db; --dark: #1a1a2e; --border: #bbb; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; color: #2c3e50; }
+  .topbar { background: var(--dark); color: white; padding: 12px 30px; display: flex; align-items: center; gap: 20px; position: sticky; top:0; z-index:99; }
+  .topbar a { color: #fdbb2d; text-decoration: none; }
+  .topbar h1 { font-size: 1.1rem; margin: 0; }
+  .container { max-width: 1150px; margin: 30px auto; padding: 0 20px; }
+  .hero { background: linear-gradient(135deg, #1a2a6c, #3498db); color: white; padding: 28px 32px; border-radius: 12px; margin-bottom: 24px; }
+  .hero h2 { margin: 0 0 6px; font-size: 1.6rem; }
+  .hero p { margin: 0; opacity: 0.9; font-size: 0.95rem; }
+  .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); border-top: 4px solid var(--accent); }
+  .card h3 { margin-top: 0; color: var(--dark); font-size: 1.15rem; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+  .aufgaben-nr { display: inline-block; background: var(--accent); color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: bold; margin-bottom: 8px; }
+  .aufgabe-text { background: #eef7ff; border-left: 4px solid var(--accent); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 14px; font-size: 0.88rem; line-height: 1.6; }
+  .merke { background: #fff0f0; border-left: 4px solid #e74c3c; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 0.86rem; margin-bottom: 12px; }
+  .hinweis { background: #f0fff4; border-left: 4px solid #27ae60; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 0.86rem; margin-bottom: 12px; }
+  .freitext { width: 100%; border: 1px solid #ccc; border-radius: 6px; min-height: 55px; padding: 8px; font-size: 0.86rem; box-sizing: border-box; resize: vertical; font-family: inherit; }
+  .freitext:focus { outline: 2px solid var(--accent); background: #eef7ff; }
+
+  /* BAB-Tabellen */
+  .bab-wrap { overflow-x: auto; margin-bottom: 14px; }
+  table.bab { border-collapse: collapse; font-size: 0.82rem; min-width: 850px; width: 100%; }
+  table.bab th, table.bab td { border: 1px solid var(--border); padding: 6px 8px; vertical-align: middle; }
+  table.bab th { background: var(--dark); color: white; text-align: center; font-size: 0.78rem; }
+  table.bab th.mat { background: #7f5c00; } table.bab th.fer { background: #2e4057; }
+  table.bab th.verw { background: #1a5c1a; } table.bab th.vert { background: #5c1a1a; }
+  table.bab td.label { text-align: left; font-weight: 500; background: #f9f9f9; }
+  table.bab td.given { text-align: right; color: #555; background: #f5f5f5; font-style: italic; }
+  table.bab tr.sum-row td { font-weight: bold; border-top: 2px solid #666; background: #fffbe6 !important; }
+  table.bab tr.bezug-row td { background: #eef7ff !important; font-size: 0.8rem; text-align: center; }
+  table.bab tr.zuschlag-row td { background: #e8f5e9 !important; font-weight: bold; }
+  table.bab input[type=text] { width: 85px; border: 1px solid #ccc; border-radius: 4px; padding: 4px 6px; font-size: 0.81rem; text-align: right; }
+  table.bab input[type=text]:focus { outline: 2px solid var(--accent); background: #eef7ff; }
+  table.bab input.wide { width: 130px; }
+
+  /* Formel-Boxen */
+  .formel { background: #fffbf0; border: 1.5px dashed #f39c12; padding: 10px 14px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.86rem; margin: 8px 0; }
+
+  /* Klassifizierungstabelle */
+  table.cls { width: 100%; border-collapse: collapse; font-size: 0.84rem; margin-bottom: 16px; }
+  table.cls th { background: var(--dark); color: white; padding: 8px 10px; border: 1px solid #333; }
+  table.cls td { border: 1px solid #ccc; padding: 7px 10px; }
+  table.cls td.label { background: #fafafa; }
+  table.cls input[type=text] { width: 95%; border: 1px solid #ccc; border-radius: 4px; padding: 4px 6px; font-size: 0.82rem; }
+  table.cls input[type=text]:focus { outline: 2px solid var(--accent); background: #eef7ff; }
+
+  @media print {
+    .topbar { display: none; }
+    body { background: white; }
+    .container { margin: 5px; }
+    input[type=text] { border-bottom: 1px solid #999; border-top:none; border-left:none; border-right:none; background:transparent; }
+    textarea { border: 1px solid #999; }
+    .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html">← Übersicht</a>
+  <h1>HF 7: Betriebsabrechnungsbogen (BAB) & Zuschlagssätze</h1>
+</div>
+<div class="container">
+  <div class="hero">
+    <h2>🏭 BAB – Vollständige Übungsserie</h2>
+    <p>6 Aufgaben: von einfacher Schlüsselung über vollständige BABs bis hin zur Ermittlung fehlender Bezugsgrößen und Beurteilungsaufgaben.</p>
+  </div>
+
+  <!-- THEORIE -->
+  <div class="card">
+    <h3>⚡ Formeln – Zuschlagssätze</h3>
+    <div class="formel">MGK-Zuschlagsatz (%)  = Materialgemeinkosten   / Fertigungsmaterial    × 100</div>
+    <div class="formel">FGK-Zuschlagsatz (%)  = Fertigungsgemeinkosten  / Fertigungslöhne       × 100</div>
+    <div class="formel">VwGK-Zuschlagsatz (%) = Verwaltungsgemeinkosten / Herstellkosten (Umsatz) × 100</div>
+    <div class="formel">VtGK-Zuschlagsatz (%) = Vertriebsgemeinkosten   / Herstellkosten (Umsatz) × 100</div>
+    <div class="merke">⚠ Achtung: VwGK und VtGK beziehen sich IMMER auf die <strong>Herstellkosten des UMSATZES</strong> (nicht der Erzeugung!). FM und FL sind Einzelkosten und stehen NICHT im BAB – sie sind nur Bezugsgrößen.</div>
+    <div class="hinweis">Typische Bezugsgrößen im BAB: Fläche (m²), Mitarbeiterzahl, Maschinenstunden (h), kWh, Lohnstunden oder Anzahl Vorgänge/Belege.</div>
+  </div>
+
+  <!-- AUFGABE 1: Einfache Schlüsselung -->
+  <div class="card">
+    <h3>📝 Aufgabe 1 – Einfache Gemeinkostenverteilung</h3>
+    <span class="aufgaben-nr">Übung 1</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Die Winkler Holzverarbeitung KG weist folgende Gemeinkosten aus. Verteile sie nach den angegebenen Schlüsseln auf die 4 Kostenstellen. Berechne dann die Zuschlagssätze.<br><br>
+      <strong>Gemeinkosten gesamt:</strong> Gehälter 180.000 € | AfA 60.000 € | Miete 40.000 € | Strom 20.000 € | Kfz 10.000 € | Versicherungen 8.000 €<br>
+      <strong>Schlüssel:</strong> Gehälter nach MA-Zahl: Mat 3 / Fert 15 / Verw 5 / Vert 7 | AfA: nur Fertigung |
+      Miete nach m²: Mat 150 / Fert 500 / Verw 100 / Vert 50 | Strom nach kWh: Mat 30 / Fert 110 / Verw 5 / Vert 5 |
+      Kfz: nur Vertrieb | Versicherungen gleichmäßig<br>
+      <strong>Bezugsgrößen:</strong> FM = 140.000 € | FL = 75.000 € | HK des Umsatzes = 310.000 €
+    </div>
+    <div class="bab-wrap"><table class="bab">
+      <tr><th style="text-align:left;width:185px;">Kostenart</th><th style="width:80px;">Gesamt (€)</th><th style="width:110px;">Schlüssel</th><th class="mat">Material</th><th class="fer">Fertigung</th><th class="verw">Verwaltung</th><th class="vert">Vertrieb</th></tr>
+      <tr><td class="label">Gehälter</td><td class="given">180.000</td><td class="given">MA 3/15/5/7</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">AfA</td><td class="given">60.000</td><td class="given">nur Fertigung</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Miete</td><td class="given">40.000</td><td class="given">m² 150/500/100/50</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Strom</td><td class="given">20.000</td><td class="given">kWh 30/110/5/5</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Kfz-Kosten</td><td class="given">10.000</td><td class="given">nur Vertrieb</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Versicherungen</td><td class="given">8.000</td><td class="given">gleichmäßig</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr class="sum-row"><td class="label">Summe GK</td><td class="given">318.000</td><td></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr class="bezug-row"><td class="label">Bezugsgröße</td><td></td><td></td><td>FM = 140.000 €</td><td>FL = 75.000 €</td><td>HKU = 310.000 €</td><td>HKU = 310.000 €</td></tr>
+      <tr class="zuschlag-row"><td class="label">Zuschlagssatz (%)</td><td></td><td></td><td><input type="text" placeholder="MGK %"></td><td><input type="text" placeholder="FGK %"></td><td><input type="text" placeholder="VwGK %"></td><td><input type="text" placeholder="VtGK %"></td></tr>
+    </table></div>
+  </div>
+
+  <!-- AUFGABE 2: Vollständiger BAB mit mehr Kostenarten -->
+  <div class="card">
+    <h3>📝 Aufgabe 2 – Vollständiger BAB (8 Kostenarten, Allfit Edition)</h3>
+    <span class="aufgaben-nr">Übung 2</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Die Allfit Sportartikel OHG weist für den Monat Oktober folgende Gemeinkosten aus (alle Beträge in €). Verteile auf die Kostenstellen und berechne die Ist-Zuschlagssätze.<br><br>
+      <strong>Gemeinkosten:</strong> Kalt- u. Warmmiete 44.000 | Gehälter 186.000 | Hilfsstoffe 16.200 | Büromaterial 8.400 |
+      Fremdleistungen 9.200 | AfA Gebäude 6.000 | AfA Maschinen 28.000 | Versicherungen 3.600<br>
+      <strong>Schlüssel:</strong>
+       Miete nach m²: Mat 240 / Fert 560 / Verw 120 / Vert 80 |
+       Gehälter nach Mitarbeiter: Mat 8 / Fert 32 / Verw 10 / Vert 10 |
+       Hilfsstoffe:  Mat 15% / Fert 70% / Verw 10% / Vert 5% |
+       Büromaterial gleichmäßig |
+       Fremdleistungen: nur Verwaltung und Vertrieb je 50% |
+       AfA Gebäude nach m² wie Miete |
+       AfA Maschinen: nur Fertigung |
+       Versicherungen nach % Anteil: Mat 10 / Fert 55 / Verw 20 / Vert 15<br>
+      <strong>Bezugsgrößen:</strong> FM = 320.000 € | FL = 148.000 € | HK des Umsatzes = 680.000 €
+    </div>
+    <div class="bab-wrap"><table class="bab">
+      <tr><th style="text-align:left;width:185px;">Kostenart</th><th style="width:80px;">Gesamt (€)</th><th style="width:130px;">Schlüssel</th><th class="mat">Material</th><th class="fer">Fertigung</th><th class="verw">Verwaltung</th><th class="vert">Vertrieb</th></tr>
+      <tr><td class="label">Miete</td><td class="given">44.000</td><td class="given">m² 240/560/120/80</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Gehälter</td><td class="given">186.000</td><td class="given">MA 8/32/10/10</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Hilfsstoffe</td><td class="given">16.200</td><td class="given">15/70/10/5%</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Büromaterial</td><td class="given">8.400</td><td class="given">gleichmäßig</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Fremdleistungen</td><td class="given">9.200</td><td class="given">Verw+Vert je 50%</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">AfA Gebäude</td><td class="given">6.000</td><td class="given">m² wie Miete</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">AfA Maschinen</td><td class="given">28.000</td><td class="given">nur Fertigung</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Versicherungen</td><td class="given">3.600</td><td class="given">10/55/20/15%</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr class="sum-row"><td class="label">Summe Gemeinkosten</td><td class="given">301.400</td><td></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr class="bezug-row"><td class="label">Bezugsgröße</td><td></td><td></td><td>FM = 320.000</td><td>FL = 148.000</td><td>HKU = 680.000</td><td>HKU = 680.000</td></tr>
+      <tr class="zuschlag-row"><td class="label">Ist-Zuschlagssatz (%)</td><td></td><td></td><td><input type="text" placeholder="MGK %"></td><td><input type="text" placeholder="FGK %"></td><td><input type="text" placeholder="VwGK %"></td><td><input type="text" placeholder="VtGK %"></td></tr>
+    </table></div>
+  </div>
+
+  <!-- AUFGABE 3: Fehlende Werte ermitteln -->
+  <div class="card">
+    <h3>📝 Aufgabe 3 – Fehlende Ausgangsgröße aus Zuschlagssatz ableiten</h3>
+    <span class="aufgaben-nr">Übung 3</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> In der Produktion der Hanna GmbH sind bekannt:<br>
+      MGK-Zuschlagsatz = 12% | FGK-Zuschlagsatz = 185% | Materialgemeinkosten dieser Periode = 30.000 € | Fertigungsgemeinkosten = 92.500 €<br>
+      <strong>Berechne die fehlenden Bezugsgrößen (Fertigungsmaterial und Fertigungslöhne).</strong>
+    </div>
+    <div class="formel">Bezugsgröße = Gemeinkosten / Zuschlagsatz × 100</div>
+    <table class="cls">
+      <tr><th>Gesucht</th><th>Formel / Rechenweg</th><th>Ergebnis</th></tr>
+      <tr><td class="label">Fertigungsmaterial (FM)</td><td><input type="text" style="width:95%;"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Fertigungslöhne (FL)</td><td><input type="text" style="width:95%;"></td><td><input type="text"></td></tr>
+    </table>
+    <div class="aufgabe-text" style="margin-top:10px;">
+      <strong>Erweiterung:</strong> Die VwGK betragen 44.800 € und der VwGK-Satz beträgt 8%. Die VtGK betragen 28.000 € und der VtGK-Satz 5%.<br>
+      Berechne die Herstellkosten des Umsatzes (HKU).
+    </div>
+    <table class="cls">
+      <tr><th>Gesucht</th><th>Rechenweg</th><th>Ergebnis</th></tr>
+      <tr><td class="label">HKU aus VwGK</td><td><input type="text" style="width:95%;"></td><td><input type="text"></td></tr>
+      <tr><td class="label">HKU aus VtGK (Kontrolle)</td><td><input type="text" style="width:95%;"></td><td><input type="text"></td></tr>
+    </table>
+  </div>
+
+  <!-- AUFGABE 4: Bezugsgrößenänderung / Vergleich -->
+  <div class="card">
+    <h3>📝 Aufgabe 4 – Auswirkung einer Kostenänderung auf Zuschlagssätze analysieren</h3>
+    <span class="aufgaben-nr">Übung 4</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Firma InnoTex hatte im Vorjahr folgende Daten:<br>
+      Materialgemeinkosten: 18.000 € | Fertigungsmaterial: 150.000 € → MGK-Satz = 12%<br>
+      Fertigungsgemeinkosten: 90.000 € | Fertigungslöhne: 50.000 € → FGK-Satz = 180%<br><br>
+      Im aktuellen Jahr stiegen die Gehälter in der Fertigung um 14.000 €.<br>
+      Die Bezugsgrößen (FM und FL) blieben unverändert.
+    </div>
+    <p style="font-weight:bold;font-size:0.88rem;">a) Berechne die neuen Ist-Zuschlagssätze im aktuellen Jahr:</p>
+    <table class="cls">
+      <tr><th>Kostenstelle</th><th>Neue Gemeinkosten (€)</th><th>Bezugsgröße (€)</th><th>Neuer Zuschlagsatz (%)</th></tr>
+      <tr><td class="label">Materialstelle</td><td><input type="text" placeholder="unverändert"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Fertigungsstelle</td><td><input type="text" placeholder="90.000 + ?"></td><td><input type="text"></td><td><input type="text"></td></tr>
+    </table>
+    <p style="font-weight:bold;font-size:0.88rem;">b) Um wie viel Prozentpunkte hat sich der FGK-Satz erhöht?</p>
+    <textarea class="freitext" rows="2" placeholder="Der FGK-Satz hat sich von ... auf ... erhöht, also um ..."></textarea>
+    <p style="font-weight:bold;font-size:0.88rem;">c) Was bedeutet das für den Preis des Produktes? Was müsste das Unternehmen tun?</p>
+    <textarea class="freitext" rows="3" placeholder="Ein höherer FGK-Satz bedeutet, dass der Selbstkostenpreis ..."></textarea>
+  </div>
+
+  <!-- AUFGABE 5: Vollst. BAB mit neutralen Kosten herausrechnen -->
+  <div class="card">
+    <h3>📝 Aufgabe 5 – Nur Kosten (nicht neutrale Aufwendungen) in den BAB übernehmen</h3>
+    <span class="aufgaben-nr">Übung 5</span>
+    <div class="aufgabe-text">
+      <strong>Wichtiger Schritt VOR dem BAB:</strong> Zuerst müssen neutrale Aufwendungen <em>herausgerechnet</em> werden.<br>
+      Die folgende Liste enthält <em>alle</em> Aufwendungen der Schmidt & Partner OHG. Markiere, welche in den BAB kommen (= betrieblich) und welche nicht.<br><br>
+      Aufwendungen (in €): Materialgemeinkosten 22.000 | Fertigungsgemeinkosten 46.000 | Verwaltungsgemeinkosten 18.000 |
+      Vertriebsgemeinkosten 12.500 | Zinsen für Privatdarlehen des Inhabers 4.000 (betriebsfremd) |
+      Steuernachzahlung Vorjahr 1.500 (periodenfremd) | Verlust durch Hochwasser 8.000 (außerordentlich) |
+      Versicherungsentschädigung für Hochwasser 6.000 (außerordentlich) | Kalk. Unternehmerlohn 3.500 (Zusatzkosten, ja in KLR!)
+    </div>
+    <table class="cls">
+      <tr><th>Aufwand</th><th style="width:80px;">Betrag (€)</th><th style="width:120px;">In BAB? (ja/nein)</th><th>Begründung</th></tr>
+      <tr><td class="label">Materialgemeinkosten</td><td>22.000</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Fertigungsgemeinkosten</td><td>46.000</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Verwaltungsgemeinkosten</td><td>18.000</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Vertriebsgemeinkosten</td><td>12.500</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Zinsen (Privatdarlehen des Inhabers)</td><td>4.000</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Steuernachzahlung Vorjahr</td><td>1.500</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Verlust durch Hochwasser</td><td>8.000</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Versicherungsentschädigung Hochwasser</td><td>6.000</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Kalk. Unternehmerlohn</td><td>3.500</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+    </table>
+    <p style="font-size:0.88rem;font-weight:bold;">Summe der Kosten, die in den BAB gehören:</p>
+    <input type="text" style="width:200px;border:1px solid #ccc;border-radius:4px;padding:6px;font-size:0.88rem;" placeholder="Summe = ?">
+  </div>
+
+  <!-- AUFGABE 6: BAB mit Hilfskostenstellen -->
+  <div class="card">
+    <h3>📝 Aufgabe 6 – Vollständiger BAB mit Umlagen (Kühlhaus GmbH)</h3>
+    <span class="aufgaben-nr">Übung 6</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Die Kühlhaus Verpackungs-GmbH hat 4 Hauptkostenstellen und zusätzlich eine <em>Hilfskostenstelle</em> «Energie».<br>
+      Die Energiekosten belaufen sich auf 36.000 € und werden nach dem Verbrauch (kW) auf die Hauptkostenstellen umgelegt:<br>
+      Material 20% | Fertigung 55% | Verwaltung 15% | Vertrieb 10%<br><br>
+      <strong>Weitere Gemeinkosten (bereits auf Hauptstellen verteilt, in €):</strong><br>
+      Material: 15.400 | Fertigung: 64.200 | Verwaltung: 22.800 | Vertrieb: 11.600<br>
+      <strong>Bezugsgrößen:</strong> FM = 95.000 € | FL = 62.000 € | HK des Umsatzes = 220.000 €
+    </div>
+    <div class="bab-wrap"><table class="bab">
+      <tr><th style="text-align:left;width:185px;">Kostenart</th><th style="width:80px;">Gesamt (€)</th><th class="mat">Material</th><th class="fer">Fertigung</th><th class="verw">Verwaltung</th><th class="vert">Vertrieb</th></tr>
+      <tr><td class="label">Sonstige GK (bereits verteilt)</td><td class="given">114.000</td><td class="given">15.400</td><td class="given">64.200</td><td class="given">22.800</td><td class="given">11.600</td></tr>
+      <tr><td class="label">Umlage Energie (36.000 €)</td><td class="given">36.000</td><td><input type="text" placeholder="20%"></td><td><input type="text" placeholder="55%"></td><td><input type="text" placeholder="15%"></td><td><input type="text" placeholder="10%"></td></tr>
+      <tr class="sum-row"><td class="label">Summe Gemeinkosten</td><td class="given">150.000</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr class="bezug-row"><td class="label">Bezugsgröße</td><td></td><td>FM = 95.000</td><td>FL = 62.000</td><td>HKU = 220.000</td><td>HKU = 220.000</td></tr>
+      <tr class="zuschlag-row"><td class="label">Zuschlagssatz (%)</td><td></td><td><input type="text" placeholder="MGK %"></td><td><input type="text" placeholder="FGK %"></td><td><input type="text" placeholder="VwGK %"></td><td><input type="text" placeholder="VtGK %"></td></tr>
+    </table></div>
+    <p style="font-size:0.88rem;font-weight:bold;">Beantworte folgende Kontrollfrage:</p>
+    <p style="font-size:0.88rem;">Prüfe nach: Addiere alle 4 Spaltensummen. Muss das Ergebnis mit der Gesamtsumme übereinstimmen?</p>
+    <textarea class="freitext" rows="2" placeholder="Ja / Nein, weil ..."></textarea>
+  </div>
+
+  <!-- AUFGABE 7: Richtig / Falsch BAB -->
+  <div class="card">
+    <h3>📝 Aufgabe 7 – Richtig oder Falsch? (BAB & Zuschlagssätze)</h3>
+    <span class="aufgaben-nr">Übung 7</span>
+    <table class="cls">
+      <tr><th style="width:60%;">Aussage</th><th style="width:70px;">R / F</th><th>Korrektur / Begründung</th></tr>
+      <tr><td class="label">Das Fertigungsmaterial ist eine Einzelkosten und erscheint als Spalte im BAB.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Ein hoher FGK-Zuschlagsatz bedeutet, dass die Fertigungsgemeinkosten sehr gering sind.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Der VwGK-Zuschlagsatz bezieht sich auf die Fertigungslöhne.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Wenn die Bezugsgröße (z.B. FL) steigt, aber die GK gleich bleiben, sinkt der Zuschlagssatz.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Neutrale Aufwendungen (z.B. außerordentliche Verluste) dürfen nicht in den BAB übernommen werden.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Kalkulatorische Kosten (z.B. kalk. Unternehmerlohn) erscheinen zwar nicht in der GuV, können aber trotzdem im BAB stehen.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Die Summe aller Spalten des BAB muss der Summe aller Kostenarten im BAB entsprechen.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Ein VtGK-Zuschlagsatz von 10% bedeutet: Pro 10 € Herstellkosten des Umsatzes fallen 1 € Vertriebsgemeinkosten an.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+    </table>
+  </div>
+
+  <div style="text-align:center;margin:30px 0 50px;">
+    <a href="hf7_abgrenzung_uebung.html" style="padding:12px 24px;background:#7f5c00;color:white;border-radius:8px;text-decoration:none;margin-right:10px;">← Abgrenzung</a>
+    <a href="hf7_kalkulation_uebung.html" style="padding:12px 24px;background:var(--dark);color:white;border-radius:8px;text-decoration:none;">Weiter: Kalkulation →</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M. Reuter OHG - Klausurtraining (HF 7)</title>
+    <style>
+        :root {
+            --primary: #8e44ad;
+            --secondary: #9b59b6;
+            --accent: #e67e22;
+            --success: #27ae60;
+            --danger: #e74c3c;
+            --bg: #fdfbfd;
+            --border: #dcd6e0;
+        }
+        
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; background-color: var(--bg); margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid var(--primary); }
+        h1, h2, h3 { color: var(--primary); }
+        
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; }
+        .btn-primary { background-color: var(--accent); color: white; }
+        .btn-primary:hover { background-color: #d35400; }
+        .btn-outline { background-color: transparent; border: 2px solid var(--accent); color: var(--accent); }
+        .btn-outline:hover { background-color: var(--accent); color: white; }
+        
+        .info-box { background-color: #fcf3eb; border-left: 4px solid var(--accent); padding: 15px 20px; margin-bottom: 20px; }
+        .aufgabe-section { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 25px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .aufgabe-title { background: var(--primary); color: white; display: inline-block; padding: 5px 15px; border-radius: 4px; margin-top: -40px; margin-bottom: 20px; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
+        th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: right; }
+        th:first-child, td:first-child { text-align: left; }
+        th { background-color: var(--secondary); color: white; font-weight: 500; }
+        .table-group-header { background-color: #7d4496; color: white; text-align: center; }
+        
+        input[type="text"], input[type="number"] { width: 100%; box-sizing: border-box; padding: 6px; border: 1px solid #ccc; border-radius: 3px; text-align: right; }
+        input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(230, 126, 34, 0.2); }
+        .correct { background-color: #e8f8f5 !important; border-color: var(--success) !important; color: #1e8449; font-weight: bold; }
+        .incorrect { background-color: #fceceb !important; border-color: var(--danger) !important; color: #c0392b; font-weight: bold; }
+        
+        .solution { display: none; color: var(--success); font-size: 12px; margin-top: 4px; }
+        .show-solutions .solution { display: block; }
+        
+        .calc-row { background-color: #f9f9f9; font-style: italic; }
+        .sum-row { font-weight: bold; background-color: #f2edf4; }
+
+        @media print {
+            .btn, .header-actions button { display: none; }
+            .container { box-shadow: none; padding: 0; }
+            body { background: white; }
+            .aufgabe-section { page-break-inside: avoid; border: none; padding: 10px 0; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-actions">
+        <div>
+            <h1>🖋️ Klausur-Workout: M. Reuter Schreibgeräte OHG</h1>
+            <p>Schwerpunkt: BAB, Ist- vs. Normalkosten (Zeitrechnung) und Kostendeckung.</p>
+        </div>
+        <div>
+            <button class="btn btn-primary" onclick="generateNewExercise()">🔄 Neue Zahlen generieren</button>
+            <button class="btn btn-outline" onclick="toggleSolutions()" id="btn-toggle-sol">👁️ Musterlösung einblenden</button>
+            <button class="btn btn-outline" onclick="checkAnswers()">✅ Eingaben prüfen</button>
+        </div>
+    </div>
+
+    <!-- AUFGABE A: BAB -->
+    <div class="aufgabe-section">
+        <div class="aufgabe-title">A. Betriebsabrechnungsbogen (Istkosten)</div>
+        <p>Die <strong>M. Reuter Schreibgeräte OHG</strong> ermittelt am Ende des Monats die Istkosten. Die primären Gemeinkosten aus der Ergebnistabelle wurden bereits in den BAB übernommen. Verteilen Sie die Gemeinkosten nach den vorgegebenen Schlüsseln und ermitteln Sie am Ende die <strong>Ist-Gemeinkostenzuschlagssätze</strong>.</p>
+        
+        <div class="info-box">
+            <strong>Bezugsgrößen für diesen Monat (Ist-Werte):</strong>
+            <ul>
+                <li>Fertigungsmaterial (FM): <strong><span id="txt_fm"></span> €</strong></li>
+                <li>Fertigungslöhne (FL): <strong><span id="txt_fl"></span> €</strong></li>
+                <li>Minderbestand an Erzeugnissen (Lagerabbau): <strong><span id="txt_bv_minder"></span> €</strong></li>
+            </ul>
+        </div>
+
+        <div style="overflow-x: auto;">
+            <table id="tabelle_bab">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="width: 20%">Kostenarten</th>
+                        <th rowspan="2" style="width: 15%">Gesamtkosten</th>
+                        <th rowspan="2" style="width: 15%">Verteilungsschlüssel</th>
+                        <th colspan="4" class="table-group-header">Hauptkostenstellen</th>
+                    </tr>
+                    <tr>
+                        <th>Material</th><th>Fertigung</th><th>Verwaltung</th><th>Vertrieb</th>
+                    </tr>
+                </thead>
+                <tbody id="bab_body">
+                    <!-- JS generated rows -->
+                </tbody>
+                <tfoot>
+                    <tr class="sum-row">
+                        <td colspan="3"><strong>Summe Ist-Gemeinkosten</strong></td>
+                        <td><input type="number" id="bab_sum_mat" data-sol="bab_sum_mat"><div class="solution" id="sol_bab_sum_mat"></div></td>
+                        <td><input type="number" id="bab_sum_fert" data-sol="bab_sum_fert"><div class="solution" id="sol_bab_sum_fert"></div></td>
+                        <td><input type="number" id="bab_sum_verw" data-sol="bab_sum_verw"><div class="solution" id="sol_bab_sum_verw"></div></td>
+                        <td><input type="number" id="bab_sum_vert" data-sol="bab_sum_vert"><div class="solution" id="sol_bab_sum_vert"></div></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3"><strong>Zuschlagsgrundlage (Bezugsgröße) in €</strong></td>
+                        <td><input type="number" id="bez_mat" data-sol="bez_mat"><div class="solution" id="sol_bez_mat"></div></td>
+                        <td><input type="number" id="bez_fert" data-sol="bez_fert"><div class="solution" id="sol_bez_fert"></div></td>
+                        <td colspan="2" style="text-align: center;">Herstellkosten des Umsatzes = <input type="number" style="width: 120px" id="bez_hkums" data-sol="bez_hkums"><div class="solution" id="sol_bez_hkums"></div></td>
+                    </tr>
+                    <tr class="calc-row">
+                        <td colspan="3"><strong>Ist-Zuschlagssätze (auf 2 Nachkommastellen)</strong></td>
+                        <td><input type="number" id="ist_zs_mgk" step="0.01" data-sol="ist_zs_mgk"> %<div class="solution" id="sol_ist_zs_mgk"></div></td>
+                        <td><input type="number" id="ist_zs_fgk" step="0.01" data-sol="ist_zs_fgk"> %<div class="solution" id="sol_ist_zs_fgk"></div></td>
+                        <td><input type="number" id="ist_zs_vwgk" step="0.01" data-sol="ist_zs_vwgk"> %<div class="solution" id="sol_ist_zs_vwgk"></div></td>
+                        <td><input type="number" id="ist_zs_vtgk" step="0.01" data-sol="ist_zs_vtgk"> %<div class="solution" id="sol_ist_zs_vtgk"></div></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- AUFGABE B: ZEITRECHNUNG -->
+    <div class="aufgabe-section">
+        <div class="aufgabe-title">B. Kostenträgerzeitrechnung (Erfolgskontrolle)</div>
+        <p>Die M. Reuter OHG rechnet unterjährig mit festen <strong>Normalkostenzuschlagssätzen</strong>, die aus den Durchschnittswerten der Vorjahre gebildet wurden:</p>
+        <ul>
+            <li>Normal-MGK-Zuschlag: <strong><span id="txt_norm_mgk"></span> %</strong></li>
+            <li>Normal-FGK-Zuschlag: <strong><span id="txt_norm_fgk"></span> %</strong></li>
+            <li>Normal-VwGK-Zuschlag: <strong><span id="txt_norm_vwgk"></span> %</strong></li>
+            <li>Normal-VtGK-Zuschlag: <strong><span id="txt_norm_vtgk"></span> %</strong></li>
+        </ul>
+        <p>Ermitteln Sie die Normalkosten für den abgelaufenen Monat und vergleichen Sie diese mit den tatsächlich angefallenen Ist-Gemeinkosten aus dem BAB. Berechnen Sie die Kostenüberdeckung bzw. Kostenunterdeckung.</p>
+
+        <table style="max-width: 900px;">
+            <thead>
+                <tr>
+                    <th style="width: 25%">Kostenart</th>
+                    <th>Zuschlagsgrundlage<br>(Ist-Werte aus BAB)</th>
+                    <th>Normal-GK<br>(Normalsatz × Grundlage)</th>
+                    <th>Ist-GK<br>(aus BAB-Summe)</th>
+                    <th>Überdeckung (+)<br>Unterdeckung (-)</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Materialgemeinkosten (MGK)</td>
+                    <td><input type="number" id="zt_bz_mat" data-sol="zt_bz_mat"><div class="solution" id="sol_zt_bz_mat"></div></td>
+                    <td><input type="number" id="zt_norm_mgk" data-sol="zt_norm_mgk"><div class="solution" id="sol_zt_norm_mgk"></div></td>
+                    <td id="td_ist_mgk">siehe BAB</td>
+                    <td><input type="number" id="zt_diff_mgk" data-sol="zt_diff_mgk"><div class="solution" id="sol_zt_diff_mgk"></div></td>
+                </tr>
+                <tr>
+                    <td>Fertigungsgemeinkosten (FGK)</td>
+                    <td><input type="number" id="zt_bz_fert" data-sol="zt_bz_fert"><div class="solution" id="sol_zt_bz_fert"></div></td>
+                    <td><input type="number" id="zt_norm_fgk" data-sol="zt_norm_fgk"><div class="solution" id="sol_zt_norm_fgk"></div></td>
+                    <td id="td_ist_fgk">siehe BAB</td>
+                    <td><input type="number" id="zt_diff_fgk" data-sol="zt_diff_fgk"><div class="solution" id="sol_zt_diff_fgk"></div></td>
+                </tr>
+                <tr>
+                    <td>Verwaltungsgemeinkosten (VwGK)</td>
+                    <td><input type="number" id="zt_bz_verw" data-sol="zt_bz_verw"><div class="solution" id="sol_zt_bz_verw"></div></td>
+                    <td><input type="number" id="zt_norm_vwgk" data-sol="zt_norm_vwgk"><div class="solution" id="sol_zt_norm_vwgk"></div></td>
+                    <td id="td_ist_vwgk">siehe BAB</td>
+                    <td><input type="number" id="zt_diff_vwgk" data-sol="zt_diff_vwgk"><div class="solution" id="sol_zt_diff_vwgk"></div></td>
+                </tr>
+                <tr>
+                    <td>Vertriebsgemeinkosten (VtGK)</td>
+                    <td><input type="number" id="zt_bz_vert" data-sol="zt_bz_vert"><div class="solution" id="sol_zt_bz_vert"></div></td>
+                    <td><input type="number" id="zt_norm_vtgk" data-sol="zt_norm_vtgk"><div class="solution" id="sol_zt_norm_vtgk"></div></td>
+                    <td id="td_ist_vtgk">siehe BAB</td>
+                    <td><input type="number" id="zt_diff_vtgk" data-sol="zt_diff_vtgk"><div class="solution" id="sol_zt_diff_vtgk"></div></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="sum-row">
+                    <td colspan="4" style="text-align: right"><strong>Gesamtabweichung (Gemeinkosten):</strong></td>
+                    <td><input type="number" id="zt_diff_gesamt" data-sol="zt_diff_gesamt"><div class="solution" id="sol_zt_diff_gesamt"></div></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+    <!-- AUFGABE C: NACHKALKULATION -->
+    <div class="aufgabe-section">
+        <div class="aufgabe-title">C. Nachkalkulation (Stückrechnung)</div>
+        <p>Für den Füller "Reuter Pro" (1.000 Stück) wurden am Monatsende folgende Ist-Zahlen ermittelt:</p>
+        <div class="info-box">
+            <ul>
+                <li>Fertigungsmaterialkosten (FM) gesamt: <strong><span id="txt_nach_fm"></span> €</strong></li>
+                <li>Fertigungslöhne (FL) gesamt: <strong><span id="txt_nach_fl"></span> €</strong></li>
+                <li>Der <strong>Listenverkaufspreis (netto)</strong> pro Stück lag bei <strong><span id="txt_nach_lvp"></span> €</strong>.</li>
+                <li>Kundenrabatt: <strong>10%</strong> | Kundenskonto: <strong>2%</strong></li>
+            </ul>
+        </div>
+        <p>Ermitteln Sie durch Rückwärts/Vorwärts-Kalkulation, welchen <strong>tatsächlichen Gewinn in Euro und in Prozent</strong> (bezogen auf die Selbstkosten) Sie mit den 1.000 Füllern erzielt haben. Verwenden Sie für die Gemeinkosten die <strong>Ist-Zuschlagssätze</strong> aus dem BAB!</p>
+
+        <table style="max-width: 600px; margin: 0 auto;">
+            <tr><td style="width:60%">Fertigungsmaterial (FM)</td><td><input type="number" id="nk_fm" data-sol="nk_fm"><div class="solution" id="sol_nk_fm"></div></td></tr>
+            <tr><td>+ MGK (mit Ist-Satz)</td><td><input type="number" id="nk_mgk" data-sol="nk_mgk"><div class="solution" id="sol_nk_mgk"></div></td></tr>
+            <tr><td>Fertigungslöhne (FL)</td><td><input type="number" id="nk_fl" data-sol="nk_fl"><div class="solution" id="sol_nk_fl"></div></td></tr>
+            <tr><td>+ FGK (mit Ist-Satz)</td><td><input type="number" id="nk_fgk" data-sol="nk_fgk"><div class="solution" id="sol_nk_fgk"></div></td></tr>
+            <tr class="sum-row"><td>= Herstellkosten</td><td><input type="number" id="nk_hk" data-sol="nk_hk"><div class="solution" id="sol_nk_hk"></div></td></tr>
+            <tr><td>+ VwGK (mit Ist-Satz)</td><td><input type="number" id="nk_vwgk" data-sol="nk_vwgk"><div class="solution" id="sol_nk_vwgk"></div></td></tr>
+            <tr><td>+ VtGK (mit Ist-Satz)</td><td><input type="number" id="nk_vtgk" data-sol="nk_vtgk"><div class="solution" id="sol_nk_vtgk"></div></td></tr>
+            <tr class="calc-row"><td>= Selbstkosten (SK) gesamt</td><td><input type="number" id="nk_sk" data-sol="nk_sk"><div class="solution" id="sol_nk_sk"></div></td></tr>
+            <tr class="sum-row"><td><strong>+ Tatsächlicher Gewinn (Euro)</strong></td><td><input type="number" id="nk_gewinn_eur" data-sol="nk_gewinn_eur" style="border-color: var(--accent); border-width: 2px;"><div class="solution" id="sol_nk_gewinn_eur"></div></td></tr>
+            <tr><td>= Barverkaufspreis gesamt</td><td><input type="number" id="nk_bvp" data-sol="nk_bvp"><div class="solution" id="sol_nk_bvp"></div></td></tr>
+            <tr><td>+ Kundenskonto gesamt (2%)</td><td><input type="number" id="nk_skonto" data-sol="nk_skonto"><div class="solution" id="sol_nk_skonto"></div></td></tr>
+            <tr><td>= Zielverkaufspreis gesamt</td><td><input type="number" id="nk_zvp" data-sol="nk_zvp"><div class="solution" id="sol_nk_zvp"></div></td></tr>
+            <tr><td>+ Kundenrabatt gesamt (10%)</td><td><input type="number" id="nk_rabatt" data-sol="nk_rabatt"><div class="solution" id="sol_nk_rabatt"></div></td></tr>
+            <tr class="calc-row"><td>= Listenverkaufspreis gesamt (1.000 Stk.)</td><td><input type="number" id="nk_lvp" data-sol="nk_lvp"><div class="solution" id="sol_nk_lvp"></div></td></tr>
+            <tr><td colspan="2" style="text-align: center; font-weight: bold; padding-top: 20px;">
+                Tatsächlicher Gewinn in Prozent (Gewinn / SK * 100): 
+                <br><br>
+                <input type="number" step="0.01" id="nk_gewinn_prozent" data-sol="nk_gewinn_prozent" style="width: 150px; text-align: center; border-color: var(--accent); border-width: 2px;"> %
+                <div class="solution" id="sol_nk_gewinn_prozent"></div>
+            </td></tr>
+        </table>
+    </div>
+
+</div>
+
+<script>
+let solutions = {};
+
+const formatNumber = (val) => new Intl.NumberFormat('de-DE').format(val);
+const round2 = (val) => Math.round(val * 100) / 100;
+function randomInt(min, max, step=10) { return Math.floor(Math.random() * ((max - min)/step + 1)) * step + min; }
+
+function generateNewExercise() {
+    clearInputs();
+    
+    // 1. BAB Basis-Werte
+    const fm = randomInt(400000, 800000, 5000);
+    const fl = randomInt(300000, 700000, 5000);
+    const bv_minder = randomInt(10000, 50000, 1000); // Minderbestand -> Aufwand, Herstellkosten Umsatz steigt.  HK Umsatz = HK Erzeugung + Bestandsminderung
+    
+    document.getElementById('txt_fm').innerText = formatNumber(fm);
+    document.getElementById('txt_fl').innerText = formatNumber(fl);
+    document.getElementById('txt_bv_minder').innerText = formatNumber(bv_minder);
+
+    let k_hfs = randomInt(80000, 150000, 1000); // Hilfsstoffe
+    let k_geh = randomInt(200000, 400000, 1000); // Gehälter
+    let k_soz = randomInt(40000, 80000, 1000); // Soziale Abgaben
+    let k_afa = randomInt(150000, 300000, 1000); // Kalk AfA
+    let k_zins = randomInt(50000, 120000, 1000); // Kalk Zinsen
+    let k_sb = randomInt(30000, 80000, 1000); // Sonstiges
+
+    const babKeys = [
+        { id: 'hfs', lbl: 'Hilfsstoffe', total: k_hfs, s: [30, 40, 10, 20] }, // % an Mat, Fert, Verw, Vert
+        { id: 'geh', lbl: 'Gehälter', total: k_geh, s: [20, 20, 40, 20] },
+        { id: 'soz', lbl: 'Soziale Abgaben', total: k_soz, s: [20, 30, 30, 20] },
+        { id: 'afa', lbl: 'Kalk. Abschreibungen', total: k_afa, s: [10, 70, 10, 10] },
+        { id: 'zins',lbl: 'Kalk. Zinsen', total: k_zins, s: [20, 40, 20, 20] },
+        { id: 'sb',  lbl: 'Sonstige Kosten', total: k_sb, s: [10, 10, 50, 30] }
+    ];
+
+    let babHtml = '';
+    let babSol = { bab_sum_mat: 0, bab_sum_fert: 0, bab_sum_verw: 0, bab_sum_vert: 0 };
+
+    babKeys.forEach(k => {
+        let mat = Math.round(k.total * k.s[0] / 100);
+        let fer = Math.round(k.total * k.s[1] / 100);
+        let ver = Math.round(k.total * k.s[2] / 100);
+        let vtr = k.total - mat - fer - ver;
+        
+        babSol[`bab_mat_${k.id}`] = mat;
+        babSol[`bab_fer_${k.id}`] = fer;
+        babSol[`bab_ver_${k.id}`] = ver;
+        babSol[`bab_vtr_${k.id}`] = vtr;
+        
+        babSol.bab_sum_mat += mat;
+        babSol.bab_sum_fert += fer;
+        babSol.bab_sum_verw += ver;
+        babSol.bab_sum_vert += vtr;
+
+        babHtml += `<tr>
+            <td>${k.lbl}</td>
+            <td>${formatNumber(k.total)}</td>
+            <td>${k.s.join(':')}</td>
+            <td><input type="number" id="bab_mat_${k.id}" data-sol="bab_mat_${k.id}"><div class="solution" id="sol_bab_mat_${k.id}"></div></td>
+            <td><input type="number" id="bab_fer_${k.id}" data-sol="bab_fer_${k.id}"><div class="solution" id="sol_bab_fer_${k.id}"></div></td>
+            <td><input type="number" id="bab_ver_${k.id}" data-sol="bab_ver_${k.id}"><div class="solution" id="sol_bab_ver_${k.id}"></div></td>
+            <td><input type="number" id="bab_vtr_${k.id}" data-sol="bab_vtr_${k.id}"><div class="solution" id="sol_bab_vtr_${k.id}"></div></td>
+        </tr>`;
+    });
+    document.getElementById('bab_body').innerHTML = babHtml;
+
+    // Herstellkosten der Erzeugung = FM + MGK + FL + FGK
+    let hk_erz = fm + babSol.bab_sum_mat + fl + babSol.bab_sum_fert;
+    // Herstellkosten des Umsatzes = HK Erz + Minderbestand
+    let hk_ums = hk_erz + bv_minder; 
+
+    babSol.bez_mat = fm;
+    babSol.bez_fert = fl;
+    babSol.bez_hkums = hk_ums;
+
+    babSol.ist_zs_mgk = round2((babSol.bab_sum_mat / fm) * 100);
+    babSol.ist_zs_fgk = round2((babSol.bab_sum_fert / fl) * 100);
+    babSol.ist_zs_vwgk = round2((babSol.bab_sum_verw / hk_ums) * 100);
+    babSol.ist_zs_vtgk = round2((babSol.bab_sum_vert / hk_ums) * 100);
+
+    // 2. ZEITRECHNUNG (Normal vs Ist)
+    // We create Normal ZS by slightly modifying the IST ZS (+- 1 to 5 %)
+    let n_mgk = round2(babSol.ist_zs_mgk + randomInt(-3, 3, 1));
+    let n_fgk = round2(babSol.ist_zs_fgk + randomInt(-5, 5, 1));
+    let n_vwgk = round2(babSol.ist_zs_vwgk + randomInt(-2, 2, 1));
+    let n_vtgk = round2(babSol.ist_zs_vtgk + randomInt(-2, 2, 1));
+
+    document.getElementById('txt_norm_mgk').innerText = n_mgk;
+    document.getElementById('txt_norm_fgk').innerText = n_fgk;
+    document.getElementById('txt_norm_vwgk').innerText = n_vwgk;
+    document.getElementById('txt_norm_vtgk').innerText = n_vtgk;
+
+    document.getElementById('td_ist_mgk').innerText = formatNumber(babSol.bab_sum_mat);
+    document.getElementById('td_ist_fgk').innerText = formatNumber(babSol.bab_sum_fert);
+    document.getElementById('td_ist_vwgk').innerText = formatNumber(babSol.bab_sum_verw);
+    document.getElementById('td_ist_vtgk').innerText = formatNumber(babSol.bab_sum_vert);
+
+    let norm_mgk_val = round2(fm * (n_mgk / 100));
+    let norm_fgk_val = round2(fl * (n_fgk / 100));
+    
+    // Normal-Herstellkosten
+    let norm_hk_erz = fm + norm_mgk_val + fl + norm_fgk_val;
+    let norm_hk_ums = norm_hk_erz + bv_minder; 
+    
+    let norm_vwgk_val = round2(norm_hk_ums * (n_vwgk / 100));
+    let norm_vtgk_val = round2(norm_hk_ums * (n_vtgk / 100));
+
+    let diff_mgk = norm_mgk_val - babSol.bab_sum_mat;
+    let diff_fgk = norm_fgk_val - babSol.bab_sum_fert;
+    let diff_vwgk = norm_vwgk_val - babSol.bab_sum_verw;
+    let diff_vtgk = norm_vtgk_val - babSol.bab_sum_vert;
+
+    let zeitSol = {
+        zt_bz_mat: fm, zt_bz_fert: fl, zt_bz_verw: norm_hk_ums, zt_bz_vert: norm_hk_ums, // Verw/Vert Basis is NORM HK_UMS in Normalkostenrechnung!
+        zt_norm_mgk: norm_mgk_val, zt_norm_fgk: norm_fgk_val, zt_norm_vwgk: norm_vwgk_val, zt_norm_vtgk: norm_vtgk_val,
+        zt_diff_mgk: diff_mgk, zt_diff_fgk: diff_fgk, zt_diff_vwgk: diff_vwgk, zt_diff_vtgk: diff_vtgk,
+        zt_diff_gesamt: diff_mgk + diff_fgk + diff_vwgk + diff_vtgk
+    };
+
+    // 3. NACHKALKULATION (Rückwärts + Vorwärts)
+    let nach_fm = randomInt(5000, 15000, 100);
+    let nach_fl = randomInt(8000, 20000, 100);
+    // Wir erfinden einen realistischen Listenpreis
+    let real_hk = nach_fm + (nach_fm * babSol.ist_zs_mgk/100) + nach_fl + (nach_fl * babSol.ist_zs_fgk/100);
+    let real_sk = real_hk + (real_hk * babSol.ist_zs_vwgk/100) + (real_hk * babSol.ist_zs_vtgk/100);
+    let lvp_per_unit = round2((real_sk * 1.20) / 1000) + randomInt(-2, 5, 1); // 20% Gewinn drauf, dann LVP
+
+    document.getElementById('txt_nach_fm').innerText = formatNumber(nach_fm);
+    document.getElementById('txt_nach_fl').innerText = formatNumber(nach_fl);
+    document.getElementById('txt_nach_lvp').innerText = formatNumber(lvp_per_unit);
+
+    let nk_lvp_gesamt = lvp_per_unit * 1000;
+    let r_rabatt = 10;
+    let r_skonto = 2;
+    
+    // Rückwärts von LVP bis BVP
+    let nk_rabatt = round2(nk_lvp_gesamt * (r_rabatt / 100));
+    let nk_zvp = nk_lvp_gesamt - nk_rabatt;
+    let nk_skonto = round2(nk_zvp * (r_skonto / 100));
+    let nk_bvp = nk_zvp - nk_skonto;
+
+    // Vorwärts von FM/FL bis SK
+    let nk_mgk = round2(nach_fm * (babSol.ist_zs_mgk / 100));
+    let nk_fgk = round2(nach_fl * (babSol.ist_zs_fgk / 100));
+    let nk_hk = nach_fm + nk_mgk + nach_fl + nk_fgk;
+    let nk_vwgk = round2(nk_hk * (babSol.ist_zs_vwgk / 100));
+    let nk_vtgk = round2(nk_hk * (babSol.ist_zs_vtgk / 100));
+    let nk_sk = nk_hk + nk_vwgk + nk_vtgk;
+
+    // Gewinn (Sandwich)
+    let nk_gewinn = nk_bvp - nk_sk;
+    let nk_gewinn_proz = round2((nk_gewinn / nk_sk) * 100);
+
+    let nkSol = {
+        nk_fm: nach_fm, nk_mgk: nk_mgk, nk_fl: nach_fl, nk_fgk: nk_fgk, nk_hk: nk_hk,
+        nk_vwgk: nk_vwgk, nk_vtgk: nk_vtgk, nk_sk: nk_sk, nk_gewinn_eur: nk_gewinn,
+        nk_bvp: nk_bvp, nk_skonto: nk_skonto, nk_zvp: nk_zvp, nk_rabatt: nk_rabatt, nk_lvp: nk_lvp_gesamt,
+        nk_gewinn_prozent: nk_gewinn_proz
+    };
+
+    // MERGE ALL
+    solutions = { ...babSol, ...zeitSol, ...nkSol };
+
+    for(let key in solutions) {
+        let solDiv = document.getElementById(`sol_${key}`);
+        if(solDiv) solDiv.innerText = `Lösung: ${formatNumber(solutions[key])}`;
+    }
+}
+
+function clearInputs() {
+    document.querySelectorAll('input[type="number"]').forEach(inp => {
+        inp.value = '';
+        inp.classList.remove('correct', 'incorrect');
+    });
+}
+
+function checkAnswers() {
+    document.querySelectorAll('input[type="number"]').forEach(inp => {
+        let solKey = inp.getAttribute('data-sol');
+        if(!solKey || solutions[solKey] === undefined) return;
+        
+        let userVal = parseFloat(inp.value.replace(',','.'));
+        let exactSol = round2(solutions[solKey]);
+        
+        inp.classList.remove('correct', 'incorrect');
+        if(isNaN(userVal) && exactSol === 0) { } 
+        else if(Math.abs(userVal - exactSol) < 0.2) { inp.classList.add('correct'); } 
+        else if(inp.value !== "") { inp.classList.add('incorrect'); }
+    });
+}
+
+function toggleSolutions() {
+    document.body.classList.toggle('show-solutions');
+    let btn = document.getElementById('btn-toggle-sol');
+    if(document.body.classList.contains('show-solutions')) {
+        btn.innerText = '🙈 Musterlösung verbergen';
+        btn.classList.add('btn-primary'); btn.classList.remove('btn-outline');
+    } else {
+        btn.innerText = '👁️ Musterlösung einblenden';
+        btn.classList.add('btn-outline'); btn.classList.remove('btn-primary');
+    }
+}
+
+window.onload = generateNewExercise;
+</script>
+
+</body>
+</html>

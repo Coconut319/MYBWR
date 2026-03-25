@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>BWR Übung: Mengenplanung (Produktionsglättung)</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; color: #333; font-size: 14px; line-height: 1.2; }
+        h1 { font-size: 1.5rem; margin-bottom: 15px; border-bottom: 2px solid #27ae60; color: #27ae60; }
+        .task-box { border: 1px solid #27ae60; padding: 12px; margin-bottom: 20px; background-color: #f0fff4; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #333; padding: 6px; text-align: center; height: 22px; }
+        th { background-color: #eee; font-weight: bold; }
+        .col-monat { width: 10%; }
+        .col-data { width: 22.5%; }
+        @media print { body { padding: 0; } @page { margin: 1cm; } .no-print { display: none; } }
+    </style>
+</head>
+<body>
+    <h1>BWR Übung: Mengenplanung (Emanzipation)</h1>
+    
+    <div class="task-box">
+        <strong>Aufgabe:</strong> Die "Speedy-Bike GmbH" plant ihre Produktion für das nächste Jahr. 
+        Um die Maschinen gleichmäßig auszulasten, wird eine konstante Produktionsmenge von <strong>9.000 Stück</strong> pro Monat geplant 
+        (ab Monat 9 sinkt diese auf <strong>8.500 Stück</strong> aufgrund von Wartungsarbeiten).<br><br>
+        <em>Ermitteln Sie die monatlichen Lagerzugänge/abgänge und den kumulierten Lagerbestand am Monatsende.</em>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th class="col-monat">Monat</th>
+                <th class="col-data">Absatz (Plan)</th>
+                <th class="col-data">Produktion</th>
+                <th class="col-data">Lagerzugang / -abgang (+ / -)</th>
+                <th class="col-data">Lagerbestand am Ende</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td>5.000</td><td>9.000</td><td></td><td></td></tr>
+            <tr><td>2</td><td>6.000</td><td>9.000</td><td></td><td></td></tr>
+            <tr><td>3</td><td>7.500</td><td>9.000</td><td></td><td></td></tr>
+            <tr><td>4</td><td>8.000</td><td>9.000</td><td></td><td></td></tr>
+            <tr><td>5</td><td>11.000</td><td>9.000</td><td></td><td></td></tr>
+            <tr><td>6</td><td>14.000</td><td>9.000</td><td></td><td></td></tr>
+            <tr><td>7</td><td>12.500</td><td>9.000</td><td></td><td></td></tr>
+            <tr><td>8</td><td>10.000</td><td>9.000</td><td></td><td></td></tr>
+            <tr><td>9</td><td>8.000</td><td>8.500</td><td></td><td></td></tr>
+            <tr><td>10</td><td>7.000</td><td>8.500</td><td></td><td></td></tr>
+            <tr><td>11</td><td>9.000</td><td>8.500</td><td></td><td></td></tr>
+            <tr><td>12</td><td>12.000</td><td>8.500</td><td></td><td></td></tr>
+        </tbody>
+    </table>
+
+    <div style="margin-top: 30px; font-weight: bold; color: #27ae60;" class="no-print">
+        Tipp: Starte in Monat 1 – der Lagerbestand ist am Anfang 0. 
+        Rechne: Produktion - Absatz = Zugang/Abgang. 
+        Dann den Zugang/Abgang zum Bestand des Vormonats addieren!
+    </div>
+</body>
+</html>

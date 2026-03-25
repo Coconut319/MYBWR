@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Storch KG - Klausurtraining (HF 7)</title>
+    <style>
+        :root { --primary: #2980b9; --secondary: #34495e; --accent: #f39c12; --success: #27ae60; --danger: #e74c3c; --bg: #f4f7f6; --border: #cbd4d0; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; background-color: var(--bg); margin: 0; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid var(--primary); }
+        h1, h2, h3 { color: var(--primary); }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; }
+        .btn-primary { background-color: var(--accent); color: white; }
+        .btn-primary:hover { background-color: #d68910; }
+        .btn-outline { background-color: transparent; border: 2px solid var(--accent); color: var(--accent); }
+        .btn-outline:hover { background-color: var(--accent); color: white; }
+        .info-box { background-color: #eaf2f8; border-left: 4px solid var(--primary); padding: 15px 20px; margin-bottom: 20px; }
+        .aufgabe-section { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 25px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .aufgabe-title { background: var(--primary); color: white; display: inline-block; padding: 5px 15px; border-radius: 4px; margin-top: -40px; margin-bottom: 20px; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+        th, td { border: 1px solid var(--border); padding: 6px 8px; text-align: right; }
+        th:first-child, td:first-child { text-align: left; }
+        th { background-color: var(--secondary); color: white; font-weight: 500; }
+        .table-group-header { background-color: #5d6d7e; color: white; text-align: center; }
+        input[type="text"], input[type="number"] { width: 100%; box-sizing: border-box; padding: 6px; border: 1px solid #ccc; border-radius: 3px; text-align: right; font-size: 13px; }
+        input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.2); }
+        .correct { background-color: #e8f8f5 !important; border-color: var(--success) !important; color: #1e8449; font-weight: bold; }
+        .incorrect { background-color: #fceceb !important; border-color: var(--danger) !important; color: #c0392b; font-weight: bold; }
+        .solution { display: none; color: var(--success); font-size: 11px; margin-top: 4px; }
+        .show-solutions .solution { display: block; }
+        .calc-row { background-color: #f9f9f9; font-style: italic; }
+        .sum-row { font-weight: bold; background-color: #eaeded; }
+        @media print { .btn, .header-actions button { display: none; } .container { box-shadow: none; padding: 0; } body { background: white; } .aufgabe-section { page-break-inside: avoid; border: none; padding: 10px 0; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-actions">
+        <div>
+            <h1>📊 Klausur-Workout: Storch KG</h1>
+            <p>Die ultimative Herausforderung: Komplette Abgrenzungsrechnung und Ergebnistabelle mit allen Feinheiten.</p>
+        </div>
+        <div>
+            <button class="btn btn-primary" onclick="generateNewExercise()">🔄 Neue Zahlen generieren</button>
+            <button class="btn btn-outline" onclick="toggleSolutions()" id="btn-toggle-sol">👁️ Musterlösung einblenden</button>
+            <button class="btn btn-outline" onclick="checkAnswers()">✅ Eingaben prüfen</button>
+        </div>
+    </div>
+
+    <!-- ZUSATZINFORMATIONEN -->
+    <div class="aufgabe-section">
+        <div class="aufgabe-title">Die Finanzbuchhaltung der Storch KG (Zusatzinformationen)</div>
+        <p>Erstellen Sie für den abgelaufenen Zeitraum die Ergebnistabelle. Lesen Sie die folgenden <strong>Zusatzinformationen</strong> genau und entscheiden Sie über <em>betriebsfremd</em>, <em>periodenfremd</em> oder <em>außerordentlich</em>:</p>
+        
+        <div class="info-box">
+            <ul>
+                <li><strong>Spenden:</strong> Es wurden insgesamt <strong><span id="txt_spenden"></span> €</strong> an das Deutsche Rote Kreuz gespendet.</li>
+                <li><strong>Personalaufwand:</strong> Im Personalaufwand ist eine Ausgleichszahlung für Urlaub aus dem Vorjahr in Höhe von <strong><span id="txt_lohn_periodenfremd"></span> €</strong> enthalten.</li>
+                <li><strong>Abschreibung auf Sachanlagen:</strong> Ein alter Lieferwagen wurde bei einem Unfall zerstört. Der Restbuchwert von <strong><span id="txt_afa_brand"></span> €</strong> ist als außerordentlicher Vorgang in der bilanzmäßigen AfA enthalten.</li>
+                <li><strong>Zinsaufwendungen:</strong> Die Miete der Betriebsgebäude ist unproblematisch, allerdings entfallen <strong><span id="txt_zins_privat"></span> €</strong> auf Kredite, die der Betriebsleiter privat aufgenommen hat.</li>
+                <li><strong>Zinserträge & Mieterträge:</strong> Alle Zinserträge und Mieterträge stammen aus Wertpapieren und einer Wohnimmobilie, die nicht dem eigentlichen Unternehmenszweck dienen.</li>
+                <li><strong>Verluste aus Wertpapierverkäufen:</strong> Diese Verluste gehören zu Finanzanlagen und sind keine typischen betrieblichen Vorgänge.</li>
+            </ul>
+        </div>
+        
+        <div class="info-box" style="background-color: #e8f8f5; border-left-color: var(--success)">
+            <strong>Kalkulatorische Zusatzinformationen:</strong>
+            <ul>
+                <li><strong>Kalkulatorische Abschreibung:</strong> Der Wiederbeschaffungswert der Sachanlagen beträgt <strong><span id="txt_kalk_wbw"></span> €</strong>. Die Anlage ist für eine Nutzungsdauer von <strong><span id="txt_kalk_nd"></span> Jahren</strong> vorgesehen (lineare AfA).</li>
+                <li><strong>Kalkulatorische Zinsen:</strong> Das betriebsnotwendige Kapital liegt bei <strong><span id="txt_kalk_kapital"></span> €</strong>. Der kalkulatorische Zinssatz beträgt <strong><span id="txt_kalk_zins_satz"></span> %</strong> p.a.</li>
+                <li><strong>Kalkulatorischer Unternehmerlohn:</strong> Für die Geschäftsführung ist ein Unternehmerlohn von monatlich <strong><span id="txt_kalk_ulohn_monat"></span> €</strong> pro Person anzusetzen (Die KG hat <span id="txt_kalk_ulohn_zahl"></span> Geschäftsführer).</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- ERGEBNISTABELLE -->
+    <div class="aufgabe-section">
+        <div class="aufgabe-title">Ergebnistabelle</div>
+        <p>Übernehmen Sie die Werte aus der FIBU (RK I) und trennen Sie diese in RK II (KLR) und den Abgrenzungsbereich.</p>
+        
+        <div style="overflow-x: auto;">
+            <table id="tabelle_abgrenzung">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="width: 28%">GuV-Posten (FIBU / RK I)</th>
+                        <th colspan="2" class="table-group-header">Rechnungskreis I (FIBU)</th>
+                        <th colspan="2" class="table-group-header">Abgrenzungsbereich (Neutral)</th>
+                        <th colspan="2" class="table-group-header">Rechnungskreis II (KLR)</th>
+                    </tr>
+                    <tr>
+                        <th>Aufwand (€)</th><th>Ertrag (€)</th>
+                        <th>Aufwand (€)</th><th>Ertrag (€)</th>
+                        <th>Kosten (€)</th><th>Leistungen (€)</th>
+                    </tr>
+                </thead>
+                <tbody id="ergebnis_body">
+                    <!-- JS generated -->
+                </tbody>
+                <tfoot>
+                    <tr class="sum-row">
+                        <td><strong>Summen</strong></td>
+                        <td><input type="number" id="sum_rk1_a" data-sol="sum_rk1_a"><div class="solution" id="sol_sum_rk1_a"></div></td>
+                        <td><input type="number" id="sum_rk1_e" data-sol="sum_rk1_e"><div class="solution" id="sol_sum_rk1_e"></div></td>
+                        <td><input type="number" id="sum_neut_a" data-sol="sum_neut_a"><div class="solution" id="sol_sum_neut_a"></div></td>
+                        <td><input type="number" id="sum_neut_e" data-sol="sum_neut_e"><div class="solution" id="sol_sum_neut_e"></div></td>
+                        <td><input type="number" id="sum_klr_k" data-sol="sum_klr_k"><div class="solution" id="sol_sum_klr_k"></div></td>
+                        <td><input type="number" id="sum_klr_l" data-sol="sum_klr_l"><div class="solution" id="sol_sum_klr_l"></div></td>
+                    </tr>
+                    <tr class="calc-row">
+                        <td><strong>Ergebnisse (Saldo = Ertrag/Leist. minus Aufwand/Kosten)</strong></td>
+                        <td colspan="2" style="text-align:center">Gesamtergebnis:<br> 
+                            <input type="number" style="width: 120px" id="saldo_gesamt" data-sol="saldo_gesamt"><div class="solution" id="sol_saldo_gesamt"></div>
+                        </td>
+                        <td colspan="2" style="text-align:center">Neutrales Ergebnis:<br> 
+                            <input type="number" style="width: 120px" id="saldo_neutral" data-sol="saldo_neutral"><div class="solution" id="sol_saldo_neutral"></div>
+                        </td>
+                        <td colspan="2" style="text-align:center">Betriebsergebnis:<br> 
+                            <input type="number" style="width: 120px" id="saldo_betrieb" data-sol="saldo_betrieb"><div class="solution" id="sol_saldo_betrieb"></div>
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+let solutions = {};
+const formatNumber = (val) => new Intl.NumberFormat('de-DE').format(val);
+function randomInt(min, max, step=10) { return Math.floor(Math.random() * ((max - min)/step + 1)) * step + min; }
+
+// Struktur der GuV: Wir bauen eine lange, typische Realschul/Ausbildungs-GuV
+const guvStructure = [
+    { id: 'mat', label: 'Materialaufwendungen', t: 'A', klr: 'K' },
+    { id: 'pers', label: 'Personalaufwendungen', t: 'A', klr: 'K_mix' },
+    { id: 'afa_sach', label: 'Abschreibungen auf Sachanlagen', t: 'A', klr: 'K_anders' },
+    { id: 'zinsen', label: 'Zinsaufwendungen', t: 'A', klr: 'K_anders' },
+    { id: 'steuern', label: 'Gewerbeertragsteuer', t: 'A', klr: 'K' },
+    { id: 'kfz', label: 'Kfz-Steuer', t: 'A', klr: 'K' },
+    { id: 'miet', label: 'Mietaufwendungen für Fabrikhalle', t: 'A', klr: 'K' },
+    { id: 'buero', label: 'Büromaterial', t: 'A', klr: 'K' },
+    { id: 'spenden', label: 'Spenden', t: 'A', klr: 'N_bfremd' },
+    { id: 'verlust_wp', label: 'Verlust a. d. Verkauf von Wertpapieren', t: 'A', klr: 'N_bfremd' },
+    
+    { id: 'umsatz', label: 'Umsatzerlöse für eigene Erzeugnisse', t: 'E', klr: 'L' },
+    { id: 'bv', label: 'Bestandsmehrung', t: 'E', klr: 'L' },
+    { id: 'zins_e', label: 'Zinserträge', t: 'E', klr: 'N_bfremd' },
+    { id: 'miet_e', label: 'Mieterträge', t: 'E', klr: 'N_bfremd' },
+    { id: 'wp_e', label: 'Erträge aus Wertpapieren', t: 'E', klr: 'N_bfremd' },
+    
+    { id: 'kalk_afa', label: 'Kalkulatorische Abschreibung', t: 'K_calc', klr: 'K_calc' },
+    { id: 'kalk_zins', label: 'Kalkulatorische Zinsen', t: 'K_calc', klr: 'K_calc' },
+    { id: 'kalk_ulohn', label: 'Kalkulatorischer Unternehmerlohn', t: 'K_calc', klr: 'K_calc' }
+];
+
+function generateNewExercise() {
+    clearInputs();
+    
+    // Basiswerte
+    const vals = {
+        mat: randomInt(3000000, 5000000, 10000),
+        pers_base: randomInt(1800000, 2500000, 10000),
+        pers_nachz: randomInt(20000, 60000, 1000), // Periodenfremd
+        afa_base: randomInt(200000, 400000, 10000),
+        afa_brand: randomInt(30000, 80000, 1000), // Außerordentlich
+        zins_base: randomInt(50000, 100000, 1000),
+        zins_privat: randomInt(15000, 35000, 1000), // Betriebsfremd
+        steuern: randomInt(80000, 150000, 1000),
+        kfz: randomInt(12000, 25000, 100),
+        miet: randomInt(200000, 300000, 1000),
+        buero: randomInt(15000, 30000, 100),
+        spenden: randomInt(5000, 15000, 100),
+        verlust_wp: randomInt(10000, 30000, 100),
+        
+        umsatz: randomInt(6000000, 9000000, 100000),
+        bv: randomInt(100000, 300000, 5000),
+        zins_e: randomInt(8000, 20000, 100),
+        miet_e: randomInt(12000, 25000, 100),
+        wp_e: randomInt(4000, 10000, 100),
+        
+        k_wbw: randomInt(2000000, 5000000, 100000),
+        k_nd: randomInt(5, 12, 1),
+        k_kapital: randomInt(1500000, 3500000, 100000),
+        k_zsatz: randomInt(6, 9, 1),
+        k_ul_m: randomInt(6000, 9500, 100),
+        k_ul_zahl: 2
+    };
+
+    // Summierte GuV Posts
+    let guv = {
+        mat: vals.mat,
+        pers: vals.pers_base + vals.pers_nachz,
+        afa_sach: vals.afa_base + vals.afa_brand,
+        zinsen: vals.zins_base + vals.zins_privat,
+        steuern: vals.steuern, kfz: vals.kfz, miet: vals.miet, buero: vals.buero,
+        spenden: vals.spenden, verlust_wp: vals.verlust_wp,
+        
+        umsatz: vals.umsatz, bv: vals.bv, zins_e: vals.zins_e, miet_e: vals.miet_e, wp_e: vals.wp_e,
+        
+        kalk_afa: vals.k_wbw / vals.k_nd,
+        kalk_zins: vals.k_kapital * (vals.k_zsatz / 100),
+        kalk_ulohn: vals.k_ul_m * 12 * vals.k_ul_zahl
+    };
+
+    // Update Text Hints
+    document.getElementById('txt_spenden').innerText = formatNumber(vals.spenden);
+    document.getElementById('txt_lohn_periodenfremd').innerText = formatNumber(vals.pers_nachz);
+    document.getElementById('txt_afa_brand').innerText = formatNumber(vals.afa_brand);
+    document.getElementById('txt_zins_privat').innerText = formatNumber(vals.zins_privat);
+    document.getElementById('txt_kalk_wbw').innerText = formatNumber(vals.k_wbw);
+    document.getElementById('txt_kalk_nd').innerText = vals.k_nd;
+    document.getElementById('txt_kalk_kapital').innerText = formatNumber(vals.k_kapital);
+    document.getElementById('txt_kalk_zins_satz').innerText = vals.k_zsatz;
+    document.getElementById('txt_kalk_ulohn_monat').innerText = formatNumber(vals.k_ul_m);
+    document.getElementById('txt_kalk_ulohn_zahl').innerText = vals.k_ul_zahl;
+
+    // Lösungen Array
+    solutions = { sum_rk1_a: 0, sum_rk1_e: 0, sum_neut_a: 0, sum_neut_e: 0, sum_klr_k: 0, sum_klr_l: 0 };
+    
+    let html = '';
+    guvStructure.forEach(p => {
+        let val = guv[p.id];
+        let r1a=0, r1e=0, na=0, ne=0, kk=0, kl=0;
+        
+        // Verteilen
+        if (p.t === 'A') {
+            r1a = val;
+            if (p.klr === 'K') kk = val;
+            if (p.klr === 'N_bfremd') na = val;
+            if (p.klr === 'K_mix') { kk = vals.pers_base; na = vals.pers_nachz; } // Mix
+            if (p.klr === 'K_anders') { na = val; } // Total Anderskosten neutralized -> We put all AfA and all Zins in neutral
+        }
+        if (p.t === 'E') {
+            r1e = val;
+            if (p.klr === 'L') kl = val;
+            if (p.klr === 'N_bfremd') ne = val;
+        }
+        if (p.t === 'K_calc') {
+            kk = val; // Kalk. Kosten
+        }
+
+        solutions[`rk1_a_${p.id}`] = r1a; solutions[`rk1_e_${p.id}`] = r1e;
+        solutions[`neut_a_${p.id}`] = na; solutions[`neut_e_${p.id}`] = ne;
+        solutions[`klr_k_${p.id}`] = kk;  solutions[`klr_l_${p.id}`] = kl;
+
+        solutions.sum_rk1_a += r1a; solutions.sum_rk1_e += r1e;
+        solutions.sum_neut_a += na; solutions.sum_neut_e += ne;
+        solutions.sum_klr_k += kk;  solutions.sum_klr_l += kl;
+
+        let guvVal = (p.t === 'A') ? r1a : (p.t === 'E') ? r1e : '';
+        if(guvVal === '') guvVal = '-'; else guvVal = formatNumber(guvVal);
+
+        html += `<tr><td>${p.label}</td>
+            <td>${p.t === 'A' ? guvVal : ''}</td>
+            <td>${p.t === 'E' ? guvVal : ''}</td>
+            <td><input type="number" id="neut_a_${p.id}" data-sol="neut_a_${p.id}"><div class="solution" id="sol_neut_a_${p.id}"></div></td>
+            <td><input type="number" id="neut_e_${p.id}" data-sol="neut_e_${p.id}"><div class="solution" id="sol_neut_e_${p.id}"></div></td>
+            <td><input type="number" id="klr_k_${p.id}" data-sol="klr_k_${p.id}"><div class="solution" id="sol_klr_k_${p.id}"></div></td>
+            <td><input type="number" id="klr_l_${p.id}" data-sol="klr_l_${p.id}"><div class="solution" id="sol_klr_l_${p.id}"></div></td>
+        </tr>`;
+    });
+
+    solutions.saldo_gesamt = solutions.sum_rk1_e - solutions.sum_rk1_a;
+    solutions.saldo_neutral = solutions.sum_neut_e - solutions.sum_neut_a;
+    solutions.saldo_betrieb = solutions.sum_klr_l - solutions.sum_klr_k;
+
+    document.getElementById('ergebnis_body').innerHTML = html;
+
+    for (let key in solutions) {
+        let el = document.getElementById(`sol_${key}`);
+        if(el) el.innerText = `Lsg: ${formatNumber(solutions[key])}`;
+    }
+}
+
+function clearInputs() {
+    document.querySelectorAll('input[type="number"]').forEach(inp => {
+        inp.value = '';
+        inp.classList.remove('correct', 'incorrect');
+    });
+}
+
+function checkAnswers() {
+    document.querySelectorAll('input[type="number"]').forEach(inp => {
+        let solKey = inp.getAttribute('data-sol');
+        if(!solKey || solutions[solKey] === undefined) return;
+        let uVal = parseFloat(inp.value);
+        let sol = solutions[solKey];
+        inp.classList.remove('correct', 'incorrect');
+        if(isNaN(uVal) && sol === 0) { } 
+        else if (Math.abs(uVal - sol) < 0.1) inp.classList.add('correct');
+        else if (inp.value !== "") inp.classList.add('incorrect');
+    });
+}
+
+function toggleSolutions() {
+    document.body.classList.toggle('show-solutions');
+}
+
+window.onload = generateNewExercise;
+</script>
+
+</body>
+</html>

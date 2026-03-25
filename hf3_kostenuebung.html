@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>BWR Übung: Kostenlehre (Kompakt)</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 15px; color: #333; line-height: 1.1; font-size: 13px; }
+        h1 { font-size: 1.3rem; margin: 0 0 10px; border-bottom: 2px solid #3498db; }
+        h2 { font-size: 1.1rem; margin: 15px 0 5px; color: #2980b9; }
+        .task-desc { background: #f0f7fb; padding: 8px; border-left: 3px solid #3498db; margin-bottom: 8px; font-size: 0.85rem; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 12px; }
+        th, td { border: 1px solid #777; padding: 4px 8px; text-align: left; height: 18px; }
+        th { background-color: #ecf0f1; font-size: 0.8rem; }
+        .center { text-align: center; }
+        @media print { 
+            body { padding: 0; }
+            @page { margin: 1cm; }
+        }
+    </style>
+</head>
+<body>
+    <h1>BWR Übung: Kosten & Kennzahlen</h1>
+
+    <h2>AA 1: Kosten sortieren</h2>
+    <div class="task-desc">Sortieren Sie die Beträge in die richtigen Spalten (Kf oder Kv) und berechnen Sie die Summen.</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Kostenart</th>
+                <th>Betrag €/mtl.</th>
+                <th>fix (Kf)</th>
+                <th>variabel (Kv)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Miete Produktionshalle</td><td>12.500,00</td><td></td><td></td></tr>
+            <tr><td>Gehälter Verwaltung</td><td>9.200,00</td><td></td><td></td></tr>
+            <tr><td>Rohstoffverbrauch</td><td>28.000,00</td><td></td><td></td></tr>
+            <tr><td>Maschinenversicherung</td><td>450,00</td><td></td><td></td></tr>
+            <tr><td>Maschinenstrom</td><td>1.500,00</td><td></td><td></td></tr>
+            <tr><td>Hilfsstoffe (Leim etc.)</td><td>500,00</td><td></td><td></td></tr>
+            <tr style="font-weight: bold; background: #eee;"><td>Gesamtkosten (K)</td><td></td><td></td><td></td></tr>
+        </tbody>
+    </table>
+
+    <h2>AA 2: Gesamtkosten-Verlauf</h2>
+    <div class="task-desc">Ermitteln Sie Kv, Kf und K bei verschiedenen Mengen. (Die aktuelle Auslastung zur Ermittlung von kv beträgt <strong>2.000 Stück</strong>; die Kf übernehmen Sie aus AA 1).</div>
+    <table>
+        <thead>
+            <tr>
+                <th>bei Stück (x)</th>
+                <th class="center">0</th>
+                <th class="center">500</th>
+                <th class="center">1.000</th>
+                <th class="center">1.500</th>
+                <th class="center">2.000</th>
+                <th class="center">2.500</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Kv</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>Kf</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr style="font-weight: bold;"><td>K</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+        </tbody>
+    </table>
+
+    <h2>AA 3: Stückkosten-Verlauf</h2>
+    <div class="task-desc">Berechnen Sie kv, kf und k. (kv = Kv/x; kf = Kf/x; k = K/x).</div>
+    <table>
+        <thead>
+            <tr>
+                <th>bei Stück (x)</th>
+                <th class="center">0</th>
+                <th class="center">500</th>
+                <th class="center">1.000</th>
+                <th class="center">1.500</th>
+                <th class="center">2.000</th>
+                <th class="center">2.500</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>kv</td><td>---</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>kf</td><td>---</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr style="font-weight: bold;"><td>k</td><td>---</td><td></td><td></td><td></td><td></td><td></td></tr>
+        </tbody>
+    </table>
+</body>
+</html>

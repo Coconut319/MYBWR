@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stuttgart GmbH - Klausurtraining (HF 7)</title>
+    <style>
+        :root { --primary: #d35400; --secondary: #e67e22; --accent: #2980b9; --success: #27ae60; --danger: #c0392b; --bg: #fffaf5; --border: #f5cba7; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; background-color: var(--bg); margin: 0; padding: 20px; }
+        .container { max-width: 1300px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid var(--primary); }
+        h1, h2, h3 { color: var(--primary); }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; }
+        .btn-primary { background-color: var(--accent); color: white; }
+        .btn-primary:hover { background-color: #1f618d; }
+        .btn-outline { background-color: transparent; border: 2px solid var(--accent); color: var(--accent); }
+        .btn-outline:hover { background-color: var(--accent); color: white; }
+        .info-box { background-color: #fef5e7; border-left: 4px solid var(--primary); padding: 15px 20px; margin-bottom: 20px; }
+        .aufgabe-section { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 25px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .aufgabe-title { background: var(--primary); color: white; display: inline-block; padding: 5px 15px; border-radius: 4px; margin-top: -40px; margin-bottom: 20px; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 13px; }
+        th, td { border: 1px solid var(--border); padding: 6px 8px; text-align: right; }
+        th:first-child, td:first-child { text-align: left; }
+        th { background-color: var(--secondary); color: white; font-weight: 500; }
+        .table-group-header { background-color: #a04000; color: white; text-align: center; }
+        .hilfs-col { background-color: #fdf2e9; }
+        input[type="text"], input[type="number"] { width: 100%; box-sizing: border-box; padding: 6px; border: 1px solid #ccc; border-radius: 3px; text-align: right; font-size: 13px; }
+        input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(41, 128, 185, 0.2); }
+        .correct { background-color: #e8f8f5 !important; border-color: var(--success) !important; color: #1e8449; font-weight: bold; }
+        .incorrect { background-color: #fceceb !important; border-color: var(--danger) !important; color: #c0392b; font-weight: bold; }
+        .solution { display: none; color: var(--success); font-size: 11px; margin-top: 4px; }
+        .show-solutions .solution { display: block; }
+        .calc-row { background-color: #f9f9f9; font-style: italic; }
+        .sum-row { font-weight: bold; background-color: #fad7a1; }
+        @media print { .btn, .header-actions button { display: none; } .container { box-shadow: none; padding: 0; } body { background: white; } .aufgabe-section { page-break-inside: avoid; border: none; padding: 10px 0; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-actions">
+        <div>
+            <h1>🏭 Klausur-Workout: Stuttgart GmbH</h1>
+            <p>Die Königsdisziplin im BAB: Erweiterter Betriebsabrechnungsbogen mit Treppenverfahren (Hilfskostenstellen-Umlage).</p>
+        </div>
+        <div>
+            <button class="btn btn-primary" onclick="generateNewExercise()">🔄 Neue Zahlen generieren</button>
+            <button class="btn btn-outline" onclick="toggleSolutions()" id="btn-toggle-sol">👁️ Musterlösung einblenden</button>
+            <button class="btn btn-outline" onclick="checkAnswers()">✅ Eingaben prüfen</button>
+        </div>
+    </div>
+
+    <div class="info-box">
+        <strong>Ausgangssituation:</strong><br>
+        Die Stuttgart GmbH betreibt eine eigene Stromerzeugung (Hilfskostenstelle 2) und bewirtschaftet ihre eigenen Gebäude (Hilfskostenstelle 1). 
+        <br><br>
+        1. Die <strong>primären Gemeinkosten</strong> müssen zunächst anhand der Schlüssel in die Abteilungen verteilt werden.<br>
+        2. Danach erfolgt das <strong>Treppenverfahren</strong>: Zuerst wird die Kostenstelle Gebäude (nach m²) umgelegt. Dabei erhält auch die Stromerzeugung ihren Anteil (!). Danach wird die Stromerzeugung (nach kWh) auf die restlichen Hauptkostenstellen verteilt.
+    </div>
+
+    <!-- BAB -->
+    <div class="aufgabe-section">
+        <div class="aufgabe-title">Betriebsabrechnungsbogen (Treppenverfahren)</div>
+        
+        <table id="tabelle_bab">
+            <thead>
+                <tr>
+                    <th rowspan="2" style="width: 15%">Kostenarten / Umlage<br>sowie Schlüssel</th>
+                    <th rowspan="2" style="width: 10%">Gesamt-<br>kosten (€)</th>
+                    <th rowspan="2" style="width: 10%">Schlüssel</th>
+                    <th colspan="2" class="table-group-header">Hilfskostenstellen</th>
+                    <th colspan="4" class="table-group-header">Hauptkostenstellen</th>
+                </tr>
+                <tr>
+                    <th class="hilfs-col">Gebäude</th>
+                    <th class="hilfs-col">Strom</th>
+                    <th>Material</th>
+                    <th>Fertigung</th>
+                    <th>Verwaltung</th>
+                    <th>Vertrieb</th>
+                </tr>
+            </thead>
+            <tbody id="bab_primar">
+                <!-- Primäre GK generiert durch JS -->
+            </tbody>
+            <tbody id="bab_sekundar">
+                <tr class="sum-row" style="background-color: #e5e8e8">
+                    <td colspan="3"><strong>Summe Primäre Gemeinkosten</strong></td>
+                    <td class="hilfs-col"><input type="number" id="sum_pri_geb" data-sol="sum_pri_geb"><div class="solution" id="sol_sum_pri_geb"></div></td>
+                    <td class="hilfs-col"><input type="number" id="sum_pri_str" data-sol="sum_pri_str"><div class="solution" id="sol_sum_pri_str"></div></td>
+                    <td><input type="number" id="sum_pri_mat" data-sol="sum_pri_mat"><div class="solution" id="sol_sum_pri_mat"></div></td>
+                    <td><input type="number" id="sum_pri_fer" data-sol="sum_pri_fer"><div class="solution" id="sol_sum_pri_fer"></div></td>
+                    <td><input type="number" id="sum_pri_ver" data-sol="sum_pri_ver"><div class="solution" id="sol_sum_pri_ver"></div></td>
+                    <td><input type="number" id="sum_pri_vtr" data-sol="sum_pri_vtr"><div class="solution" id="sol_sum_pri_vtr"></div></td>
+                </tr>
+                <!-- Umlage 1: Gebäude -->
+                <tr style="background-color: #fcf3cf">
+                    <td colspan="3"><strong>Umlage HKS 1: Gebäude (m²)</strong><br>
+                        Verteilung (m²): <span id="txt_qm"></span><br>
+                        <em>Summe d. Empfänger-m²: <span id="txt_qm_sum"></span></em>
+                    </td>
+                    <td class="hilfs-col"><input type="number" id="um1_geb" data-sol="um1_geb" placeholder="-Entlastung"><div class="solution" id="sol_um1_geb"></div></td>
+                    <td class="hilfs-col"><input type="number" id="um1_str" data-sol="um1_str"><div class="solution" id="sol_um1_str"></div></td>
+                    <td><input type="number" id="um1_mat" data-sol="um1_mat"><div class="solution" id="sol_um1_mat"></div></td>
+                    <td><input type="number" id="um1_fer" data-sol="um1_fer"><div class="solution" id="sol_um1_fer"></div></td>
+                    <td><input type="number" id="um1_ver" data-sol="um1_ver"><div class="solution" id="sol_um1_ver"></div></td>
+                    <td><input type="number" id="um1_vtr" data-sol="um1_vtr"><div class="solution" id="sol_um1_vtr"></div></td>
+                </tr>
+                <!-- Umlage 2: Strom -->
+                <tr style="background-color: #ebdef0">
+                    <td colspan="3"><strong>Umlage HKS 2: Strom (kWh)</strong><br>
+                        Verteilung (kWh): <span id="txt_kw"></span><br>
+                        <em>Summe d. Empfänger-kWh: <span id="txt_kw_sum"></span></em><br>
+                        <small style="color:#e74c3c">Achtung: Neuer Umlagebetrag = Primäre GK Strom + Anteil aus Gebäude!</small>
+                    </td>
+                    <td class="hilfs-col"></td>
+                    <td class="hilfs-col"><input type="number" id="um2_str" data-sol="um2_str" placeholder="-Entlastung"><div class="solution" id="sol_um2_str"></div></td>
+                    <td><input type="number" id="um2_mat" data-sol="um2_mat"><div class="solution" id="sol_um2_mat"></div></td>
+                    <td><input type="number" id="um2_fer" data-sol="um2_fer"><div class="solution" id="sol_um2_fer"></div></td>
+                    <td><input type="number" id="um2_ver" data-sol="um2_ver"><div class="solution" id="sol_um2_ver"></div></td>
+                    <td><input type="number" id="um2_vtr" data-sol="um2_vtr"><div class="solution" id="sol_um2_vtr"></div></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr class="sum-row">
+                    <td colspan="5"><strong>Summe (Endgültige Gemeinkosten)</strong></td>
+                    <td><input type="number" id="end_mat" data-sol="end_mat"><div class="solution" id="sol_end_mat"></div></td>
+                    <td><input type="number" id="end_fer" data-sol="end_fer"><div class="solution" id="sol_end_fer"></div></td>
+                    <td><input type="number" id="end_ver" data-sol="end_ver"><div class="solution" id="sol_end_ver"></div></td>
+                    <td><input type="number" id="end_vtr" data-sol="end_vtr"><div class="solution" id="sol_end_vtr"></div></td>
+                </tr>
+                <tr>
+                    <td colspan="5"><strong>Zuschlagsgrundlage in €</strong></td>
+                    <td id="td_fm" style="font-weight:bold">FM: </td>
+                    <td id="td_fl" style="font-weight:bold">FL: </td>
+                    <td colspan="2" id="td_hku" style="text-align:center; font-weight:bold">HK d. Umsatzes: </td>
+                </tr>
+                <tr class="calc-row">
+                    <td colspan="5"><strong>Gemeinkostenzuschlagssätze (%)</strong></td>
+                    <td><input type="number" id="zs_mat" step="0.01" data-sol="zs_mat"><div class="solution" id="sol_zs_mat"></div></td>
+                    <td><input type="number" id="zs_fer" step="0.01" data-sol="zs_fer"><div class="solution" id="sol_zs_fer"></div></td>
+                    <td><input type="number" id="zs_ver" step="0.01" data-sol="zs_ver"><div class="solution" id="sol_zs_ver"></div></td>
+                    <td><input type="number" id="zs_vtr" step="0.01" data-sol="zs_vtr"><div class="solution" id="sol_zs_vtr"></div></td>
+                </tr>
+            </tfoot>
+        </table>
+    </div>
+
+</div>
+
+<script>
+let sol = {};
+const formatNumber = (val) => new Intl.NumberFormat('de-DE').format(val);
+const round2 = (val) => Math.round(val * 100) / 100;
+function randomInt(min, max, step=10) { return Math.floor(Math.random() * ((max - min)/step + 1)) * step + min; }
+
+function generateNewExercise() {
+    clearInputs();
+    
+    // Basiswerte
+    const fm = randomInt(500000, 1000000, 10000);
+    const fl = randomInt(800000, 1500000, 10000);
+    const bestands_Aenderung = randomInt(-50000, 50000, 5000); // Mehr-/Minderbestand (Aufwand/Ertrag irrelevant, only for HK Umsatz)
+    // Wenn positiv: Mehrbestand. HK Umsatz = HK Erzeugung - Mehrbestand
+    
+    document.getElementById('td_fm').innerText = `FM: ${formatNumber(fm)}`;
+    document.getElementById('td_fl').innerText = `FL: ${formatNumber(fl)}`;
+
+    // Primäre Gemeinkosten
+    const pri = [
+        // id, label, gesamt, keys array: [geb, strom, mat, fer, verw, vert]
+        { id: 'hilf', lbl: 'Hilfsstoffe', t: randomInt(100000, 200000, 1000), k: [2, 8, 30, 40, 10, 10] },
+        { id: 'bb', lbl: 'Betriebsstoffe', t: randomInt(300000, 500000, 1000), k: [5, 45, 5, 40, 2, 3] }, // Viel Strom
+        { id: 'geh', lbl: 'Gehälter', t: randomInt(600000, 900000, 1000), k: [5, 5, 10, 20, 40, 20] },
+        { id: 'afa', lbl: 'Kalk. Abschreibung', t: randomInt(200000, 400000, 1000), k: [30, 10, 10, 40, 5, 5] },
+        { id: 'zins', lbl: 'Kalk. Zinsen', t: randomInt(80000, 150000, 1000), k: [40, 5, 15, 20, 10, 10] }
+    ];
+
+    let pri_html = '';
+    sol = {
+        sum_pri_geb:0, sum_pri_str:0, sum_pri_mat:0, sum_pri_fer:0, sum_pri_ver:0, sum_pri_vtr:0
+    };
+
+    pri.forEach(p => {
+        let geb = Math.round(p.t * p.k[0] / 100);
+        let str = Math.round(p.t * p.k[1] / 100);
+        let mat = Math.round(p.t * p.k[2] / 100);
+        let fer = Math.round(p.t * p.k[3] / 100);
+        let ver = Math.round(p.t * p.k[4] / 100);
+        let vtr = p.t - geb - str - mat - fer - ver; // Diff
+
+        sol.sum_pri_geb += geb;
+        sol.sum_pri_str += str;
+        sol.sum_pri_mat += mat;
+        sol.sum_pri_fer += fer;
+        sol.sum_pri_ver += ver;
+        sol.sum_pri_vtr += vtr;
+
+        sol[`pri_${p.id}_geb`] = geb; sol[`pri_${p.id}_str`] = str;
+        sol[`pri_${p.id}_mat`] = mat; sol[`pri_${p.id}_fer`] = fer;
+        sol[`pri_${p.id}_ver`] = ver; sol[`pri_${p.id}_vtr`] = vtr;
+
+        pri_html += `<tr>
+            <td>${p.lbl}</td>
+            <td>${formatNumber(p.t)}</td>
+            <td>${p.k.join(':')}</td>
+            <td class="hilfs-col"><input type="number" id="pri_${p.id}_geb" data-sol="pri_${p.id}_geb"><div class="solution" id="sol_pri_${p.id}_geb"></div></td>
+            <td class="hilfs-col"><input type="number" id="pri_${p.id}_str" data-sol="pri_${p.id}_str"><div class="solution" id="sol_pri_${p.id}_str"></div></td>
+            <td><input type="number" id="pri_${p.id}_mat" data-sol="pri_${p.id}_mat"><div class="solution" id="sol_pri_${p.id}_mat"></div></td>
+            <td><input type="number" id="pri_${p.id}_fer" data-sol="pri_${p.id}_fer"><div class="solution" id="sol_pri_${p.id}_fer"></div></td>
+            <td><input type="number" id="pri_${p.id}_ver" data-sol="pri_${p.id}_ver"><div class="solution" id="sol_pri_${p.id}_ver"></div></td>
+            <td><input type="number" id="pri_${p.id}_vtr" data-sol="pri_${p.id}_vtr"><div class="solution" id="sol_pri_${p.id}_vtr"></div></td>
+        </tr>`;
+    });
+    document.getElementById('bab_primar').innerHTML = pri_html;
+
+    // UMLLAGE 1: Gebäude. Basis = m²
+    // Die Gebäude-Kosten (sum_pri_geb) müssen auf alle anderen (Strom, Mat, Fer, Ver, Vtr) verteilt werden.
+    let m2 = [
+        randomInt(500, 1000, 50),   // Strom
+        randomInt(1000, 3000, 100), // Material
+        randomInt(3000, 8000, 100), // Fertigung
+        randomInt(500, 1500, 50),   // Verwaltung
+        randomInt(500, 1500, 50)    // Vertrieb
+    ];
+    let m2_sum = m2.reduce((a,b)=>a+b, 0);
+    document.getElementById('txt_qm').innerText = m2.join(' : ');
+    document.getElementById('txt_qm_sum').innerText = m2_sum;
+
+    let geb_total = sol.sum_pri_geb;
+    sol.um1_geb = -geb_total;
+    sol.um1_str = Math.round(geb_total * (m2[0] / m2_sum));
+    sol.um1_mat = Math.round(geb_total * (m2[1] / m2_sum));
+    sol.um1_fer = Math.round(geb_total * (m2[2] / m2_sum));
+    sol.um1_ver = Math.round(geb_total * (m2[3] / m2_sum));
+    sol.um1_vtr = geb_total - sol.um1_str - sol.um1_mat - sol.um1_fer - sol.um1_ver;
+
+    // UMLAGE 2: Strom. Basis = kWh
+    // Die Strom-Kosten = pri_str + um1_str, die auf (Mat, Fer, Ver, Vtr) verteilt werden.
+    let strom_total = sol.sum_pri_str + sol.um1_str;
+    sol.um2_str = -strom_total;
+    
+    let kw = [
+        randomInt(2000, 5000, 100),   // Material
+        randomInt(20000, 50000, 1000),// Fertigung (Massiver Stromverbrauch)
+        randomInt(3000, 8000, 100),   // Verwaltung
+        randomInt(3000, 8000, 100)    // Vertrieb
+    ];
+    let kw_sum = kw.reduce((a,b)=>a+b, 0);
+    document.getElementById('txt_kw').innerText = kw.join(' : ');
+    document.getElementById('txt_kw_sum').innerText = kw_sum;
+
+    sol.um2_mat = Math.round(strom_total * (kw[0] / kw_sum));
+    sol.um2_fer = Math.round(strom_total * (kw[1] / kw_sum));
+    sol.um2_ver = Math.round(strom_total * (kw[2] / kw_sum));
+    sol.um2_vtr = strom_total - sol.um2_mat - sol.um2_fer - sol.um2_ver;
+
+    // ENDSUMMEN HK
+    sol.end_mat = sol.sum_pri_mat + sol.um1_mat + sol.um2_mat;
+    sol.end_fer = sol.sum_pri_fer + sol.um1_fer + sol.um2_fer;
+    sol.end_ver = sol.sum_pri_ver + sol.um1_ver + sol.um2_ver;
+    sol.end_vtr = sol.sum_pri_vtr + sol.um1_vtr + sol.um2_vtr;
+
+    // ZUSCHLAGSSÄTZE
+    let hk_erz = fm + sol.end_mat + fl + sol.end_fer;
+    let hk_ums = hk_erz - bestands_Aenderung; // if positiv (mehrbestand) -> abgezogen
+    
+    let bestand_txt = bestands_Aenderung > 0 ? ` (abzgl. ${formatNumber(bestands_Aenderung)} Mehrbestand)` : ` (zzgl. ${formatNumber(-bestands_Aenderung)} Minderbestand)`;
+    document.getElementById('td_hku').innerText = `HK d. Umsatzes: ${formatNumber(hk_ums)} ${bestands_Aenderung!==0 ? bestand_txt : ''}`;
+
+    sol.zs_mat = round2((sol.end_mat / fm) * 100);
+    sol.zs_fer = round2((sol.end_fer / fl) * 100);
+    sol.zs_ver = round2((sol.end_ver / hk_ums) * 100);
+    sol.zs_vtr = round2((sol.end_vtr / hk_ums) * 100);
+
+    // SOLUTIONS text
+    for (let key in sol) {
+        let el = document.getElementById(`sol_${key}`);
+        if(el) el.innerText = `Lsg: ${formatNumber(sol[key])}`;
+    }
+}
+
+function clearInputs() {
+    document.querySelectorAll('input[type="number"]').forEach(inp => {
+        inp.value = '';
+        inp.classList.remove('correct', 'incorrect');
+    });
+}
+
+function checkAnswers() {
+    document.querySelectorAll('input[type="number"]').forEach(inp => {
+        let solKey = inp.getAttribute('data-sol');
+        if(!solKey || sol[solKey] === undefined) return;
+        let uVal = parseFloat(inp.value);
+        let s = sol[solKey];
+        inp.classList.remove('correct', 'incorrect');
+        if(isNaN(uVal) && s === 0) { } 
+        else if (Math.abs(uVal - s) < 0.1) inp.classList.add('correct');
+        else if (inp.value !== "") inp.classList.add('incorrect');
+    });
+}
+
+function toggleSolutions() {
+    document.body.classList.toggle('show-solutions');
+}
+
+window.onload = generateNewExercise;
+</script>
+
+</body>
+</html>

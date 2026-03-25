@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>BWR Übung: Engpassplanung (Maschinenkapazität)</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 20px; color: #333; font-size: 13px; line-height: 1.2; }
+        h1 { font-size: 1.4rem; color: #2980b9; border-bottom: 3px solid #3498db; margin-bottom: 15px; }
+        .info-box { border: 1px solid #3498db; padding: 12px; margin-bottom: 20px; background-color: #f0f7fb; }
+        h2 { font-size: 1.1rem; margin: 20px 0 10px; color: #2c3e50; border-left: 5px solid #3498db; padding-left: 10px; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+        th, td { border: 1px solid #444; padding: 6px; text-align: center; }
+        th { background-color: #ecf0f1; font-weight: bold; }
+        .grey-bg { background-color: #eee; }
+        @media print { body { padding: 0; } @page { margin: 1cm; } .no-print { display: none; } }
+    </style>
+</head>
+<body>
+    <h1>Übung: Produktionsprogramm bei Engpassaggregat</h1>
+    
+    <div class="info-box">
+        <strong>Situation:</strong> In der Fabrik der "AllSport GmbH" steht eine neue Schleifmaschine bereit. 
+        Die gesamte Laufzeit der Maschine ist diesen Monat auf <strong>30.000 Minuten</strong> begrenzt.<br><br>
+        <strong>Fixkosten:</strong> 100.000,00 EUR
+    </div>
+
+    <h3>Tabelle A: Bestehende Daten</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Artikel</th>
+                <th>AS Pro</th>
+                <th>AS Match</th>
+                <th>AS Club</th>
+                <th>AS Junior</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Zuletzt ermittelte Reihenfolge</td><td><strong>1</strong></td><td><strong>2</strong></td><td><strong>3</strong></td><td><strong>4</strong></td></tr>
+            <tr><td>Erwarteter Absatz in Stück</td><td>2.000</td><td>4.000</td><td>3.000</td><td>5.000</td></tr>
+            <tr><td>Stückdeckungsbeitrag (€)</td><td>30,00</td><td>24,00</td><td>20,00</td><td>16,00</td></tr>
+            <tr><td>Schleifzeit je Stück in Min.</td><td>4</td><td>3</td><td>4</td><td>2</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Tabelle B: Produktionsmenge bei Engpass</h3>
+    <div style="font-style: italic; margin-bottom: 5px;">Gehen Sie Zeile für Zeile vor und verteilen Sie die Kapazität!</div>
+    <table>
+        <thead>
+            <tr>
+                <th>Rang</th>
+                <th>Produkt</th>
+                <th>absetzbare Menge in Stück</th>
+                <th>Schleifzeit je Stück in Min.</th>
+                <th>benötigte Schleifzeit insgesamt in Min.</th>
+                <th>produzierte Menge in Stück</th>
+                <th>Restschleifzeit (Kapazität: 30.000 Min)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>1</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>2</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>3</td><td></td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>4</td><td></td><td></td><td></td><td></td><td></td><td>0</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Betriebsgewinn berechnen:</h3>
+    <div style="border: 1px solid #333; height: 30px; width: 300px; padding: 5px;">Betriebsgewinn (in EUR): </div><br>
+    <div style="font-style: italic;">Nebenrechnung hier:</div>
+    <div style="border: 1px solid #ccc; height: 80px; width: 100%; padding: 5px;"></div>
+
+</body>
+</html>

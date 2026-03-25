@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Biker OHG - Klausurtraining (HF 7)</title>
+    <style>
+        :root { --primary: #16a085; --secondary: #1abc9c; --accent: #f39c12; --success: #27ae60; --danger: #e74c3c; --bg: #f4fbf9; --border: #c8e6c9; }
+        body { font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; line-height: 1.6; color: #333; background-color: var(--bg); margin: 0; padding: 20px; }
+        .container { max-width: 1000px; margin: 0 auto; background: white; padding: 40px; border-radius: 8px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        .header-actions { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid var(--primary); }
+        h1, h2, h3 { color: var(--primary); }
+        .btn { padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.2s; }
+        .btn-primary { background-color: var(--accent); color: white; }
+        .btn-primary:hover { background-color: #d68910; }
+        .btn-outline { background-color: transparent; border: 2px solid var(--accent); color: var(--accent); }
+        .btn-outline:hover { background-color: var(--accent); color: white; }
+        .info-box { background-color: #eafaf1; border-left: 4px solid var(--primary); padding: 15px 20px; margin-bottom: 20px; }
+        .aufgabe-section { background: #fff; border: 1px solid var(--border); border-radius: 6px; padding: 25px; margin-bottom: 30px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .aufgabe-title { background: var(--primary); color: white; display: inline-block; padding: 5px 15px; border-radius: 4px; margin-top: -40px; margin-bottom: 20px; font-weight: bold; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 14px; }
+        th, td { border: 1px solid var(--border); padding: 8px 12px; text-align: left; }
+        th { background-color: var(--secondary); color: white; font-weight: 500; }
+        input[type="number"], input[type="text"] { width: 100%; box-sizing: border-box; padding: 8px; border: 1px solid #ccc; border-radius: 3px; font-size: 14px; }
+        .num-input { text-align: right; }
+        select { width: 100%; padding: 8px; border: 1px solid #ccc; }
+        input:focus, select:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.2); }
+        .correct { background-color: #e8f8f5 !important; border-color: var(--success) !important; color: #1e8449; font-weight: bold; }
+        .incorrect { background-color: #fceceb !important; border-color: var(--danger) !important; color: #c0392b; font-weight: bold; }
+        .solution { display: none; color: var(--success); font-size: 12px; margin-top: 5px; font-weight: bold; }
+        .show-solutions .solution { display: block; }
+        .sum-row { font-weight: bold; background-color: #eaeded; }
+        @media print { .btn, .header-actions button { display: none; } .container { box-shadow: none; padding: 0; } body { background: white; } .aufgabe-section { page-break-inside: avoid; border: none; padding: 10px 0; } }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-actions">
+        <div>
+            <h1>🚲 Klausur-Workout: Biker OHG</h1>
+            <p>Spezialtraining: Kalkulatorische Kosten (Ermittlung von Zinsen, AfA, Lohn).</p>
+        </div>
+        <div>
+            <button class="btn btn-primary" onclick="generateNewExercise()">🔄 Neue Zahlen generieren</button>
+            <button class="btn btn-outline" onclick="toggleSolutions()" id="btn-toggle-sol">👁️ Musterlösung einblenden</button>
+            <button class="btn btn-outline" onclick="checkAnswers()">✅ Eingaben prüfen</button>
+        </div>
+    </div>
+
+    <!-- 1. AfA -->
+    <div class="aufgabe-section">
+        <div class="aufgabe-title">1. Kalkulatorische Abschreibung (AfA)</div>
+        <p>Die bilanzielle AfA (FIBU) geht stur von den historischen Anschaffungskosten aus. Da die Preise jedoch stetig steigen, muss die KLR mit den Wiederbeschaffungskosten (WBK) rechnen, um den Substanzverlust der Maschine am Laufzeitende wieder auszugleichen.</p>
+        
+        <div class="info-box">
+            <ul>
+                <li><strong>Maschine A:</strong> Historische Anschaffungs- & Herstellkosten (AHK): <strong><span id="txt_afa_ahk"></span> €</strong>.</li>
+                <li>Bilanzielle Nutzungsdauer (Steuer-Tabelle): <strong><span id="txt_afa_nd_fibu"></span> Jahre</strong>.</li>
+                <li>Wiederbeschaffungswert in der KLR: <strong><span id="txt_afa_wbk"></span> €</strong>.</li>
+                <li>Tatsächlich geplante Nutzungsdauer (KLR): <strong><span id="txt_afa_nd_klr"></span> Jahre</strong>.</li>
+                <li>Für die GuV wird bereits ein Restbuchwert abgeschrieben. Erfassen Sie die Unterschiede exakt.</li>
+            </ul>
+        </div>
+        
+        <table>
+            <tr><th style="width: 50%">Wert</th><th>Berechnung (in €)</th></tr>
+            <tr>
+                <td>1. Bilanzielle AfA pro Jahr (für GuV Aufwand)</td>
+                <td><input type="number" class="num-input" id="afa_fibu" data-sol="afa_fibu"><div class="solution" id="sol_afa_fibu"></div></td>
+            </tr>
+            <tr>
+                <td>2. Kalkulatorische AfA pro Jahr (für KLR Kosten)</td>
+                <td><input type="number" class="num-input" id="afa_klr" data-sol="afa_klr"><div class="solution" id="sol_afa_klr"></div></td>
+            </tr>
+            <tr>
+                <td>3. Art der Kosten (Anderskosten oder Zusatzkosten?)</td>
+                <td>
+                    <select id="afa_art" data-sol="afa_art">
+                        <option value="">-- Bitte wählen --</option>
+                        <option value="Anderskosten">Anderskosten</option>
+                        <option value="Zusatzkosten">Zusatzkosten</option>
+                    </select>
+                    <div class="solution" id="sol_afa_art"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 2. ZINSEN -->
+    <div class="aufgabe-section">
+        <div class="aufgabe-title">2. Kalkulatorische Zinsen</div>
+        <p>Ermitteln Sie das <strong>betriebsnotwendige Kapital</strong> und daraus die kalkulatorischen Jahreszinsen. Das Abzugskapital stellen die von Lieferanten gewährten zinslosen Darlehen/Zahlungsziele dar.</p>
+        
+        <div class="info-box">
+            <ul>
+                <li>Gesamtes Anlagevermögen: <strong><span id="txt_zins_av"></span> €</strong> (darin enthalten sind stillgelegte Maschinen i.H.v. <strong><span id="txt_zins_av_privat"></span> €</strong>, die nicht mehr dem Betriebszweck dienen).</li>
+                <li>Betriebsnotwendiges Umlaufvermögen: <strong><span id="txt_zins_uv"></span> €</strong></li>
+                <li>Abzugskapital (zinsfreie Verbindlichkeiten a. LL etc.): <strong><span id="txt_zins_abzug"></span> €</strong></li>
+                <li>Kalkulatorischer Zinssatz: <strong><span id="txt_zins_satz"></span> %</strong> p.a.</li>
+                <li>Fremdkapitalzinsen lt. GuV: <strong><span id="txt_zins_fibu"></span> €</strong></li>
+            </ul>
+        </div>
+        
+        <table>
+            <tr><th style="width: 50%">Wert</th><th>Betrag (in €)</th></tr>
+            <tr>
+                <td>Betriebsnotwendiges Anlagevermögen</td>
+                <td><input type="number" class="num-input" id="zins_av_netto" data-sol="zins_av_netto"><div class="solution" id="sol_zins_av_netto"></div></td>
+            </tr>
+            <tr>
+                <td>+ Betriebsnotwendiges Umlaufvermögen</td>
+                <td><input type="number" class="num-input" id="zins_uv" data-sol="zins_uv"><div class="solution" id="sol_zins_uv"></div></td>
+            </tr>
+            <tr class="sum-row">
+                <td>= Betriebsnotwendiges Vermögen</td>
+                <td><input type="number" class="num-input" id="zins_vermogen" data-sol="zins_vermogen"><div class="solution" id="sol_zins_vermogen"></div></td>
+            </tr>
+            <tr>
+                <td>- Abzugskapital</td>
+                <td><input type="number" class="num-input" id="zins_abzug" data-sol="zins_abzug"><div class="solution" id="sol_zins_abzug"></div></td>
+            </tr>
+            <tr class="sum-row" style="background-color: var(--primary); color: white;">
+                <td>= Betriebsnotwendiges Kapital</td>
+                <td><input type="number" class="num-input" id="zins_kapital" data-sol="zins_kapital"><div class="solution" id="sol_zins_kapital"></div></td>
+            </tr>
+            <tr>
+                <td><strong>Kalkulatorische Zinsen (pro Jahr)</strong></td>
+                <td><input type="number" class="num-input" id="zins_klr" data-sol="zins_klr"><div class="solution" id="sol_zins_klr"></div></td>
+            </tr>
+            <tr>
+                <td>Kostenart (Anders- oder Zusatzkosten?)</td>
+                <td>
+                    <select id="zins_art" data-sol="zins_art">
+                        <option value="">-- Bitte wählen --</option>
+                        <option value="Anderskosten">Anderskosten</option>
+                        <option value="Zusatzkosten">Zusatzkosten</option>
+                    </select>
+                    <div class="solution" id="sol_zins_art"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+
+    <!-- 3. UNTERNEHMERLOHN -->
+    <div class="aufgabe-section">
+        <div class="aufgabe-title">3. Kalkulatorischer Unternehmerlohn</div>
+        <p>Da die Biker OHG eine Personengesellschaft ist (Offene Handelsgesellschaft), beziehen die Gesellschafter keinen klassischen Lohn als Aufwand in der GuV, sondern leben von "Privatentnahmen" aus dem Gewinn. Für die Preiskalkulation muss die Arbeitsleistung aber berücksichtigt werden.</p>
+        
+        <div class="info-box">
+            <ul>
+                <li>Die OHG hat <strong><span id="txt_ul_zahl"></span> Gesellschafter</strong>, die vollzeitig im Betrieb arbeiten.</li>
+                <li>Ein branchenübliches Gehalt für einen angestellten Geschäftsführer in vergleichbarer Position läge bei <strong><span id="txt_ul_gehalt"></span> € pro Monat</strong>.</li>
+            </ul>
+        </div>
+        
+        <table>
+            <tr><th style="width: 50%">Wert</th><th>Berechnung (in €)</th></tr>
+            <tr>
+                <td>1. Kalkulatorischer Unternehmerlohn JAHRESwert gesamt</td>
+                <td><input type="number" class="num-input" id="ul_klr" data-sol="ul_klr"><div class="solution" id="sol_ul_klr"></div></td>
+            </tr>
+            <tr>
+                <td>2. Art der Kosten</td>
+                <td>
+                    <select id="ul_art" data-sol="ul_art">
+                        <option value="">-- Bitte wählen --</option>
+                        <option value="Anderskosten">Anderskosten</option>
+                        <option value="Zusatzkosten">Zusatzkosten</option>
+                    </select>
+                    <div class="solution" id="sol_ul_art"></div>
+                </td>
+            </tr>
+        </table>
+    </div>
+</div>
+
+<script>
+let sol = {};
+const formatNumber = (val) => new Intl.NumberFormat('de-DE').format(val);
+function randomInt(min, max, step=10) { return Math.floor(Math.random() * ((max - min)/step + 1)) * step + min; }
+
+function generateNewExercise() {
+    clearInputs();
+    
+    // 1. AFA
+    let afa_ahk = randomInt(500000, 1500000, 10000);
+    let afa_nd_fibu = randomInt(5, 8, 1);
+    let afa_wbk = afa_ahk + randomInt(100000, 500000, 10000); // Preissteigerung
+    let afa_nd_klr = afa_nd_fibu + randomInt(2, 4, 1); // Real holds longer
+    
+    document.getElementById('txt_afa_ahk').innerText = formatNumber(afa_ahk);
+    document.getElementById('txt_afa_nd_fibu').innerText = afa_nd_fibu;
+    document.getElementById('txt_afa_wbk').innerText = formatNumber(afa_wbk);
+    document.getElementById('txt_afa_nd_klr').innerText = afa_nd_klr;
+    
+    sol.afa_fibu = Math.round(afa_ahk / afa_nd_fibu);
+    sol.afa_klr = Math.round(afa_wbk / afa_nd_klr);
+    sol.afa_art = "Anderskosten";
+
+    // 2. ZINSEN
+    let z_av_brutto = randomInt(2000000, 5000000, 100000);
+    let z_av_privat = randomInt(100000, 300000, 10000);
+    let z_av_netto = z_av_brutto - z_av_privat;
+    let z_uv = randomInt(500000, 1500000, 50000);
+    let z_verm = z_av_netto + z_uv;
+    let z_abzug = randomInt(200000, 800000, 10000);
+    let z_kapital = z_verm - z_abzug;
+    let z_satz = randomInt(5, 9, 1);
+    let z_fibu = randomInt(10000, 50000, 1000);
+
+    document.getElementById('txt_zins_av').innerText = formatNumber(z_av_brutto);
+    document.getElementById('txt_zins_av_privat').innerText = formatNumber(z_av_privat);
+    document.getElementById('txt_zins_uv').innerText = formatNumber(z_uv);
+    document.getElementById('txt_zins_abzug').innerText = formatNumber(z_abzug);
+    document.getElementById('txt_zins_satz').innerText = z_satz;
+    document.getElementById('txt_zins_fibu').innerText = formatNumber(z_fibu);
+
+    sol.zins_av_netto = z_av_netto;
+    sol.zins_uv = z_uv;
+    sol.zins_vermogen = z_verm;
+    sol.zins_abzug = z_abzug;
+    sol.zins_kapital = z_kapital;
+    sol.zins_klr = Math.round(z_kapital * (z_satz / 100));
+    sol.zins_art = "Anderskosten"; // Because there are Fremdkapitalzinsen in the GuV (txt_zins_fibu)
+
+    // 3. UNTERNEHMERLOHN
+    let ul_zahl = randomInt(2, 4, 1);
+    let ul_gehalt = randomInt(6500, 9500, 500);
+    document.getElementById('txt_ul_zahl').innerText = ul_zahl;
+    document.getElementById('txt_ul_gehalt').innerText = formatNumber(ul_gehalt);
+
+    sol.ul_klr = ul_zahl * ul_gehalt * 12;
+    sol.ul_art = "Zusatzkosten";
+
+    // Inject Solutions visual
+    for (let key in sol) {
+        let el = document.getElementById(`sol_${key}`);
+        if(el) {
+            if(typeof sol[key] === 'string') el.innerText = `Lösung: ${sol[key]}`;
+            else el.innerText = `Lösung: ${formatNumber(sol[key])} €`;
+        }
+    }
+}
+
+function clearInputs() {
+    document.querySelectorAll('input, select').forEach(inp => {
+        inp.value = '';
+        inp.classList.remove('correct', 'incorrect');
+    });
+}
+
+function checkAnswers() {
+    document.querySelectorAll('input, select').forEach(inp => {
+        let solKey = inp.getAttribute('data-sol');
+        if(!solKey || sol[solKey] === undefined) return;
+        
+        inp.classList.remove('correct', 'incorrect');
+        
+        if(inp.tagName === 'SELECT') {
+            if(inp.value === sol[solKey]) inp.classList.add('correct');
+            else if(inp.value !== "") inp.classList.add('incorrect');
+        } else {
+            let uVal = parseFloat(inp.value);
+            if(Math.abs(uVal - sol[solKey]) < 0.1) inp.classList.add('correct');
+            else if (inp.value !== "") inp.classList.add('incorrect');
+        }
+    });
+}
+
+function toggleSolutions() {
+    document.body.classList.toggle('show-solutions');
+}
+
+window.onload = generateNewExercise;
+</script>
+
+</body>
+</html>

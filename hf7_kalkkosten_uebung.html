@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>HF 7 Übung: Kalkulatorische Kosten</title>
+<style>
+  :root { --accent: #e74c3c; --dark: #1a1a2e; --border: #bbb; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; color: #2c3e50; }
+  .topbar { background: var(--dark); color: white; padding: 12px 30px; display: flex; align-items: center; gap: 20px; position: sticky; top:0; z-index:99; }
+  .topbar a { color: #fdbb2d; text-decoration: none; }
+  .topbar h1 { font-size: 1.1rem; margin: 0; }
+  .container { max-width: 1050px; margin: 30px auto; padding: 0 20px; }
+  .hero { background: linear-gradient(135deg, #7b241c, #e74c3c); color: white; padding: 28px 32px; border-radius: 12px; margin-bottom: 24px; }
+  .hero h2 { margin: 0 0 6px; font-size: 1.6rem; }
+  .hero p { margin: 0; opacity: 0.9; font-size: 0.95rem; }
+  .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); border-top: 4px solid var(--accent); }
+  .card h3 { margin-top: 0; color: var(--dark); font-size: 1.15rem; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+  .aufgaben-nr { display: inline-block; background: var(--accent); color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: bold; margin-bottom: 8px; }
+  .aufgabe-text { background: #fff5f5; border-left: 4px solid var(--accent); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 14px; font-size: 0.88rem; line-height: 1.65; }
+  .merke { background: #fff0f0; border-left: 4px solid #c0392b; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 0.86rem; margin-bottom: 12px; }
+  .hinweis { background: #f0fff4; border-left: 4px solid #27ae60; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 0.86rem; margin-bottom: 12px; }
+  .formel { background: #fffbf0; border: 1.5px dashed #f39c12; padding: 10px 14px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.86rem; margin: 8px 0; }
+  .freitext { width: 100%; border: 1px solid #ccc; border-radius: 6px; min-height: 55px; padding: 8px; font-size: 0.86rem; box-sizing: border-box; resize: vertical; font-family: inherit; }
+  .freitext:focus { outline: 2px solid var(--accent); background: #fff5f5; }
+
+  /* Tabellen */
+  table.cls { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 14px; }
+  table.cls th { background: var(--dark); color: white; padding: 7px 10px; border: 1px solid #333; }
+  table.cls td { border: 1px solid #ccc; padding: 7px 10px; vertical-align: middle; }
+  table.cls td.label { background: #fafafa; font-weight: 500; }
+  table.cls tr:nth-child(even) td.label { background: #f4f4f4; }
+  table.cls input[type=text] { width: 96%; border: 1px solid #ccc; border-radius: 4px; padding: 4px 6px; font-size: 0.83rem; }
+  table.cls input[type=text]:focus { outline: 2px solid var(--accent); background: #fff5f5; }
+  table.cls tr.sum td { font-weight: bold; border-top: 2px solid #888; background: #fffbe6 !important; }
+
+  /* Kalkulations-Schema */
+  table.kalk { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin-bottom: 14px; }
+  table.kalk td { border: 1px solid var(--border); padding: 7px 10px; }
+  table.kalk td.label { width: 55%; font-weight: 500; background: #f9f9f9; }
+  table.kalk td.label.indent { padding-left: 26px; color: #555; font-weight: normal; }
+  table.kalk td.hint { width: 22%; font-size: 0.8rem; color: #888; background: #fafafa; font-family: monospace; }
+  table.kalk input[type=text] { width: 110px; border: 1px solid #ccc; border-radius: 4px; padding: 5px 8px; text-align: right; font-size: 0.86rem; }
+  table.kalk input[type=text]:focus { outline: 2px solid var(--accent); background: #fff5f5; }
+  table.kalk tr.sum td { background: #fffbe6; font-weight: bold; border-top: 2px solid #999; }
+  table.kalk tr.total td { background: #fde8e8 !important; font-weight: bold; }
+
+  /* Theorie-Grid */
+  .theorie-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 14px; }
+  .theorie-box { border: 1px solid #ddd; border-radius: 8px; padding: 14px; }
+  .theorie-box h4 { margin: 0 0 8px; font-size: 0.9rem; }
+
+  @media print {
+    .topbar { display: none; }
+    body { background: white; }
+    input[type=text] { border-bottom: 1px solid #999; border-top:none; border-left:none; border-right:none; background:transparent; }
+    textarea { border: 1px solid #999; }
+    .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html">← Übersicht</a>
+  <h1>HF 7: Kalkulatorische Kosten</h1>
+</div>
+<div class="container">
+  <div class="hero">
+    <h2>🔢 Kalkulatorische Kosten – Vollständige Übungsserie</h2>
+    <p>Anderskosten (kalk. AfA) und Zusatzkosten (kalk. Unternehmerlohn, kalk. Zinsen) berechnen und im BAB/Kalkulation berücksichtigen.</p>
+  </div>
+
+  <!-- ======== THEORIE ======== -->
+  <div class="card">
+    <h3>⚡ Theorie: Kalkulatorische Kosten im Überblick</h3>
+    <div class="theorie-grid">
+      <div class="theorie-box" style="background:#fff5f5;border-color:#e74c3c;">
+        <h4 style="color:#c0392b;">🔁 Anderskosten</h4>
+        In der GuV als Aufwand gebucht, aber in <em>anderer Höhe</em> in die Kostenrechnung übernommen.<br><br>
+        <strong>Beispiel: Kalk. Abschreibung (AfA)</strong><br>
+        GuV-AfA basiert auf historischem Anschaffungswert, kalk. AfA basiert auf <em>Wiederbeschaffungswert</em>.<br>
+        <div class="formel" style="font-size:0.82rem;">Kalk. AfA = Wiederbeschaffungswert / Nutzungsdauer</div>
+        Ist Kalk-AfA &gt; GuV-AfA → <strong>Anderskosten</strong> (Differenz = Zusatzbelastung)<br>
+        Ist Kalk-AfA &lt; GuV-AfA → <strong>Anderserlös</strong> (negative Differenz)
+      </div>
+      <div class="theorie-box" style="background:#f0fff4;border-color:#27ae60;">
+        <h4 style="color:#1a5c1a;">➕ Zusatzkosten</h4>
+        In der GuV gar nicht auftauchend (kein Aufwand), <em>aber trotzdem</em> in die Kostenrechnung aufzunehmen, weil ein echter Wertverzehr vorliegt.<br><br>
+        <strong>Kalk. Unternehmerlohn</strong><br>
+        <div class="formel" style="font-size:0.82rem;">= Gehalt eines vergleichbaren Angestellten-Geschäftsführers</div>
+        <strong>Kalk. Zinsen auf Eigenkapital</strong><br>
+        <div class="formel" style="font-size:0.82rem;">Kalk. Zinsen = betriebsnotwendiges Kapital × Zinssatz</div>
+        Betriebsnotwendiges Kapital = Eigenkapital (das im Betrieb gebunden ist)
+      </div>
+    </div>
+    <div class="merke">⚠ In die KLR (BAB + Kalkulation) kommen NIE die GuV-Beträge, sondern IMMER die kalkulatorischen Beträge. Die Differenz wird in der Ergebnistabelle (Abgrenzungsrechnung) sichtbar.</div>
+  </div>
+
+  <!-- ======== AUFGABE 1: Anderskosten berechnen ======== -->
+  <div class="card">
+    <h3>📝 Aufgabe 1 – Kalkulatorische Abschreibung berechnen (Anderskosten)</h3>
+    <span class="aufgaben-nr">Übung 1</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Die Bergmann Werkzeug GmbH besitzt folgende Anlagen. Berechne die buchhalterische (GuV-) AfA und die kalkulatorische AfA. Ermittle die Differenz und ordne sie als Anderskosten oder Anderserlös ein.
+    </div>
+    <table class="cls">
+      <tr>
+        <th style="width:20%;">Anlage</th>
+        <th style="width:14%;">Anschaffungskosten (AK)</th>
+        <th style="width:14%;">Wiederbeschaffungswert (WBW)</th>
+        <th style="width:10%;">Nutzungsdauer</th>
+        <th style="width:12%;">GuV-AfA/Jahr<br>(AK ÷ ND)</th>
+        <th style="width:12%;">Kalk. AfA/Jahr<br>(WBW ÷ ND)</th>
+        <th style="width:10%;">Differenz</th>
+        <th style="width:14%;">Einordnung</th>
+      </tr>
+      <tr>
+        <td class="label">Drehmaschine</td>
+        <td style="text-align:right;">80.000 €</td>
+        <td style="text-align:right;">110.000 €</td>
+        <td style="text-align:center;">8 Jahre</td>
+        <td><input type="text" placeholder="?"></td>
+        <td><input type="text" placeholder="?"></td>
+        <td><input type="text" placeholder="+/–"></td>
+        <td><input type="text" placeholder="Anderskosten / ‑erlös"></td>
+      </tr>
+      <tr>
+        <td class="label">Gabelstapler</td>
+        <td style="text-align:right;">36.000 €</td>
+        <td style="text-align:right;">42.000 €</td>
+        <td style="text-align:center;">6 Jahre</td>
+        <td><input type="text" placeholder="?"></td>
+        <td><input type="text" placeholder="?"></td>
+        <td><input type="text" placeholder="+/–"></td>
+        <td><input type="text" placeholder="Anderskosten / ‑erlös"></td>
+      </tr>
+      <tr>
+        <td class="label">Bürocomputer</td>
+        <td style="text-align:right;">12.000 €</td>
+        <td style="text-align:right;">9.000 €</td>
+        <td style="text-align:center;">3 Jahre</td>
+        <td><input type="text" placeholder="?"></td>
+        <td><input type="text" placeholder="?"></td>
+        <td><input type="text" placeholder="+/–"></td>
+        <td><input type="text" placeholder="Anderskosten / ‑erlös"></td>
+      </tr>
+      <tr>
+        <td class="label">Montageanlage</td>
+        <td style="text-align:right;">240.000 €</td>
+        <td style="text-align:right;">300.000 €</td>
+        <td style="text-align:center;">10 Jahre</td>
+        <td><input type="text" placeholder="?"></td>
+        <td><input type="text" placeholder="?"></td>
+        <td><input type="text" placeholder="+/–"></td>
+        <td><input type="text" placeholder="Anderskosten / ‑erlös"></td>
+      </tr>
+      <tr>
+        <td class="label">Transportfahrzeug</td>
+        <td style="text-align:right;">58.000 €</td>
+        <td style="text-align:right;">58.000 €</td>
+        <td style="text-align:center;">5 Jahre</td>
+        <td><input type="text" placeholder="?"></td>
+        <td><input type="text" placeholder="?"></td>
+        <td><input type="text" placeholder="+/–"></td>
+        <td><input type="text" placeholder="Anderskosten / ‑erlös"></td>
+      </tr>
+      <tr class="sum">
+        <td class="label">Summe</td>
+        <td></td><td></td><td></td>
+        <td><input type="text" placeholder="Gesamt-GuV-AfA"></td>
+        <td><input type="text" placeholder="Gesamt-Kalk-AfA"></td>
+        <td><input type="text" placeholder="Gesamt +/–"></td>
+        <td></td>
+      </tr>
+    </table>
+    <p style="font-size:0.88rem;font-weight:bold;">Was wird in den BAB eingetragen: GuV-AfA oder kalk. AfA? Begründe kurz.</p>
+    <textarea class="freitext" rows="2" placeholder="In den BAB kommt die ... weil ..."></textarea>
+  </div>
+
+  <!-- ======== AUFGABE 2: Unternehmerlohn ======== -->
+  <div class="card">
+    <h3>📝 Aufgabe 2 – Kalkulatorischer Unternehmerlohn (Zusatzkosten)</h3>
+    <span class="aufgaben-nr">Übung 2</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Der Inhaber der Schneider Elektrotechnik OHG ist neben seiner Rolle als Eigentümer auch täglich als Techniker tätig. Er erhält kein Gehalt. Ein vergleichbarer angestellter Techniker-Geschäftsführer würde am Markt <strong>6.200 € brutto pro Monat</strong> verdienen.
+    </div>
+    <p style="font-size:0.88rem;font-weight:bold;">a) Berechne den kalkulatorischen Unternehmerlohn (pro Monat, Quartal, Jahr):</p>
+    <table class="cls">
+      <tr><th>Zeitraum</th><th>Berechnung</th><th>Betrag (€)</th></tr>
+      <tr><td class="label">Pro Monat</td><td style="color:#888;font-style:italic;">gegeben</td><td>6.200</td></tr>
+      <tr><td class="label">Pro Quartal (3 Monate)</td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Pro Jahr (12 Monate)</td><td><input type="text"></td><td><input type="text"></td></tr>
+    </table>
+    <p style="font-size:0.88rem;font-weight:bold;">b) Der kalkulatorische Unternehmerlohn erscheint in welchem Rechenkreis der Ergebnistabelle?</p>
+    <textarea class="freitext" rows="2" placeholder="Er erscheint im ... weil ..."></textarea>
+    <p style="font-size:0.88rem;font-weight:bold;">c) Warum muss der Unternehmerlohn in die KLR aufgenommen werden, obwohl er in der GuV nicht erscheint?</p>
+    <textarea class="freitext" rows="2" placeholder="Weil der Betrieb ohne die Arbeitsleistung des Inhabers ..."></textarea>
+  </div>
+
+  <!-- ======== AUFGABE 3: Kalk. Zinsen ======== -->
+  <div class="card">
+    <h3>📝 Aufgabe 3 – Kalkulatorische Zinsen auf Eigenkapital (Zusatzkosten)</h3>
+    <span class="aufgaben-nr">Übung 3</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Die Allfit Sportartikel OHG weist folgende Kapitalstruktur und Anlagewerte aus. Berechne die kalkulatorischen Zinsen auf das betriebsnotwendige Kapital.<br><br>
+      Eigenkapital: 850.000 € | Fremdkapital: 320.000 € | Zinssatz für kalk. Zinsen: 6% p.a.<br>
+      <em>Hinweis: Kalk. Zinsen beziehen sich NUR auf das Eigenkapital (Opportunitätskosten).</em>
+    </div>
+    <div class="formel">Kalk. Zinsen p.a. = Eigenkapital × Zinssatz</div>
+    <table class="cls">
+      <tr><th>Berechnung</th><th>Betrag (€)</th></tr>
+      <tr><td class="label">Eigenkapital</td><td>850.000</td></tr>
+      <tr><td class="label">Fremdkapital (nicht relevant für kalk. Zinsen)</td><td>320.000</td></tr>
+      <tr><td class="label">Kalk. Zinsen p.a. (= EK × 6%)</td><td><input type="text"></td></tr>
+      <tr><td class="label">Kalk. Zinsen pro Monat</td><td><input type="text"></td></tr>
+    </table>
+    <p style="font-size:0.88rem;font-weight:bold;">Warum zahlt das Unternehmen "sich selbst" Zinsen auf das Eigenkapital?</p>
+    <textarea class="freitext" rows="2" placeholder="Das Eigenkapital könnte alternativ ... werden und würde dann ... erwirtschaften. Diese entgangenen ..."></textarea>
+    <p style="font-size:0.88rem;font-weight:bold;">Erweiterung: Wo erscheinen die kalk. Zinsen in der Ergebnistabelle?</p>
+    <table class="cls">
+      <tr><th style="width:40%;">Frage</th><th>Antwort</th></tr>
+      <tr><td class="label">Erscheinen sie im Rechnungskreis I (GuV)?</td><td><input type="text" placeholder="ja / nein, weil ..."></td></tr>
+      <tr><td class="label">Erscheinen sie im Neutralen Ergebnis?</td><td><input type="text" placeholder="ja / nein, weil ..."></td></tr>
+      <tr><td class="label">Erscheinen sie im Betriebsergebnis (KLR)?</td><td><input type="text" placeholder="ja / nein, weil ..."></td></tr>
+    </table>
+  </div>
+
+  <!-- ======== AUFGABE 4: Vollständige Berechnung aller kalk. Kosten ======== -->
+  <div class="card">
+    <h3>📝 Aufgabe 4 – Alle kalkulatorischen Kosten berechnen (gemischte Aufgabe)</h3>
+    <span class="aufgaben-nr">Übung 4</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Für die Kreuzfeld Möbel OHG wurden folgende Angaben ermittelt. Berechne alle kalkulatorischen Kosten für den Monat Oktober.<br><br>
+      <strong>AfA:</strong> Maschine: AK = 96.000 €, WBW = 120.000 €, ND = 8 Jahre | Fahrzeug: AK = 40.000 €, WBW = 40.000 €, ND = 5 Jahre<br>
+      <strong>Unternehmerlohn:</strong> Vergleichbares Geschäftsführergehalt = 4.800 € / Monat<br>
+      <strong>Zinsen:</strong> Eigenkapital = 600.000 € | Fremdkapital = 180.000 € | Zinssatz = 5% p.a.<br>
+      <strong>GuV-Positionen (Oktober):</strong> GuV-AfA gesamt = 1.350 € / Monat (buchmäßig)
+    </div>
+    <p style="font-size:0.88rem;font-weight:bold;">a) Kalk. AfA (pro Monat):</p>
+    <table class="cls">
+      <tr><th>Anlage</th><th>WBW</th><th>ND</th><th>Kalk. AfA p.a.</th><th>Kalk. AfA / Monat</th></tr>
+      <tr><td class="label">Maschine</td><td>120.000</td><td>8 Jahre</td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Fahrzeug</td><td>40.000</td><td>5 Jahre</td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">Summe Kalk. AfA / Monat</td><td></td><td></td><td></td><td><input type="text"></td></tr>
+    </table>
+    <p style="font-size:0.88rem;font-weight:bold;">b) Anderskosten / Anderserlöse AfA (Monat):</p>
+    <table class="cls">
+      <tr><th>Position</th><th>Betrag</th></tr>
+      <tr><td class="label">GuV-AfA / Monat (gebucht)</td><td>1.350 €</td></tr>
+      <tr><td class="label">Kalk. AfA / Monat (aus a)</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">Differenz (= Anderskosten wenn positiv)</td><td><input type="text" placeholder="+/–"></td></tr>
+    </table>
+    <p style="font-size:0.88rem;font-weight:bold;">c) Kalk. Unternehmerlohn (Monat):</p>
+    <table class="cls">
+      <tr><th>Berechnung</th><th>Betrag / Monat</th></tr>
+      <tr><td class="label">Kalk. Unternehmerlohn</td><td><input type="text" placeholder="= 4.800 €"></td></tr>
+    </table>
+    <p style="font-size:0.88rem;font-weight:bold;">d) Kalk. Zinsen (Monat):</p>
+    <table class="cls">
+      <tr><th>Berechnung</th><th>Betrag</th></tr>
+      <tr><td class="label">Eigenkapital × 5% p.a.</td><td><input type="text" placeholder="= ? p.a."></td></tr>
+      <tr><td class="label">Kalk. Zinsen pro Monat (÷ 12)</td><td><input type="text"></td></tr>
+    </table>
+    <p style="font-size:0.88rem;font-weight:bold;">e) Gesamtübersicht aller kalkulatorischen Kosten (Oktober):</p>
+    <table class="cls">
+      <tr><th>Position</th><th>GuV-Aufwand (Oktober)</th><th>Kalk. Kosten (Oktober)</th><th>Differenz</th><th>Art</th></tr>
+      <tr><td class="label">AfA</td><td>1.350</td><td><input type="text"></td><td><input type="text"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Unternehmerlohn</td><td style="color:#999;font-style:italic;">0 (kein GuV-Aufwand)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text" placeholder="Zusatzkosten"></td></tr>
+      <tr><td class="label">Kalk. Zinsen</td><td style="color:#999;font-style:italic;">0 (kein GuV-Aufwand)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text" placeholder="Zusatzkosten"></td></tr>
+      <tr class="sum"><td class="label">Summe kalk. Kosten / Monat</td><td><input type="text"></td><td><input type="text"></td><td></td><td></td></tr>
+    </table>
+  </div>
+
+  <!-- ======== AUFGABE 5: Kalk. Kosten im BAB und Kalkulation berücksichtigen ======== -->
+  <div class="card">
+    <h3>📝 Aufgabe 5 – Kalkulatorische Kosten im BAB berücksichtigen</h3>
+    <span class="aufgaben-nr">Übung 5</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Die Hanna GmbH hat sowohl bilanzielle als auch kalkulatorische Positionen. Trage im BAB nur die kalkulatorischen Beträge ein. Nicht die GuV-Beträge!<br><br>
+      <strong>BAB-Daten (nur kalk. Kosten verwenden, in €):</strong><br>
+      Gehälter (GuV): 48.000 → identisch, kein Unterschied<br>
+      Miete (GuV): 12.000 → identisch, kein Unterschied<br>
+      GuV-AfA: 1.200 / Monat → Kalk. AfA: 1.850 / Monat (Anderskosten: +650)<br>
+      Kalk. Unternehmerlohn: 5.500 / Monat (Zusatzkosten, fehlt in GuV komplett)<br>
+      Kalk. Zinsen: 2.100 / Monat (Zusatzkosten, fehlt in GuV komplett)<br><br>
+      Verteilungsschlüssel:
+      Gehälter MA 2/14/3/3 | Miete m² 80/300/60/60 | Kalk. AfA: nur Fertigung |
+      Unternehmerlohn gleichmäßig | Kalk. Zinsen: Mat 10% / Fert 60% / Verw 20% / Vert 10%<br>
+      <strong>Bezugsgrößen:</strong> FM = 80.000 € | FL = 42.000 € | HKU = 185.000 €
+    </div>
+    <div style="overflow-x:auto;"><table style="border-collapse:collapse;font-size:0.82rem;min-width:820px;width:100%;">
+      <tr>
+        <th style="background:var(--dark);color:white;padding:6px 8px;border:1px solid #444;text-align:left;width:200px;">Kostenart (kalk.)</th>
+        <th style="background:var(--dark);color:white;padding:6px 8px;border:1px solid #444;width:85px;">Gesamt (€)</th>
+        <th style="background:var(--dark);color:white;padding:6px 8px;border:1px solid #444;width:110px;">Schlüssel</th>
+        <th style="background:#7f5c00;color:white;padding:6px 8px;border:1px solid #444;">Material</th>
+        <th style="background:#2e4057;color:white;padding:6px 8px;border:1px solid #444;">Fertigung</th>
+        <th style="background:#1a5c1a;color:white;padding:6px 8px;border:1px solid #444;">Verwaltung</th>
+        <th style="background:#5c1a1a;color:white;padding:6px 8px;border:1px solid #444;">Vertrieb</th>
+      </tr>
+      <tr><td style="background:#f9f9f9;padding:6px 8px;border:1px solid #ccc;font-weight:500;">Gehälter</td><td style="padding:6px 8px;border:1px solid #ccc;color:#555;font-style:italic;text-align:right;">48.000</td><td style="padding:6px 8px;border:1px solid #ccc;font-size:0.79rem;color:#666;">MA 2/14/3/3</td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td></tr>
+      <tr><td style="background:#f4f4f4;padding:6px 8px;border:1px solid #ccc;font-weight:500;">Miete</td><td style="padding:6px 8px;border:1px solid #ccc;color:#555;font-style:italic;text-align:right;">12.000</td><td style="padding:6px 8px;border:1px solid #ccc;font-size:0.79rem;color:#666;">m² 80/300/60/60</td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td></tr>
+      <tr><td style="background:#f9f9f9;padding:6px 8px;border:1px solid #ccc;font-weight:500;">Kalk. AfA</td><td style="padding:6px 8px;border:1px solid #ccc;color:var(--accent);font-weight:bold;text-align:right;">1.850</td><td style="padding:6px 8px;border:1px solid #ccc;font-size:0.79rem;color:#666;">nur Fertigung</td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td></tr>
+      <tr><td style="background:#f0fff4;padding:6px 8px;border:1px solid #ccc;font-weight:500;">Kalk. Unternehmerlohn</td><td style="padding:6px 8px;border:1px solid #ccc;color:var(--accent);font-weight:bold;text-align:right;">5.500</td><td style="padding:6px 8px;border:1px solid #ccc;font-size:0.79rem;color:#666;">gleichmäßig</td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td></tr>
+      <tr><td style="background:#fff5f5;padding:6px 8px;border:1px solid #ccc;font-weight:500;">Kalk. Zinsen</td><td style="padding:6px 8px;border:1px solid #ccc;color:var(--accent);font-weight:bold;text-align:right;">2.100</td><td style="padding:6px 8px;border:1px solid #ccc;font-size:0.79rem;color:#666;">10/60/20/10%</td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td></tr>
+      <tr style="font-weight:bold;background:#fffbe6;">
+        <td style="padding:6px 8px;border:1px solid #777;border-top:2px solid #666;">Summe Kosten</td><td style="padding:6px 8px;border:1px solid #777;border-top:2px solid #666;text-align:right;">69.450</td><td></td>
+        <td style="border:1px solid #777;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #777;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #777;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td><td style="border:1px solid #777;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;"></td>
+      </tr>
+      <tr style="background:#eef7ff;">
+        <td style="padding:5px 8px;border:1px solid #ccc;font-size:0.8rem;">Bezugsgröße</td><td></td><td></td>
+        <td style="padding:5px 8px;border:1px solid #ccc;text-align:center;font-size:0.79rem;">FM = 80.000</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:center;font-size:0.79rem;">FL = 42.000</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:center;font-size:0.79rem;">HKU = 185.000</td><td style="padding:5px 8px;border:1px solid #ccc;text-align:center;font-size:0.79rem;">HKU = 185.000</td>
+      </tr>
+      <tr style="background:#e8f5e9;font-weight:bold;">
+        <td style="padding:6px 8px;border:1px solid #ccc;">Zuschlagssatz (%)</td><td></td><td></td>
+        <td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;" placeholder="MGK %"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;" placeholder="FGK %"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;" placeholder="VwGK %"></td><td style="border:1px solid #ccc;padding:4px;"><input type="text" style="width:82px;border:1px solid #ccc;border-radius:4px;padding:4px 5px;font-size:0.8rem;text-align:right;" placeholder="VtGK %"></td>
+      </tr>
+    </table></div>
+  </div>
+
+  <!-- ======== AUFGABE 6: Kalk. Kosten Richtig/Falsch ======== -->
+  <div class="card">
+    <h3>📝 Aufgabe 6 – Richtig oder Falsch? (Kalkulatorische Kosten)</h3>
+    <span class="aufgaben-nr">Übung 6</span>
+    <table class="cls">
+      <tr><th style="width:60%;">Aussage</th><th style="width:60px;">R / F</th><th>Korrektur / Erklärung</th></tr>
+      <tr><td class="label">Kalkulatorische Kosten können höher oder niedriger als die GuV-Aufwendungen sein.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Der Unternehmerlohn ist immer in der GuV als Aufwand enthalten.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Kalk. Zinsen werden auf das gesamte Kapital (EK + FK) berechnet.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Anderskosten entstehen, wenn die kalk. AfA größer ist als die GuV-AfA.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Der Wiederbeschaffungswert ist immer identisch mit den Anschaffungskosten einer Maschine.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Zusatzkosten erhöhen das Betriebsergebnis der KLR, ohne in der GuV aufzutauchen.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">In den BAB werden immer die kalkulatorischen Beträge eingetragen, nicht die GuV-Aufwandsbeträge.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Ein Unternehmen ohne Eigenkapital braucht keine kalkulatorischen Zinsen anzusetzen.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+    </table>
+  </div>
+
+  <div style="text-align:center;margin:30px 0 50px;">
+    <a href="hf7_abgrenzung_uebung.html" style="padding:12px 24px;background:#7f5c00;color:white;border-radius:8px;text-decoration:none;margin-right:10px;">← Abgrenzungsrechnung</a>
+    <a href="hf7_bab_uebung.html" style="padding:12px 24px;background:#1a2a6c;color:white;border-radius:8px;text-decoration:none;margin-right:10px;">Weiter: BAB →</a>
+    <a href="hf7_wertströme.html" style="padding:12px 24px;background:var(--dark);color:white;border-radius:8px;text-decoration:none;">Zur Theorie</a>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>HF 7 Übung: Kostenträgerrechnung & Kalkulation</title>
+<style>
+  :root { --accent: #27ae60; --dark: #1a1a2e; --border: #bbb; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; color: #2c3e50; }
+  .topbar { background: var(--dark); color: white; padding: 12px 30px; display: flex; align-items: center; gap: 20px; position: sticky; top:0; z-index:99; }
+  .topbar a { color: #fdbb2d; text-decoration: none; }
+  .topbar h1 { font-size: 1.1rem; margin: 0; }
+  .container { max-width: 1050px; margin: 30px auto; padding: 0 20px; }
+  .hero { background: linear-gradient(135deg, #1a5c1a, #27ae60); color: white; padding: 28px 32px; border-radius: 12px; margin-bottom: 24px; }
+  .hero h2 { margin: 0 0 6px; font-size: 1.6rem; }
+  .hero p { margin: 0; opacity: 0.9; font-size: 0.95rem; }
+  .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); border-top: 4px solid var(--accent); }
+  .card h3 { margin-top: 0; color: var(--dark); font-size: 1.15rem; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+  .aufgaben-nr { display: inline-block; background: var(--accent); color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: bold; margin-bottom: 8px; }
+  .aufgabe-text { background: #f0fff4; border-left: 4px solid var(--accent); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 14px; font-size: 0.88rem; line-height: 1.6; }
+  .merke { background: #fff0f0; border-left: 4px solid #e74c3c; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 0.86rem; margin-bottom: 12px; }
+  .formel { background: #fffbf0; border: 1.5px dashed #f39c12; padding: 10px 14px; border-radius: 8px; font-family: 'Courier New', monospace; font-size: 0.86rem; margin: 8px 0; }
+  .freitext { width: 100%; border: 1px solid #ccc; border-radius: 6px; min-height: 55px; padding: 8px; font-size: 0.86rem; box-sizing: border-box; resize: vertical; font-family: inherit; }
+  .freitext:focus { outline: 2px solid var(--accent); background: #f0fff4; }
+
+  /* Kalkulationsschema */
+  table.kalk { width: 100%; border-collapse: collapse; font-size: 0.87rem; margin-bottom: 14px; }
+  table.kalk td { border: 1px solid var(--border); padding: 7px 10px; vertical-align: middle; }
+  table.kalk td.label { width:52%; font-weight: 500; background: #f9f9f9; }
+  table.kalk td.label.indent { padding-left: 26px; color: #555; font-weight: normal; }
+  table.kalk td.hint { width: 20%; font-size: 0.79rem; color: #888; background: #fafafa; font-family: monospace; }
+  table.kalk input[type=text] { width: 110px; border: 1px solid #ccc; border-radius: 4px; padding: 5px 8px; text-align: right; font-size: 0.86rem; }
+  table.kalk input[type=text]:focus { outline: 2px solid var(--accent); background: #f0fff4; }
+  table.kalk tr.sum { background: #fffbe6; } table.kalk tr.sum td { font-weight: bold; border-top: 2px solid #999; }
+  table.kalk tr.total td { font-weight: bold; background: #e8f5e9 !important; }
+  table.kalk tr.preis td { background: #1a5c1a !important; color: white !important; font-weight: bold; }
+
+  /* Klassifizierungstabelle */
+  table.cls { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 16px; }
+  table.cls th { background: var(--dark); color: white; padding: 7px 10px; border: 1px solid #333; }
+  table.cls td { border: 1px solid #ccc; padding: 7px 10px; }
+  table.cls td.label { background: #fafafa; }
+  table.cls input[type=text] { width: 95%; border: 1px solid #ccc; border-radius: 4px; padding: 4px 6px; font-size: 0.83rem; }
+  table.cls input[type=text]:focus { outline: 2px solid var(--accent); background: #f0fff4; }
+
+  /* Zwei-Spalten-Kalk */
+  .two-kalk { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
+
+  @media print {
+    .topbar { display: none; }
+    body { background: white; }
+    input[type=text] { border-bottom: 1px solid #999; border-top:none; border-left:none; border-right:none; background:transparent; }
+    textarea { border: 1px solid #999; }
+    .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+    .two-kalk { grid-template-columns: 1fr 1fr; }
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html">← Übersicht</a>
+  <h1>HF 7: Kostenträgerrechnung & Kalkulation</h1>
+</div>
+<div class="container">
+  <div class="hero">
+    <h2>📋 Kalkulation – Vollständige Übungsserie</h2>
+    <p>6 Aufgaben: Vorwärtskalkulation, Rückwärtskalkulation, Gesamtrechnung mit Lager, Zwei-Produkt-Vergleich, Listenpreisermittlung und komplexe Mischaufgaben.</p>
+  </div>
+
+  <!-- THEORIE -->
+  <div class="card">
+    <h3>⚡ Kalkulationsschema (vollständig)</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+      <div>
+        <div class="formel">  Fertigungsmaterial (FM)&#10;+ Materialgemeinkosten (MGK)&#10;= Materialkosten (MK)&#10;&#10;  Fertigungslöhne (FL)&#10;+ Fertigungsgemeinkosten (FGK)&#10;= Fertigungskosten (FK)&#10;&#10;= Herstellkosten Erzeugung (HKE)</div>
+      </div>
+      <div>
+        <div class="formel">  HKE&#10;+/- Lagerbestandsänderung&#10;= Herstellkosten des Umsatzes&#10;&#10;+ VwGK&#10;+ VtGK&#10;= Selbstkosten (SK)&#10;+ Gewinnzuschlag&#10;= Barverkaufspreis&#10;+ Skonto (÷ Rest × Skonto%)&#10;= Zielverkaufspreis&#10;+ Rabatt (÷ Rest × Rabatt%)&#10;= Listenpreis (netto)</div>
+      </div>
+    </div>
+    <div class="merke">⚠ Skonto & Rabatt werden AUFGESCHLAGEN! Beispiel 2% Skonto: Zielpreis = Barpreis × 100/98. Damit zahlt der Kunde (nach Abzug) genau den Barpreis.</div>
+  </div>
+
+  <!-- AUFGABE 1: Einfache Vorwärtskalkulation -->
+  <div class="card">
+    <h3>📝 Aufgabe 1 – Vorwärtskalkulation (Möbel AG – Schreibtisch "Office Pro")</h3>
+    <span class="aufgaben-nr">Übung 1</span>
+    <div class="aufgabe-text">
+      FM = 65,00 € | FL = 40,00 € | MGK-Satz = 10% | FGK-Satz = 190% | VwGK-Satz = 8% | VtGK-Satz = 6%<br>
+      Kein Lagerbestandsunterschied. Gewinnaufschlag = 12% auf SK | Skonto = 3% | Rabatt = 15%
+    </div>
+    <table class="kalk">
+      <tr><td class="label">Fertigungsmaterial (FM)</td><td class="hint"></td><td><input type="text" placeholder="65,00 €"></td></tr>
+      <tr><td class="label indent">+ Materialgemeinkosten (10%)</td><td class="hint">65 × 10%</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Materialkosten</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Fertigungslöhne (FL)</td><td class="hint"></td><td><input type="text" placeholder="40,00 €"></td></tr>
+      <tr><td class="label indent">+ Fertigungsgemeinkosten (190%)</td><td class="hint">40 × 190%</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Fertigungskosten</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Herstellkosten der Erzeugung = HK des Umsatzes</td><td class="hint">(kein Lager)</td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ Verwaltungsgemeinkosten (8%)</td><td class="hint">HKU × 8%</td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ Vertriebsgemeinkosten (6%)</td><td class="hint">HKU × 6%</td><td><input type="text"></td></tr>
+      <tr class="total"><td class="label">= Selbstkosten (SK) pro Stück</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ Gewinnaufschlag (12%)</td><td class="hint">SK × 12%</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Barverkaufspreis</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ Kundenskonto (3%) aufschlagen</td><td class="hint">Bar ÷ 97 × 3</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Zielverkaufspreis</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ Kundenrabatt (15%) aufschlagen</td><td class="hint">Ziel ÷ 85 × 15</td><td><input type="text"></td></tr>
+      <tr class="preis"><td class="label" style="color:white;">= Listenverkaufspreis (netto)</td><td class="hint" style="color:#aaa;"></td><td><input type="text" style="background:#1a5c1a;color:white;border-color:#27ae60;"></td></tr>
+    </table>
+  </div>
+
+  <!-- AUFGABE 2: Gesamtrechnung (Menge, Lager) -->
+  <div class="card">
+    <h3>📝 Aufgabe 2 – Gesamtrechnung (produzierte vs. verkaufte Menge + Lager)</h3>
+    <span class="aufgaben-nr">Übung 2</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> TechPrint GmbH produziert Druckmaschinen. Im Oktober wurden produziert: <strong>500 Stück</strong>, verkauft: <strong>420 Stück</strong>.<br>
+      FM gesamt = 210.000 € | FL gesamt = 120.000 €<br>
+      MGK = 12% | FGK = 175% | VwGK = 9% | VtGK = 7%<br>
+      Gewinnzuschlag = 15% | Skonto = 2% | Rabatt = 10%
+    </div>
+    <table class="kalk">
+      <tr><td class="label">Fertigungsmaterial (gesamt)</td><td class="hint"></td><td><input type="text" placeholder="210.000"></td></tr>
+      <tr><td class="label indent">+ MGK (12%)</td><td class="hint">210.000 × 12%</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Materialkosten</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label">Fertigungslöhne (gesamt)</td><td class="hint"></td><td><input type="text" placeholder="120.000"></td></tr>
+      <tr><td class="label indent">+ FGK (175%)</td><td class="hint">120.000 × 175%</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Fertigungskosten</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Herstellkosten der Erzeugung (500 Stück)</td><td class="hint">MK + FK</td><td><input type="text"></td></tr>
+      <tr><td class="label indent">– Mehrbestand FE (80 Stück ins Lager)</td><td class="hint">HKE ÷ 500 × 80</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Herstellkosten des Umsatzes (420 Stück)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ VwGK (9%)</td><td class="hint">HKU × 9%</td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ VtGK (7%)</td><td class="hint">HKU × 7%</td><td><input type="text"></td></tr>
+      <tr class="total"><td class="label">= Selbstkosten des Umsatzes (gesamt)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr class="total"><td class="label">= Selbstkosten pro Stück (÷ 420)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ Gewinnaufschlag (15%)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Barverkaufspreis je Stück</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ Skonto (2%)</td><td class="hint">Bar ÷ 98 × 2</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Zielverkaufspreis je Stück</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ Rabatt (10%)</td><td class="hint">Ziel ÷ 90 × 10</td><td><input type="text"></td></tr>
+      <tr class="preis"><td class="label" style="color:white;">= Listenverkaufspreis je Stück</td><td class="hint" style="color:#aaa;"></td><td><input type="text" style="background:#1a5c1a;color:white;border-color:#27ae60;"></td></tr>
+    </table>
+  </div>
+
+  <!-- AUFGABE 3: Rückwärtskalkulation -->
+  <div class="card">
+    <h3>📝 Aufgabe 3 – Rückwärtskalkulation (vom Listenpreis zu den Kosten)</h3>
+    <span class="aufgaben-nr">Übung 3</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Der Katalogpreis (Listenpreis netto) eines Produkts beträgt <strong>238,00 €</strong>.<br>
+      Bekannt: Rabatt = 15% | Skonto = 3% | Gewinnzuschlag = 10% auf SK<br>
+      <strong>Gesucht:</strong> Selbstkosten, Barverkaufspreis, Zielverkaufspreis.
+    </div>
+    <div class="merke">⚠ Bei der Rückwärtskalkulation wird subtrahiert statt aufgeschlagen: Zielpreis = Listenpreis × (100 – Rabatt%) / 100</div>
+    <table class="kalk">
+      <tr class="preis"><td class="label" style="color:white;">Listenverkaufspreis (netto, gegeben)</td><td class="hint" style="color:#aaa;"></td><td><input type="text" placeholder="238,00 €" style="background:#1a5c1a;color:white;border-color:#27ae60;"></td></tr>
+      <tr><td class="label indent">– Kundenrabatt (15%)</td><td class="hint">238 × 15%</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Zielverkaufspreis</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">– Skonto (3%)</td><td class="hint">Ziel × 3%</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Barverkaufspreis</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">– Gewinnaufschlag (10% auf SK)</td><td class="hint">Bar ÷ 110 × 10</td><td><input type="text"></td></tr>
+      <tr class="total"><td class="label">= Selbstkosten (SK)</td><td class="hint"></td><td><input type="text"></td></tr>
+    </table>
+    <p style="font-size:0.88rem;font-weight:bold;">Wenn die Selbstkosten bekannt sind: Was wären die max. erlaubten Herstellkosten, wenn VwGK=8% und VtGK=5%?</p>
+    <table class="kalk">
+      <tr><td class="label indent">SK – VwGK (8%) – VtGK (5%)</td><td class="hint">SK ÷ 1,13</td><td><input type="text"></td></tr>
+      <tr class="total"><td class="label">= max. Herstellkosten des Umsatzes</td><td class="hint"></td><td><input type="text"></td></tr>
+    </table>
+  </div>
+
+  <!-- AUFGABE 4: Zwei-Produkt-Kalkulation (Vergleich) -->
+  <div class="card">
+    <h3>📝 Aufgabe 4 – Zwei-Produkt-Kalkulation (Produkt A und Produkt B im Vergleich)</h3>
+    <span class="aufgaben-nr">Übung 4</span>
+    <div class="aufgabe-text">
+      Die Kreuzfeld OHG produziert zwei Produkte. Berechne für beide die Selbstkosten je Stück und ermittle den Listenpreis.<br><br>
+      <table style="font-size:0.86rem;border-collapse:collapse;width:60%;">
+        <tr style="background:#1a1a2e;color:white;"><td style="padding:5px 10px;border:1px solid #333;">Angabe</td><td style="padding:5px 10px;border:1px solid #333;text-align:right;">Produkt A</td><td style="padding:5px 10px;border:1px solid #333;text-align:right;">Produkt B</td></tr>
+        <tr><td style="padding:5px 10px;border:1px solid #ccc;">Fertigungsmaterial (FM)</td><td style="padding:5px 10px;border:1px solid #ccc;text-align:right;">28,00 €</td><td style="padding:5px 10px;border:1px solid #ccc;text-align:right;">52,00 €</td></tr>
+        <tr><td style="padding:5px 10px;border:1px solid #ccc;">Fertigungslöhne (FL)</td><td style="padding:5px 10px;border:1px solid #ccc;text-align:right;">18,00 €</td><td style="padding:5px 10px;border:1px solid #ccc;text-align:right;">35,00 €</td></tr>
+        <tr><td style="padding:5px 10px;border:1px solid #ccc;">MGK-Satz</td><td colspan="2" style="padding:5px 10px;border:1px solid #ccc;text-align:center;">14% (beide)</td></tr>
+        <tr><td style="padding:5px 10px;border:1px solid #ccc;">FGK-Satz</td><td colspan="2" style="padding:5px 10px;border:1px solid #ccc;text-align:center;">210% (beide)</td></tr>
+        <tr><td style="padding:5px 10px;border:1px solid #ccc;">VwGK-Satz</td><td colspan="2" style="padding:5px 10px;border:1px solid #ccc;text-align:center;">7% (beide)</td></tr>
+        <tr><td style="padding:5px 10px;border:1px solid #ccc;">VtGK-Satz</td><td colspan="2" style="padding:5px 10px;border:1px solid #ccc;text-align:center;">5% (beide)</td></tr>
+        <tr><td style="padding:5px 10px;border:1px solid #ccc;">Gewinnzuschlag</td><td style="padding:5px 10px;border:1px solid #ccc;text-align:right;">12%</td><td style="padding:5px 10px;border:1px solid #ccc;text-align:right;">18%</td></tr>
+        <tr><td style="padding:5px 10px;border:1px solid #ccc;">Skonto</td><td colspan="2" style="padding:5px 10px;border:1px solid #ccc;text-align:center;">2% (beide)</td></tr>
+        <tr><td style="padding:5px 10px;border:1px solid #ccc;">Rabatt</td><td colspan="2" style="padding:5px 10px;border:1px solid #ccc;text-align:center;">10% (beide)</td></tr>
+      </table>
+    </div>
+    <div class="two-kalk">
+      <div>
+        <p style="font-weight:bold;font-size:0.9rem;margin-bottom:8px;">Produkt A:</p>
+        <table class="kalk">
+          <tr><td class="label">FM</td><td><input type="text" placeholder="28,00"></td></tr>
+          <tr><td class="label indent">+ MGK (14%)</td><td><input type="text"></td></tr>
+          <tr class="sum"><td class="label">= Materialkosten</td><td><input type="text"></td></tr>
+          <tr><td class="label">FL</td><td><input type="text" placeholder="18,00"></td></tr>
+          <tr><td class="label indent">+ FGK (210%)</td><td><input type="text"></td></tr>
+          <tr class="sum"><td class="label">= Fertigungskosten</td><td><input type="text"></td></tr>
+          <tr class="sum"><td class="label">= HK = HKU</td><td><input type="text"></td></tr>
+          <tr><td class="label indent">+ VwGK (7%)</td><td><input type="text"></td></tr>
+          <tr><td class="label indent">+ VtGK (5%)</td><td><input type="text"></td></tr>
+          <tr class="total"><td class="label">= Selbstkosten</td><td><input type="text"></td></tr>
+          <tr><td class="label indent">+ Gewinn (12%)</td><td><input type="text"></td></tr>
+          <tr class="sum"><td class="label">= Barpreis</td><td><input type="text"></td></tr>
+          <tr><td class="label indent">+ Skonto (2%)</td><td><input type="text"></td></tr>
+          <tr class="sum"><td class="label">= Zielpreis</td><td><input type="text"></td></tr>
+          <tr><td class="label indent">+ Rabatt (10%)</td><td><input type="text"></td></tr>
+          <tr class="preis"><td class="label" style="color:white;">= Listenpreis A</td><td><input type="text" style="background:#1a5c1a;color:white;border-color:#27ae60;"></td></tr>
+        </table>
+      </div>
+      <div>
+        <p style="font-weight:bold;font-size:0.9rem;margin-bottom:8px;">Produkt B:</p>
+        <table class="kalk">
+          <tr><td class="label">FM</td><td><input type="text" placeholder="52,00"></td></tr>
+          <tr><td class="label indent">+ MGK (14%)</td><td><input type="text"></td></tr>
+          <tr class="sum"><td class="label">= Materialkosten</td><td><input type="text"></td></tr>
+          <tr><td class="label">FL</td><td><input type="text" placeholder="35,00"></td></tr>
+          <tr><td class="label indent">+ FGK (210%)</td><td><input type="text"></td></tr>
+          <tr class="sum"><td class="label">= Fertigungskosten</td><td><input type="text"></td></tr>
+          <tr class="sum"><td class="label">= HK = HKU</td><td><input type="text"></td></tr>
+          <tr><td class="label indent">+ VwGK (7%)</td><td><input type="text"></td></tr>
+          <tr><td class="label indent">+ VtGK (5%)</td><td><input type="text"></td></tr>
+          <tr class="total"><td class="label">= Selbstkosten</td><td><input type="text"></td></tr>
+          <tr><td class="label indent">+ Gewinn (18%)</td><td><input type="text"></td></tr>
+          <tr class="sum"><td class="label">= Barpreis</td><td><input type="text"></td></tr>
+          <tr><td class="label indent">+ Skonto (2%)</td><td><input type="text"></td></tr>
+          <tr class="sum"><td class="label">= Zielpreis</td><td><input type="text"></td></tr>
+          <tr><td class="label indent">+ Rabatt (10%)</td><td><input type="text"></td></tr>
+          <tr class="preis"><td class="label" style="color:white;">= Listenpreis B</td><td><input type="text" style="background:#1a5c1a;color:white;border-color:#27ae60;"></td></tr>
+        </table>
+      </div>
+    </div>
+    <p style="font-size:0.88rem;font-weight:bold;margin-top:10px;">Welches Produkt hat die höheren Selbstkosten pro Stück? Begründe kurz, warum.</p>
+    <textarea class="freitext" rows="2" placeholder="Produkt ... hat höhere SK, weil ..."></textarea>
+  </div>
+
+  <!-- AUFGABE 5: Gegebener Listenpreis, fehlender Zuschlagsatz -->
+  <div class="card">
+    <h3>📝 Aufgabe 5 – Fehlenden Zuschlagsatz ermitteln (Rückrechnung aus Kalkulationsschema)</h3>
+    <span class="aufgaben-nr">Übung 5</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Der Listenpreis für ein Produkt beträgt <strong>352,00 € (netto)</strong>.<br>
+      Bekannt: Rabatt 12% | Skonto 2% | Gewinn 10% | VwGK-Satz 9% | VtGK-Satz 6% |
+      FM = 42,00 € | MGK-Satz 11% | FL = 36,00 €<br>
+      <strong>Gesucht:</strong> FGK-Zuschlagsatz (%)
+    </div>
+    <table class="kalk">
+      <tr class="preis"><td class="label" style="color:white;">Listenpreis (gegeben)</td><td class="hint" style="color:#aaa;"></td><td><input type="text" placeholder="352,00" style="background:#1a5c1a;color:white;border-color:#27ae60;"></td></tr>
+      <tr><td class="label indent">– Rabatt (12%)</td><td class="hint">352 × 12%</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Zielverkaufspreis</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">– Skonto (2%)</td><td class="hint">Ziel × 2%</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Barverkaufspreis</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">– Gewinn (10% auf SK)</td><td class="hint">Bar ÷ 110 × 10</td><td><input type="text"></td></tr>
+      <tr class="total"><td class="label">= Selbstkosten (SK)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">– VwGK (9%)</td><td class="hint">SK ÷ 1,15 × 0,09</td><td><input type="text"></td></tr>
+      <tr><td class="label indent">– VtGK (6%)</td><td class="hint">SK ÷ 1,15 × 0,06</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Herstellkosten des Umsatzes (HKU)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label">FM = 42 € + MGK (11%)</td><td class="hint">42 × 11% = MGK</td><td><input type="text" placeholder="MGK = ?"></td></tr>
+      <tr class="sum"><td class="label">= Materialkosten</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label">FL (gegeben)</td><td class="hint"></td><td><input type="text" placeholder="36,00"></td></tr>
+      <tr><td class="label indent">+ FGK (? % → gesucht!)</td><td class="hint">HKU – MK – FL</td><td><input type="text" placeholder="FGK = ?"></td></tr>
+      <tr class="total"><td class="label">FGK-Zuschlagsatz = FGK / FL × 100</td><td class="hint"></td><td><input type="text" placeholder="? %"></td></tr>
+    </table>
+  </div>
+
+  <!-- AUFGABE 6: Minderbestand (Lagerabbau) -->
+  <div class="card">
+    <h3>📝 Aufgabe 6 – Gesamtrechnung mit Minderbestand (Lagerabbau)</h3>
+    <span class="aufgaben-nr">Übung 6</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> SportFlex GmbH produziert 800 Stück, verkauft aber 950 Stück (= 150 Stück kommen aus dem Lager).<br>
+      FM gesamt (800 Stück) = 96.000 € | FL gesamt = 44.000 €<br>
+      MGK = 11% | FGK = 205% | VwGK = 8% | VtGK = 5%<br>
+      Die aus dem Lager entnommenen 150 Stück haben HK-Kosten von je 185 € (= Lagerabgangswert = 27.750 €).<br>
+      Gewinn = 14% | Skonto = 2% | Rabatt = 8%
+    </div>
+    <table class="kalk">
+      <tr><td class="label">FM gesamt (800 Stück)</td><td class="hint"></td><td><input type="text" placeholder="96.000"></td></tr>
+      <tr><td class="label indent">+ MGK (11%)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Materialkosten</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label">FL gesamt</td><td class="hint"></td><td><input type="text" placeholder="44.000"></td></tr>
+      <tr><td class="label indent">+ FGK (205%)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Fertigungskosten</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Herstellkosten der Erzeugung (800 Stück)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ Minderbestand FE (150 Stück × 185 €)</td><td class="hint">= 27.750 €</td><td><input type="text" placeholder="+27.750"></td></tr>
+      <tr class="sum"><td class="label">= Herstellkosten des Umsatzes (950 Stück)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ VwGK (8%)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ VtGK (5%)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr class="total"><td class="label">= Selbstkosten gesamt (950 Stück)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr class="total"><td class="label">= Selbstkosten pro Stück (÷ 950)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ Gewinn (14%)</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Barverkaufspreis je Stück</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ Skonto (2%)</td><td class="hint">Bar ÷ 98 × 2</td><td><input type="text"></td></tr>
+      <tr class="sum"><td class="label">= Zielverkaufspreis je Stück</td><td class="hint"></td><td><input type="text"></td></tr>
+      <tr><td class="label indent">+ Rabatt (8%)</td><td class="hint">Ziel ÷ 92 × 8</td><td><input type="text"></td></tr>
+      <tr class="preis"><td class="label" style="color:white;">= Listenverkaufspreis je Stück</td><td class="hint" style="color:#aaa;"></td><td><input type="text" style="background:#1a5c1a;color:white;border-color:#27ae60;"></td></tr>
+    </table>
+  </div>
+
+  <!-- AUFGABE 7: Richtig/Falsch -->
+  <div class="card">
+    <h3>📝 Aufgabe 7 – Richtig oder Falsch? (Kalkulation)</h3>
+    <span class="aufgaben-nr">Übung 7</span>
+    <table class="cls">
+      <tr><th style="width:60%;">Aussage</th><th style="width:60px;">R / F</th><th>Korrektur / Erklärung</th></tr>
+      <tr><td class="label">Beim Mehrbestand an fertigen Erzeugnissen entstehen mehr Herstellkosten des Umsatzes als der Erzeugung.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Kundenskonto und Kundenrabatt werden beide vom Selbstkostenpreis abgezogen.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Die Verwaltungsgemeinkosten beziehen sich auf die Fertigungslöhne als Bezugsgröße.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Die Herstellkosten der Erzeugung und des Umsatzes sind gleich, wenn kein Lager gebildet wird.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Ein höherer Gewinnzuschlag erhöht den Barverkaufspreis proportional.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">In der Rückwärtskalkulation wird der Listenpreis durch Abzug von Rabatt und Skonto zum Barpreis.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Wenn Skonto 2% beträgt und der Barpreis 196 €, dann ist der Listenpreis = 196 × 1,02 = 199,92 €.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Die Sondereinzelkosten der Fertigung (SEKF) kommen nach den Fertigungskosten hinzu.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+    </table>
+  </div>
+
+  <div style="text-align:center;margin:30px 0 50px;">
+    <a href="hf7_bab_uebung.html" style="padding:12px 24px;background:#1a2a6c;color:white;border-radius:8px;text-decoration:none;margin-right:10px;">← BAB-Übung</a>
+    <a href="hf7_zeitrechnung_uebung.html" style="padding:12px 24px;background:var(--dark);color:white;border-radius:8px;text-decoration:none;">Weiter: Zeitrechnung →</a>
+  </div>
+</div>
+</body>
+</html>

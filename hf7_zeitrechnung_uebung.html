@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>HF 7 Übung: Kostenträgerzeitrechnung (Normal vs. Ist)</title>
+<style>
+  :root { --accent: #9b59b6; --dark: #1a1a2e; --border: #bbb; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #f0f2f5; margin: 0; color: #2c3e50; }
+  .topbar { background: var(--dark); color: white; padding: 12px 30px; display: flex; align-items: center; gap: 20px; position: sticky; top:0; z-index:99; }
+  .topbar a { color: #fdbb2d; text-decoration: none; }
+  .topbar h1 { font-size: 1.1rem; margin: 0; }
+  .container { max-width: 1100px; margin: 30px auto; padding: 0 20px; }
+  .hero { background: linear-gradient(135deg, #4a235a, #9b59b6); color: white; padding: 28px 32px; border-radius: 12px; margin-bottom: 24px; }
+  .hero h2 { margin: 0 0 6px; font-size: 1.6rem; }
+  .hero p { margin: 0; opacity: 0.9; font-size: 0.95rem; }
+  .card { background: white; border-radius: 12px; padding: 24px; margin-bottom: 24px; box-shadow: 0 2px 10px rgba(0,0,0,0.07); border-top: 4px solid var(--accent); }
+  .card h3 { margin-top: 0; color: var(--dark); font-size: 1.15rem; border-bottom: 1px solid #eee; padding-bottom: 8px; }
+  .aufgaben-nr { display: inline-block; background: var(--accent); color: white; padding: 2px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: bold; margin-bottom: 8px; }
+  .aufgabe-text { background: #f5eeff; border-left: 4px solid var(--accent); padding: 14px 18px; border-radius: 0 8px 8px 0; margin-bottom: 14px; font-size: 0.88rem; line-height: 1.6; }
+  .merke { background: #fff0f0; border-left: 4px solid #e74c3c; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 0.86rem; margin-bottom: 12px; }
+  .hinweis { background: #fffbf0; border-left: 4px solid #f39c12; padding: 10px 14px; border-radius: 0 6px 6px 0; font-size: 0.86rem; margin-bottom: 12px; }
+  .freitext { width: 100%; border: 1px solid #ccc; border-radius: 6px; min-height: 55px; padding: 8px; font-size: 0.86rem; box-sizing: border-box; resize: vertical; font-family: inherit; }
+  .freitext:focus { outline: 2px solid var(--accent); background: #f5eeff; }
+  .green { color: #1a5c1a; font-weight: bold; }
+  .red { color: #c0392b; font-weight: bold; }
+
+  /* Kalkulationsschema (Normal vs Ist) */
+  .zeit-wrap { overflow-x: auto; margin-bottom: 12px; }
+  table.zeit { border-collapse: collapse; font-size: 0.84rem; min-width: 850px; width: 100%; }
+  table.zeit th, table.zeit td { border: 1px solid var(--border); padding: 7px 9px; vertical-align: middle; }
+  table.zeit th { background: var(--dark); color: white; text-align: center; font-size: 0.8rem; }
+  table.zeit th.normal { background: #2e4057; }
+  table.zeit th.ist { background: #7f5c00; }
+  table.zeit th.diff { background: #5c1a1a; }
+  table.zeit td.label { text-align: left; font-weight: 500; background: #f9f9f9; }
+  table.zeit td.label.indent { padding-left: 22px; color: #555; font-weight: normal; font-size: 0.82rem; }
+  table.zeit tr.sum td { font-weight: bold; border-top: 2px solid #777; background: #fffbe6 !important; }
+  table.zeit tr.total td { font-weight: bold; background: #e8f5e9 !important; }
+  table.zeit input[type=text] { width: 100px; border: 1px solid #ccc; border-radius: 4px; padding: 5px 7px; font-size: 0.83rem; text-align: right; }
+  table.zeit input[type=text]:focus { outline: 2px solid var(--accent); background: #f5eeff; }
+  table.zeit input.ud { border-color: #888; background: #fff8f8; }
+
+  /* BAB-mini */
+  table.bab-m { border-collapse: collapse; font-size: 0.83rem; width: 100%; margin-bottom: 10px; }
+  table.bab-m th, table.bab-m td { border: 1px solid var(--border); padding: 6px 9px; }
+  table.bab-m th { background: var(--dark); color: white; text-align: center; }
+  table.bab-m th.normal { background: #2e4057; }
+  table.bab-m th.ist { background: #7f5c00; }
+  table.bab-m th.diff { background: #5c1a1a; }
+  table.bab-m td.label { font-weight: 500; background: #f9f9f9; }
+  table.bab-m tr.sum td { font-weight: bold; border-top: 2px solid #777; background: #fffbe6 !important; }
+  table.bab-m input[type=text] { width: 100px; border: 1px solid #ccc; border-radius: 4px; padding: 4px 7px; text-align: right; font-size: 0.83rem; }
+  table.bab-m input[type=text]:focus { outline: 2px solid var(--accent); background: #f5eeff; }
+  table.bab-m input.ud { border-color: #888; background: #fff8f8; }
+
+  /* Klassifizierungstabelle */
+  table.cls { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin-bottom: 14px; }
+  table.cls th { background: var(--dark); color: white; padding: 7px 10px; border: 1px solid #333; }
+  table.cls td { border: 1px solid #ccc; padding: 7px 10px; }
+  table.cls td.label { background: #fafafa; }
+  table.cls input[type=text] { width: 95%; border: 1px solid #ccc; border-radius: 4px; padding: 4px 6px; font-size: 0.83rem; }
+  table.cls input[type=text]:focus { outline: 2px solid var(--accent); }
+
+  @media print {
+    .topbar { display: none; }
+    body { background: white; }
+    input[type=text] { border-bottom: 1px solid #999; border-top:none; border-left:none; border-right:none; background:transparent; }
+    textarea { border: 1px solid #999; }
+    .card { box-shadow: none; border: 1px solid #ddd; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+<div class="topbar">
+  <a href="index.html">← Übersicht</a>
+  <h1>HF 7: Kostenträgerzeitrechnung (Normal vs. Ist)</h1>
+</div>
+<div class="container">
+  <div class="hero">
+    <h2>🔍 Zeitrechnung – Vollständige Übungsserie</h2>
+    <p>5 Aufgaben: Über-/Unterdeckung im BAB, vollständiger Normalkostenvergleich auf Stückbasis, Ermittlung fehlender Normalzuschlagssätze, Beurteilungsaufgaben und Richtig/Falsch.</p>
+  </div>
+
+  <!-- THEORIE -->
+  <div class="card">
+    <h3>⚡ Theorie: Normal vs. Ist</h3>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:12px;">
+      <div style="border:1px solid #ddd;padding:12px;border-radius:8px;background:#eef7ff;">
+        <strong style="color:#2e4057;">Normalzuschlagssätze (Plan)</strong><br>
+        Zu Jahresbeginn festgelegt, basierend auf Erfahrungswerten. Für die <em>Vorkalkulation</em> (Preissetzung vor der Produktion).
+      </div>
+      <div style="border:1px solid #ddd;padding:12px;border-radius:8px;background:#fffbf0;">
+        <strong style="color:#7f5c00;">Istzuschlagssätze (Wirklichkeit)</strong><br>
+        Am Periodenende aus echten Zahlen berechnet. Für die <em>Nachkalkulation</em> (Wurde günstiger/teurer als geplant produziert?).
+      </div>
+    </div>
+    <div class="hinweis">
+      <strong>Über-/Unterdeckung pro Kostenstelle:</strong><br>
+      Normalgemeinkosten (Plan) – Istgemeinkosten (Wirklichkeit) = Differenz<br>
+      <span class="green">→ Positiv = Überdeckung</span> (weniger GK als geplant → Effizienzgewinn)<br>
+      <span class="red">→ Negativ = Unterdeckung</span> (mehr GK als geplant → Effizienzproblem)
+    </div>
+    <div class="hinweis" style="background:#f0fff4;border-color:#27ae60;">
+      <strong>Über-/Unterdeckung auf Stückbasis:</strong><br>
+      Normal-SK – Ist-SK = positive Zahl → Überdeckung (Normal teurer, Ist günstiger) ✓<br>
+      Normal-SK – Ist-SK = negative Zahl → Unterdeckung (Normal günstiger, Ist teurer) ✗
+    </div>
+  </div>
+
+  <!-- AUFGABE 1: Über-/Unterdeckung im BAB -->
+  <div class="card">
+    <h3>📝 Aufgabe 1 – Über-/Unterdeckung im BAB ermitteln (Allfit Sportartikel)</h3>
+    <span class="aufgaben-nr">Übung 1</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Die Normal-Zuschlagssätze der Allfit OHG für das Jahr wurden zu Jahresbeginn festgelegt. Die IST-Gemeinkosten aus dem Jahres-BAB liegen nun vor. Ermittle Über- oder Unterdeckung je Kostenstelle.<br><br>
+      <strong>Normal-Zuschlagssätze:</strong> MGK = 8% | FGK = 195% | VwGK = 8% | VtGK = 5%<br>
+      <strong>Bezugsgrößen (Ist, für das Jahr):</strong> FM = 485.000 € | FL = 220.000 € | HKU = 890.000 €<br>
+      <strong>Ist-Gemeinkosten (aus BAB):</strong> MGK = 40.600 € | FGK = 442.000 € | VwGK = 74.800 € | VtGK = 42.000 €
+    </div>
+    <div class="zeit-wrap">
+      <table class="bab-m">
+        <tr>
+          <th style="text-align:left;width:180px;">Kostenstelle</th>
+          <th class="normal">Normal-GK (Plan in €)<br><small>= Bezugsgr. × Normalsatz</small></th>
+          <th class="normal" style="width:150px;">Berechnung</th>
+          <th class="ist">Ist-GK (€)</th>
+          <th class="diff">Überdeckung (+) /<br>Unterdeckung (–) in €</th>
+        </tr>
+        <tr><td class="label">Material (MGK)</td><td><input type="text" placeholder="485.000 × 8%"></td><td style="font-size:0.8rem;color:#888;text-align:center;">= ?</td><td style="font-weight:500;text-align:right;color:#7f5c00;">40.600</td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+        <tr><td class="label">Fertigung (FGK)</td><td><input type="text" placeholder="220.000 × 195%"></td><td style="font-size:0.8rem;color:#888;text-align:center;">= ?</td><td style="font-weight:500;text-align:right;color:#7f5c00;">442.000</td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+        <tr><td class="label">Verwaltung (VwGK)</td><td><input type="text" placeholder="890.000 × 8%"></td><td style="font-size:0.8rem;color:#888;text-align:center;">= ?</td><td style="font-weight:500;text-align:right;color:#7f5c00;">74.800</td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+        <tr><td class="label">Vertrieb (VtGK)</td><td><input type="text" placeholder="890.000 × 5%"></td><td style="font-size:0.8rem;color:#888;text-align:center;">= ?</td><td style="font-weight:500;text-align:right;color:#7f5c00;">42.000</td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+        <tr class="sum"><td class="label">Summe</td><td><input type="text" placeholder="Gesamt-Normal"></td><td></td><td style="font-weight:bold;text-align:right;">599.400</td><td><input type="text" class="ud" placeholder="Gesamt +/–"></td></tr>
+      </table>
+    </div>
+    <p style="font-size:0.88rem;font-weight:bold;">Interpretiere das Ergebnis: Welche Kostenstelle hat das größte Problem?</p>
+    <textarea class="freitext" rows="2" placeholder="Die größte Unterdeckung liegt in der ... , weil ..."></textarea>
+  </div>
+
+  <!-- AUFGABE 2: Vollständiger Stückvergleich Normal vs. Ist -->
+  <div class="card">
+    <h3>📝 Aufgabe 2 – Vollständiger Stückvergleich (Normal vs. Ist) – Produkt "RunnerX"</h3>
+    <span class="aufgaben-nr">Übung 2</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Berechne die Selbstkosten des Produkts "RunnerX" auf Stückbasis – einmal mit den Normalzuschlagssätzen und einmal mit den tatsächlichen Ist-Zuschlagssätzen.<br><br>
+      FM = 38,00 € | FL = 22,00 €<br>
+      <strong>Normal-Sätze:</strong> MGK 10% | FGK 185% | VwGK 9% | VtGK 6%<br>
+      <strong>Ist-Sätze:</strong> MGK 12% | FGK 198% | VwGK 10% | VtGK 7%
+    </div>
+    <div class="zeit-wrap">
+      <table class="zeit">
+        <thead>
+          <tr>
+            <th style="text-align:left;width:240px;">Position</th>
+            <th class="normal" style="width:115px;">Normal-Kalkulation</th>
+            <th class="ist" style="width:115px;">Ist-Kalkulation</th>
+            <th class="diff" style="width:135px;">Abweichung Normal–Ist</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="label">Fertigungsmaterial (FM)</td><td style="text-align:right;">38,00 €</td><td style="text-align:right;">38,00 €</td><td></td></tr>
+          <tr><td class="label indent">+ MGK</td><td><input type="text" placeholder="10%"></td><td><input type="text" placeholder="12%"></td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+          <tr class="sum"><td class="label">= Materialkosten</td><td><input type="text"></td><td><input type="text"></td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+          <tr><td class="label">Fertigungslöhne (FL)</td><td style="text-align:right;">22,00 €</td><td style="text-align:right;">22,00 €</td><td></td></tr>
+          <tr><td class="label indent">+ FGK</td><td><input type="text" placeholder="185%"></td><td><input type="text" placeholder="198%"></td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+          <tr class="sum"><td class="label">= Fertigungskosten</td><td><input type="text"></td><td><input type="text"></td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+          <tr class="sum"><td class="label">= Herstellkosten = HKU (kein Lager)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+          <tr><td class="label indent">+ VwGK</td><td><input type="text" placeholder="9%"></td><td><input type="text" placeholder="10%"></td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+          <tr><td class="label indent">+ VtGK</td><td><input type="text" placeholder="6%"></td><td><input type="text" placeholder="7%"></td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+          <tr class="total"><td class="label">= Selbstkosten pro Stück</td><td><input type="text"></td><td><input type="text"></td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.87rem;font-weight:bold;">Ist das eine Über- oder Unterdeckung? Begründe.</p>
+    <textarea class="freitext" rows="2" placeholder="Da Normal-SK ... und Ist-SK ..., ergibt sich eine ...deckung von ... €/Stück. Das bedeutet ..."></textarea>
+  </div>
+
+  <!-- AUFGABE 3: Zwei Perioden vergleichen -->
+  <div class="card">
+    <h3>📝 Aufgabe 3 – Periodenvergleich: Ist-Zuschlagssätze Vorjahr vs. aktuelles Jahr (Kreuzfeld OHG)</h3>
+    <span class="aufgaben-nr">Übung 3</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Vergleiche die Ist-Zuschlagssätze der Kreuzfeld OHG aus zwei aufeinanderfolgenden Jahren.<br>
+      Berechne die Sätze, trage Ergebnisse ein und kommentiere die Entwicklung.<br><br>
+      <strong>Vorjahr:</strong> MGK = 30.800 € / FM = 280.000 € | FGK = 135.000 € / FL = 72.000 € | VwGK = 38.000 € / HKU = 455.000 € | VtGK = 25.600 € / HKU = 455.000 €<br>
+      <strong>Aktuelles Jahr:</strong> MGK = 34.200 € / FM = 270.000 € | FGK = 158.000 € / FL = 78.000 € | VwGK = 42.000 € / HKU = 480.000 € | VtGK = 28.000 € / HKU = 480.000 €
+    </div>
+    <table class="bab-m">
+      <tr><th style="text-align:left;width:160px;">Kostenstelle</th><th class="normal">Vorjahr: GK / BG</th><th class="normal">Vorjahr: Satz %</th><th class="ist">akt. Jahr: GK / BG</th><th class="ist">akt. Jahr: Satz %</th><th class="diff">Veränderung (%-Punkte)</th></tr>
+      <tr><td class="label">MGK</td><td style="text-align:right;color:#555;font-style:italic;">30.800 / 280.000</td><td><input type="text" placeholder="?%"></td><td style="text-align:right;color:#555;font-style:italic;">34.200 / 270.000</td><td><input type="text" placeholder="?%"></td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+      <tr><td class="label">FGK</td><td style="text-align:right;color:#555;font-style:italic;">135.000 / 72.000</td><td><input type="text" placeholder="?%"></td><td style="text-align:right;color:#555;font-style:italic;">158.000 / 78.000</td><td><input type="text" placeholder="?%"></td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+      <tr><td class="label">VwGK</td><td style="text-align:right;color:#555;font-style:italic;">38.000 / 455.000</td><td><input type="text" placeholder="?%"></td><td style="text-align:right;color:#555;font-style:italic;">42.000 / 480.000</td><td><input type="text" placeholder="?%"></td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+      <tr><td class="label">VtGK</td><td style="text-align:right;color:#555;font-style:italic;">25.600 / 455.000</td><td><input type="text" placeholder="?%"></td><td style="text-align:right;color:#555;font-style:italic;">28.000 / 480.000</td><td><input type="text" placeholder="?%"></td><td><input type="text" class="ud" placeholder="+/–"></td></tr>
+    </table>
+    <p style="font-size:0.87rem;font-weight:bold;">Welche Kostenstelle hat sich am stärksten verändert? Was könnte die Ursache sein?</p>
+    <textarea class="freitext" rows="3" placeholder="Die stärkste Satzsteigerung liegt bei ... Das könnte daran liegen, dass ..."></textarea>
+  </div>
+
+  <!-- AUFGABE 4: Normalzuschlagssatz berechnen aus Soll-Überdeckung -->
+  <div class="card">
+    <h3>📝 Aufgabe 4 – Normalzuschlagssatz festlegen (Jahresplanung)</h3>
+    <span class="aufgaben-nr">Übung 4</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Die Planungsabteilung der Hanna GmbH soll für das neue Jahr Normal-Zuschlagssätze festlegen. Grundlage sind die durchschnittlichen Gemeinkosten der letzten 3 Jahren und die geplanten Bezugsgrößen.<br><br>
+      <strong>Durchschnittliche GK (letzten 3 Jahre):</strong> MGK: 48.000 / 42.000 / 54.000 € | FGK: 196.000 / 210.000 / 188.000 € | VwGK: 62.000 / 68.000 / 64.000 € | VtGK: 35.000 / 40.000 / 38.000 €<br>
+      <strong>Geplante Bezugsgrößen für neues Jahr:</strong> FM = 375.000 € | FL = 145.000 € | HKU = 640.000 €
+    </div>
+    <p style="font-size:0.88rem;font-weight:bold;">a) Berechne den Durchschnitt der Gemeinkosten für jede Kostenstelle:</p>
+    <table class="cls">
+      <tr><th>Kostenstelle</th><th>Jahr 1</th><th>Jahr 2</th><th>Jahr 3</th><th>Durchschnitt</th></tr>
+      <tr><td class="label">MGK</td><td>48.000</td><td>42.000</td><td>54.000</td><td><input type="text" placeholder="? / 3"></td></tr>
+      <tr><td class="label">FGK</td><td>196.000</td><td>210.000</td><td>188.000</td><td><input type="text" placeholder="? / 3"></td></tr>
+      <tr><td class="label">VwGK</td><td>62.000</td><td>68.000</td><td>64.000</td><td><input type="text" placeholder="? / 3"></td></tr>
+      <tr><td class="label">VtGK</td><td>35.000</td><td>40.000</td><td>38.000</td><td><input type="text" placeholder="? / 3"></td></tr>
+    </table>
+    <p style="font-size:0.88rem;font-weight:bold;margin-top:10px;">b) Berechne die Normal-Zuschlagssätze für das neue Jahr:</p>
+    <table class="cls">
+      <tr><th>Kostenstelle</th><th>Durchschnitts-GK</th><th>Bezugsgröße (Plan)</th><th>Normal-Zuschlagsatz (%)</th></tr>
+      <tr><td class="label">MGK (Bezug: FM)</td><td><input type="text"></td><td>375.000</td><td><input type="text" placeholder="?%"></td></tr>
+      <tr><td class="label">FGK (Bezug: FL)</td><td><input type="text"></td><td>145.000</td><td><input type="text" placeholder="?%"></td></tr>
+      <tr><td class="label">VwGK (Bezug: HKU)</td><td><input type="text"></td><td>640.000</td><td><input type="text" placeholder="?%"></td></tr>
+      <tr><td class="label">VtGK (Bezug: HKU)</td><td><input type="text"></td><td>640.000</td><td><input type="text" placeholder="?%"></td></tr>
+    </table>
+  </div>
+
+  <!-- AUFGABE 5: Vollständige Gesamtrechnung Normal vs. Ist mit Ergebnis -->
+  <div class="card">
+    <h3>📝 Aufgabe 5 – Vollständige Gesamtrechnung Normal vs. Ist (Betriebsergebnis ermitteln)</h3>
+    <span class="aufgaben-nr">Übung 5</span>
+    <div class="aufgabe-text">
+      <strong>Situation:</strong> Die SportFlex GmbH hat im Monat Oktober 600 Stück produziert und 580 Stück verkauft.<br>
+      FM gesamt = 180.000 € | FL gesamt = 88.000 €<br>
+      <strong>Normal-Sätze:</strong> MGK 11% | FGK 190% | VwGK 9% | VtGK 6%<br>
+      <strong>Ist-Sätze:</strong> MGK 14% | FGK 204% | VwGK 11% | VtGK 7%<br>
+      Lagerbestandsänderung: 20 Stück auf Lager (Mehrbestand, HK entsprechend anteilig).<br>
+      Normal-SK/Stück = ermittle aus Normalrechnung. Ist-SK/Stück = ermittle aus Istrechnung.
+    </div>
+    <div class="zeit-wrap">
+      <table class="zeit">
+        <thead>
+          <tr>
+            <th style="text-align:left;width:230px;">Position</th>
+            <th class="normal" style="width:125px;">Normal-Kalkulation</th>
+            <th class="ist" style="width:125px;">Ist-Kalkulation</th>
+            <th class="diff" style="width:140px;">Abweichung (+/–)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td class="label">FM gesamt</td><td style="text-align:right;">180.000</td><td style="text-align:right;">180.000</td><td></td></tr>
+          <tr><td class="label indent">+ MGK</td><td><input type="text" placeholder="11%"></td><td><input type="text" placeholder="14%"></td><td><input type="text" class="ud"></td></tr>
+          <tr class="sum"><td class="label">= Materialkosten</td><td><input type="text"></td><td><input type="text"></td><td><input type="text" class="ud"></td></tr>
+          <tr><td class="label">FL gesamt</td><td style="text-align:right;">88.000</td><td style="text-align:right;">88.000</td><td></td></tr>
+          <tr><td class="label indent">+ FGK</td><td><input type="text" placeholder="190%"></td><td><input type="text" placeholder="204%"></td><td><input type="text" class="ud"></td></tr>
+          <tr class="sum"><td class="label">= Fertigungskosten</td><td><input type="text"></td><td><input type="text"></td><td><input type="text" class="ud"></td></tr>
+          <tr class="sum"><td class="label">= Herstellkosten Erzeugung (600 Stk.)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text" class="ud"></td></tr>
+          <tr><td class="label indent">– Mehrbestand (20 Stk., HKE ÷ 600 × 20)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text" class="ud"></td></tr>
+          <tr class="sum"><td class="label">= Herstellkosten Umsatz (580 Stk.)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text" class="ud"></td></tr>
+          <tr><td class="label indent">+ VwGK</td><td><input type="text" placeholder="9%"></td><td><input type="text" placeholder="11%"></td><td><input type="text" class="ud"></td></tr>
+          <tr><td class="label indent">+ VtGK</td><td><input type="text" placeholder="6%"></td><td><input type="text" placeholder="7%"></td><td><input type="text" class="ud"></td></tr>
+          <tr class="total"><td class="label">= Selbstkosten gesamt (580 Stk.)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text" class="ud"></td></tr>
+          <tr class="total"><td class="label">= Selbstkosten pro Stück (÷ 580)</td><td><input type="text"></td><td><input type="text"></td><td><input type="text" class="ud" placeholder="+/– pro Stk."></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:0.87rem;font-weight:bold;">Handelt es sich um eine Über- oder Unterdeckung? Was sollte das Unternehmen tun?</p>
+    <textarea class="freitext" rows="3" placeholder="Es handelt sich um eine ... weil die Ist-SK pro Stück ... als die Normal-SK sind. Das Unternehmen sollte ..."></textarea>
+  </div>
+
+  <!-- AUFGABE 6: Richtig / Falsch -->
+  <div class="card">
+    <h3>📝 Aufgabe 6 – Richtig oder Falsch? (Zeitrechnung)</h3>
+    <span class="aufgaben-nr">Übung 6</span>
+    <table class="cls">
+      <tr><th style="width:60%;">Aussage</th><th style="width:60px;">R / F</th><th>Korrektur / Erklärung</th></tr>
+      <tr><td class="label">Normalzuschlagssätze werden am Jahresende aus den echten Kosten berechnet.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Wenn der Ist-Zuschlagsatz kleiner ist als der Normal-Zuschlagsatz, entsteht eine Unterdeckung.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Bei einer Überdeckung hat das Unternehmen effizienter produziert als geplant.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Die Kostenträgerzeitrechnung vergleicht Umsätze der aktuellen Periode mit dem Vorjahr.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Eine Unterdeckung bedeutet für das Unternehmen, dass die Produkte zu teuer verkauft wurden.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Der Normal-FGK-Satz ist immer derselbe wie der Ist-FGK-Satz, wenn die Produktionsmenge gleich bleibt.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+      <tr><td class="label">Wenn die tatsächlichen GK gestiegen sind, führt dies c.p. zu einer Unterdeckung.</td><td><input type="text"></td><td><input type="text" style="width:95%;"></td></tr>
+    </table>
+  </div>
+
+  <div style="text-align:center;margin:30px 0 50px;">
+    <a href="hf7_kalkulation_uebung.html" style="padding:12px 24px;background:#1a5c1a;color:white;border-radius:8px;text-decoration:none;margin-right:10px;">← Kalkulation</a>
+    <a href="hf7_wertströme.html" style="padding:12px 24px;background:var(--dark);color:white;border-radius:8px;text-decoration:none;">Zurück zur Theorie</a>
+  </div>
+</div>
+</body>
+</html>

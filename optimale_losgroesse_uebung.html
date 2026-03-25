@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <title>BWR Übung: Optimale Losgröße</title>
+    <style>
+        body { font-family: 'Segoe UI', Arial, sans-serif; padding: 25px; color: #333; font-size: 14px; line-height: 1.2; }
+        h1 { font-size: 1.6rem; color: #2c3e50; border-bottom: 3px solid #3498db; margin-bottom: 15px; }
+        .task-box { border: 1px solid #3498db; padding: 15px; margin-bottom: 25px; background-color: #f7f9fc; }
+        table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        th, td { border: 1px solid #444; padding: 10px; text-align: center; }
+        th { background-color: #ecf0f1; font-size: 0.85rem; font-weight: bold; }
+        .footer { margin-top: 40px; border-top: 1px solid #ccc; padding-top: 10px; font-style: italic; font-size: 0.9rem; }
+        @media print { body { padding: 0; } @page { margin: 1.5cm; } .no-print { display: none; } }
+    </style>
+</head>
+<body>
+    <h1>BWR Übung: Optimale Losgröße (HF 3)</h1>
+    
+    <div class="task-box">
+        <strong>Ausgangslage:</strong> Die "ProteinPower Ltd." plant die Produktion von Protein-Shakes für das nächste Jahr. 
+        Man geht von einem Absatz von <strong>20.000 Beuteln</strong> aus.<br><br>
+        <strong>Kosteninformationen:</strong>
+        <ul>
+            <li>Lagerkosten pro Beutel: <strong>0,60 €</strong></li>
+            <li>Rüstkosten pro Wechsel: <strong>300,00 €</strong></li>
+        </ul>
+        <em>Vervollständigen Sie das Schema und treffen Sie eine Entscheidung für die optimale Losgröße.</em>
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <th>mögliche Losgröße (Stück)</th>
+                <th>Lose (Anzahl der Wechsel)</th>
+                <th>Rüstkosten (auflagenfixe Gesamtkosten €)</th>
+                <th>durchschn. Lagerbestand (LG / 2)</th>
+                <th>Lagerkosten (variabel Gesamtkosten €)</th>
+                <th>Gesamtkosten (€)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>20.000</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>10.000</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>5.000</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>4.000</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>2.000</td><td></td><td></td><td></td><td></td><td></td></tr>
+            <tr><td>1.000</td><td></td><td></td><td></td><td></td><td></td></tr>
+        </tbody>
+    </table>
+
+    <div class="footer">
+        <strong>Entscheidung:</strong> Die optimale Losgröße beträgt ______________, da hier die Gesamtkosten mit ______________ € am geringsten sind.
+    </div>
+
+    <div class="no-print" style="margin-top: 25px; color: #2980b9;">
+        <strong>Tipps:</strong><br>
+        1. Lose = 20.000 / Losgröße<br>
+        2. Rüstkosten = Lose * 300<br>
+        3. Durchschn. Lagerbestand = Losgröße / 2<br>
+        4. Lagerkosten = Durchschn. Lagerbestand * 0,60
+    </div>
+</body>
+</html>
